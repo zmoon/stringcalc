@@ -12,4 +12,8 @@ pdf = PyPDF2.PdfFileReader(f)
 
 assert pdf.numPages == 14
 
+page = pdf.getPage(4)
+print(page.extractText())
+
+
 f.close()
