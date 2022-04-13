@@ -142,6 +142,24 @@ df.loc[df.group.str.lower().str.endswith(cont), "group"] = (
     df.group.str.slice(stop=len(cont))
 )
 
+# Check some of the tension calculations
+import numpy as np
+from pyabc2 import Pitch
+# pip install --no-deps https://github.com/zmoon/pyabc2/archive/main.zip
+
+cats = ["Acoustic or Electric Guitar", "Acoustic Guitar", "Folk Guitar", "Classical Guitar"]
+L = 25.5  # scale length, used for the non-bass guitar categories (inches)
+df_ = df[df.category.isin(cats)]
+for i, row in df_.iterrows():
+    UW = row.uw
+    F = np.array([Pitch.from_name(note).etf if note is not None else np.nan for note in row.notes])
+    # ^ frequency (Hz)
+    T = UW * (2 * L * F)**2 / 386.4
+    # ^ tension (lb)
+    T0 = np.array([ten if ten is not None else np.nan for ten in row.tens])
+    np.testing.assert_allclose(T[~np.isnan(T0)], T0[~np.isnan(T0)], atol=0.07, rtol=0, equal_nan=True)
+
+# Save
 fn = "daddario-tension.csv"
 df.to_csv(fn, index=False)
 
