@@ -128,6 +128,12 @@ df = pd.DataFrame(rows).convert_dtypes()
 
 assert df.id.unique().size == len(df)
 
+# Split ID parts
+df = df.join(df.id.str.extract("(?P<id_pref>[A-Z]+)(?P<id_gauge>[0-9]+)(?P<id_suff>[A-Z]*)"), how="left")
+df["gauge"] = "." + df["id_gauge"]  # I think this should always be the case but maybe not
+df["group_id"] = df["id_pref"] + df["id_suff"]
+df = df.drop(columns="id_gauge")
+
 # Fix categories that are uppercase for some reason
 df.loc[df.category.str.isupper(), "category"] = (
     df.category.str.title()    
@@ -136,11 +142,15 @@ df.loc[df.category.str.isupper(), "category"] = (
 # Fix continued categories
 cont = " (cont.)"
 df.loc[df.category.str.lower().str.endswith(cont), "category"] = (
-    df.category.str.slice(stop=len(cont))
+    df.category.str.slice(stop=-len(cont))
 )
 df.loc[df.group.str.lower().str.endswith(cont), "group"] = (
-    df.group.str.slice(stop=len(cont))
+    df.group.str.slice(stop=-len(cont))
 )
+
+# Group ID counts
+group_id_counts = df.groupby("group").apply(lambda g: g.group_id.value_counts().to_dict())
+# Multiples in a certain group mostly come from different bass scale length subgroups
 
 # Check some of the tension calculations
 import numpy as np
