@@ -42,6 +42,9 @@ def d(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
         
     dd = np.append(d[0], np.diff(d))
 
+    # TODO: d to +5 or +7 frets?
+    # TODO: comparison to just intonation for specified root
+
     df = pd.DataFrame({"n": n, "d": d, "Δd": dd}).set_index("n")
     desc = {
         "n": "fret number",
