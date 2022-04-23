@@ -6,11 +6,13 @@ e.g.
 - For specified total or per-string tension, suggest strings
 """
 import re
+from functools import lru_cache
 from typing import NamedTuple
 
 import pandas as pd
 
 
+@lru_cache
 def load_data(*, drop_sample_tensions=True):
     """Load the data (currently only D'Addario) needed for the calculations."""
 
@@ -21,7 +23,7 @@ def load_data(*, drop_sample_tensions=True):
 
     # Set categorical columns
     df = df.convert_dtypes()
-    for name in ["category", "group", "group_id"]:
+    for name in ["category", "group", "id_pref", "group_id"]:
         df[name] = df[name].astype("category")
 
     return df
@@ -95,3 +97,37 @@ class String(NamedTuple):
             sgauge = sgauge[1:]
 
         return f"{self.L}\" {self.type} {sgauge}{'p' if not self.wound else ''}"
+
+
+def ten(s: String):
+    """Compute tension for :class:`String`."""
+    
+    t = s.type
+    g = s.gauge
+    L = s.L
+
+    if t in {"PL", "S", "PS"}:  # plain steel
+        tda = "PL"
+    elif t in {"PB"}:  # phosphor bronze
+        tda = "PB"
+    else:
+        raise ValueError(f"string type {t!r} invalid or not supported")
+
+    data = load_data().query(f"id_pref == '{tda}'")
+
+    rows = data.loc[data.gauge == g]
+    if len(rows) == 0:
+        raise ValueError(
+            f"gauge {g} not found. "
+            f"Available {tda} gauges are: {', '.join(data.gauge.astype(str))}"
+        )
+        # TODO: use closest instead with warning?
+    elif len(rows) > 1:
+        raise ValueError("multiple matching gauges\n{rows.to_string()}")
+
+    UW = float(rows.uw)
+    F = 440.  # for testing
+
+    T = UW * (2 * L * F)**2 / 386.
+
+    return T
