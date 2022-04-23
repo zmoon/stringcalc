@@ -41,6 +41,9 @@ class String(NamedTuple):
     gauge: float
     wound: bool
     
+    # TODO: `wound` isn't really relevant for single string, since `type` tells us whether wound or not
+    # TODO: unit support (pint?)
+
     @classmethod
     def from_spec(cls, s: str):
         m = _re_string_spec.match(s.strip())
@@ -62,11 +65,14 @@ class String(NamedTuple):
             
         type_ = d["type"]
 
+        sgauge = d["gauge"]
+        if "." not in sgauge and sgauge.startswith("0"):  # leading 0 implies decimal
+            sgauge = f".{sgauge}"
         try:
-            gauge = float(d["gauge"])
+            gauge = float(sgauge)
         except Exception as e:
             raise ValueError(
-                f"detected string gauge {d['gauge']!r} could not be coerced to float"
+                f"detected string gauge {sgauge!r} could not be coerced to float"
             ) from e            
         
         pw = d["pw"]
@@ -82,3 +88,10 @@ class String(NamedTuple):
                 raise ValueError(f"invalid p/w {pw}")
         
         return cls(L, type_, gauge, wound)
+
+    def __str__(self):
+        sgauge = str(self.gauge)
+        if sgauge.startswith("0."):
+            sgauge = sgauge[1:]
+
+        return f"{self.L}\" {self.type} {sgauge}{'p' if not self.wound else ''}"
