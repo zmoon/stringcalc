@@ -7,17 +7,21 @@ e.g.
 """
 import re
 from functools import lru_cache
+from pathlib import Path
 from typing import NamedTuple
 
 import pandas as pd
+
+HERE = Path(__file__).parent
+DATA = HERE / "data"
 
 
 @lru_cache
 def load_data(*, drop_sample_tensions=True):
     """Load the data (currently only D'Addario) needed for the calculations."""
 
-    df = pd.read_csv("data/daddario-tension.csv", header=0)
-    
+    df = pd.read_csv(DATA/"daddario-tension.csv", header=0)
+
     if drop_sample_tensions:
         df = df.drop(columns=["notes", "tens"])
 
