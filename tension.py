@@ -135,3 +135,31 @@ def ten(s: String):
     T = UW * (2 * L * F)**2 / 386.
 
     return T
+
+
+def from_ten(T: float, L: float, pitch: str, *, type: str = "PB", n: int = 3):
+    """For target tension and given scale length, return suggested gauge(s)."""
+    from pyabc2 import Pitch
+
+    t = type
+
+    if t == "PB":  # implying PB | PL
+        tda = ["PB", "PL"]
+    else:
+        raise ValueError(f"string type {t!r} invalid or not supported")
+
+    data = load_data().query(f"id_pref in @tda")
+    UW = data.uw
+    F = Pitch.from_name(pitch).etf
+    T_all = UW * (2 * L * F)**2 / 386.
+
+    # Find closest ones
+    data_sort = data.iloc[(T_all - T).abs().argsort()[:n]].copy()
+    data_sort["T"] = T_all[data_sort.index]
+    data_sort["T - T_in"] = data_sort["T"] - T
+
+    # TODO: warning if edge is one of the closest
+
+    df = data_sort[["id", "T", "T - T_in"]].sort_values(by="id").reset_index(drop=True)
+
+    return df

@@ -1,6 +1,6 @@
 import pytest
 
-from tension import String, ten
+from tension import String, ten, from_ten
 
 
 @pytest.mark.parametrize(
@@ -33,3 +33,12 @@ def test_str(s):
 def test_string_ten():
     assert ten(String.from_spec("14\" PL .015")) == pytest.approx(19.6, abs=0.01)
     # TODO: confirm the check #
+
+
+def test_ten_sugg():
+    T = 20
+    L = 24.75
+    pitch = "E4"  # top string in standard tuning
+
+    ret = from_ten(T, L, pitch)
+    assert ret.id == ["PB011", "PB0115", "PB012"]
