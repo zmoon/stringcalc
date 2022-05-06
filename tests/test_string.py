@@ -41,4 +41,4 @@ def test_ten_sugg():
     pitch = "E4"  # top string in standard tuning
 
     ret = from_ten(T, L, pitch)
-    assert ret.id == ["PB011", "PB0115", "PB012"]
+    assert ret.id.tolist() == ["PL011", "PL0115", "PL012"]

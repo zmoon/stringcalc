@@ -16,7 +16,7 @@ HERE = Path(__file__).parent
 DATA = HERE / "data"
 
 
-@lru_cache
+@lru_cache(2)
 def load_data(*, drop_sample_tensions=True):
     """Load the data (currently only D'Addario) needed for the calculations."""
 
