@@ -23,7 +23,18 @@ def test_d_et_rel(n, expected):
         ((2, None), 16.3316, 18.332),
         ((2, None), 21, 23.572),
         ((0, 1), 1, 17.817),
+        ((1, 0), 1, 17.817),
     ]
 )
 def test_l_from_d(ab, d, expected):
     assert frets.l_from_d(ab, d) == pytest.approx(expected, abs=5e-4)
+
+
+def test_l_from_d_invalid_ab():
+    with pytest.raises(ValueError, match="must be different"):
+        frets.l_from_d((0, 0), 10)
+
+
+def test_l_from_d_invalid_d():
+    with pytest.raises(ValueError, match="must be positive"):
+        frets.l_from_d((0, 1), -10)

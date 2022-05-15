@@ -63,6 +63,9 @@ def l_from_d(ab: tuple[int, None], d: float) -> float:
     Use ``None`` to indicate the bridge/saddle end of the fretboard
     (and ``0`` to indicate the nut end).
     """
+    if not d > 0:
+        raise ValueError("`d` must be positive")
+
     a, b = ab
 
     def c(n):
@@ -76,7 +79,10 @@ def l_from_d(ab: tuple[int, None], d: float) -> float:
     c_a = c(a)
     c_b = c(b)
 
-    return d / (c_b - c_a)
+    if c_a == c_b:
+        raise ValueError("`a` and `b` must be different frets in order to compute L")
+
+    return d / abs(c_b - c_a)
 
 
 if __name__ == "__main__":
