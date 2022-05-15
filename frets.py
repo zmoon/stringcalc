@@ -56,6 +56,29 @@ def d(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
     return df
 
 
+def l_from_d(ab: tuple[int, None], d: float) -> float:
+    """Calculate the scale length implied by a->b distance `d`.
+
+    `ab` is a 2-tuple specifying the bounds of the input distance in terms of fret number.
+    Use ``None`` to indicate the bridge/saddle end of the fretboard
+    (and ``0`` to indicate the nut end).
+    """
+    a, b = ab
+
+    def c(n):
+        if n in {None, np.inf}:
+            return 1
+        elif n == 0:
+            return 0
+        else:
+            return (1 - 1 / (2**(n / 12)))
+
+    c_a = c(a)
+    c_b = c(b)
+
+    return d / (c_b - c_a)
+
+
 if __name__ == "__main__":
     L = 21
     N = 19
