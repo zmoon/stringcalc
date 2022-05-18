@@ -1,6 +1,6 @@
 import pytest
 
-from tension import String, ten, from_ten
+from stringcalc.tension import String, ten, from_ten
 
 
 @pytest.mark.parametrize(

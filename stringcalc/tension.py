@@ -13,7 +13,7 @@ from typing import NamedTuple
 import pandas as pd
 
 HERE = Path(__file__).parent
-DATA = HERE / "data"
+DATA = HERE / "../data"
 
 
 @lru_cache(2)

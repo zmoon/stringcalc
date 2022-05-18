@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-import frets
+from stringcalc import frets
 
 
 @pytest.mark.parametrize(
