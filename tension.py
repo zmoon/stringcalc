@@ -43,11 +43,17 @@ _re_string_spec = re.compile(
 
 class String(NamedTuple):
     L: float
+    """Scale length."""
     type: str
+    """Currently D'Addario string type abbreviation, such as 'PB', 'PL', or 'NYL'."""
     gauge: float
+    """String gauge."""
     wound: bool
+    """Whether the string is wound (as opposed to plain)."""
     
     # TODO: `wound` isn't really relevant for single string, since `type` tells us whether wound or not
+    # i.e., `wound` can be a property (as well as winding and core materials, loop vs ball, ...?)
+    # OR: store core and winding material, keeping it more general, instead of using D'Addario IDs
     # TODO: unit support (pint?)
 
     @classmethod
@@ -101,6 +107,10 @@ class String(NamedTuple):
             sgauge = sgauge[1:]
 
         return f"{self.L}\" {self.type} {sgauge}{'p' if not self.wound else ''}"
+
+    # TODO: .tune_to() method, returning a TunedString
+
+# TODO: TunedString class with Pitch
 
 
 def ten(s: String):
