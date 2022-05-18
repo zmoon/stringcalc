@@ -13,7 +13,7 @@ from typing import NamedTuple
 import pandas as pd
 
 HERE = Path(__file__).parent
-DATA = HERE / "../data"
+DATA = HERE / "data"
 
 
 @lru_cache(2)
@@ -21,6 +21,7 @@ def load_data(*, drop_sample_tensions=True):
     """Load the data (currently only D'Addario) needed for the calculations."""
 
     df = pd.read_csv(DATA / "daddario-tension.csv", header=0)
+    # TODO: use importlib.resources
 
     if drop_sample_tensions:
         df = df.drop(columns=["notes", "tens"])
