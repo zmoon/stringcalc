@@ -20,7 +20,7 @@ DATA = HERE / "../data"
 def load_data(*, drop_sample_tensions=True):
     """Load the data (currently only D'Addario) needed for the calculations."""
 
-    df = pd.read_csv(DATA/"daddario-tension.csv", header=0)
+    df = pd.read_csv(DATA / "daddario-tension.csv", header=0)
 
     if drop_sample_tensions:
         df = df.drop(columns=["notes", "tens"])
@@ -41,6 +41,7 @@ _re_string_spec = re.compile(
     r" *(?P<pw>[pPwW])?"
 )
 
+
 class String(NamedTuple):
     L: float
     """Scale length."""
@@ -50,7 +51,7 @@ class String(NamedTuple):
     """String gauge."""
     wound: bool
     """Whether the string is wound (as opposed to plain)."""
-    
+
     # TODO: `wound` isn't really relevant for single string, since `type` tells us whether wound or not
     # i.e., `wound` can be a property (as well as winding and core materials, loop vs ball, ...?)
     # OR: store core and winding material, keeping it more general, instead of using D'Addario IDs
@@ -63,18 +64,18 @@ class String(NamedTuple):
             raise ValueError(
                 f"input {s!r} did not match the spec. "
                 "Some valid examples are:\n"
-                "  `22.9\" PB .042w`"
+                '  `22.9" PB .042w`'
             )
-        
+
         d = m.groupdict()
-        
+
         try:
             L = float(d["L"])
         except Exception as e:
             raise ValueError(
                 f"detected string length {d['L']!r} could not be coerced to float"
             ) from e
-            
+
         type_ = d["type"]
 
         sgauge = d["gauge"]
@@ -85,8 +86,8 @@ class String(NamedTuple):
         except Exception as e:
             raise ValueError(
                 f"detected string gauge {sgauge!r} could not be coerced to float"
-            ) from e            
-        
+            ) from e
+
         pw = d["pw"]
         if pw is None:
             wound = True  # maybe should be configurable
@@ -98,7 +99,7 @@ class String(NamedTuple):
                 wound = True
             else:
                 raise ValueError(f"invalid p/w {pw}")
-        
+
         return cls(L, type_, gauge, wound)
 
     def __str__(self):
@@ -110,12 +111,13 @@ class String(NamedTuple):
 
     # TODO: .tune_to() method, returning a TunedString
 
+
 # TODO: TunedString class with Pitch
 
 
 def ten(s: String):
     """Compute tension for :class:`String`."""
-    
+
     t = s.type
     g = s.gauge
     L = s.L
@@ -140,9 +142,9 @@ def ten(s: String):
         raise ValueError("multiple matching gauges\n{rows.to_string()}")
 
     UW = float(rows.uw)
-    F = 440.  # for testing
+    F = 440.0  # for testing
 
-    T = UW * (2 * L * F)**2 / 386.
+    T = UW * (2 * L * F) ** 2 / 386.0
 
     return T
 
@@ -154,14 +156,14 @@ def from_ten(T: float, L: float, pitch: str, *, type: str = "PB", n: int = 3):
     t = type
 
     if t == "PB":  # implying PB | PL
-        tda = ["PB", "PL"]
+        tda = ["PB", "PL"]  # noqa: F841
     else:
         raise ValueError(f"string type {t!r} invalid or not supported")
 
-    data = load_data().query(f"id_pref in @tda")
+    data = load_data().query("id_pref in @tda")
     UW = data.uw
     F = Pitch.from_name(pitch).etf
-    T_all = UW * (2 * L * F)**2 / 386.
+    T_all = UW * (2 * L * F) ** 2 / 386.0
 
     # Find closest ones
     data_sort = data.iloc[(T_all - T).abs().argsort()[:n]].copy()

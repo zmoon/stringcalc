@@ -6,7 +6,6 @@ import re
 
 import pandas as pd
 
-
 # e.g. `PL009 .00001794 18.6 14.7 13.1 10.4 8.3 7.4 5.8 4.6`
 re_entry = re.compile(r"(?P<id>[A-Z0-9]+) (?P<uw>\.[0-9]+) (?P<tens>(.+){8})")
 
@@ -41,7 +40,7 @@ Banjo = 26 1/4" (19 5/8" for 5th string)
 
 def convert_note(s: str) -> str:
     """Convert note from the D'Addario format to piano key.
-    
+
     Pitch Notation
     --------------
     c' (Middle c) = 261.6 Hz
@@ -52,31 +51,30 @@ def convert_note(s: str) -> str:
     2 Octaves Below = C
     3 Octaves Below = C'
     """
-    dn_vals = {"": 0, "'": 1, "\"": 2, "''": 2}
-    
+    dn_vals = {"": 0, "'": 1, '"': 2, "''": 2}
+
     x = 2 if "#" in s else 1
     c, apos = s[:x], s[x:]
     assert c[0].upper() in "ABCDEFG" and apos in dn_vals, s
-    
+
     dn = dn_vals[apos]
     if c.islower():
         n = 3 + dn
     else:
         n = 2 - dn
-        
+
     return f"{c.upper()}{n}"
 
 
 for s, expected in [
     ("c'", "C4"),  # middle C
     ("d'", "D4"),
-    ("c\"", "C5"),
+    ('c"', "C5"),
     ("C", "C2"),
-    ("C'", "C1")
+    ("C'", "C1"),
 ]:
     got = convert_note(s)
     assert got == expected, f"{got=}, {expected=}"
-
 
 
 rows = []
@@ -86,24 +84,24 @@ notes = None
 with open("daddario-tension.txt", encoding="utf-8") as f:
     for line in f:
         line = line.strip()
-        
+
         if " & -F6" in line:
             # There are just two of these, in the bass section
             # Not sure what means so just removing
             line = line.replace(" & -F6", "")
-        
+
         if line.endswith("Scale"):
             continue  # used to group some of the bass strings
-        
+
         # Category?
         if line in cats:
             cat = line
-        
+
         # Table heading
         elif line.startswith("Item# Unit Weight"):
             notes_ = line[17:].split()
             notes = [convert_note(x) for x in notes_]
-        
+
         # Table entry
         elif (m := re_entry.fullmatch(line)) is not None:
             d = m.groupdict()
@@ -117,7 +115,7 @@ with open("daddario-tension.txt", encoding="utf-8") as f:
                 "notes": notes,
                 "tens": [None if x == "-" else float(x) for x in d["tens"].split()],
             }
-        
+
             rows.append(row)
 
         else:
@@ -129,24 +127,22 @@ df = pd.DataFrame(rows).convert_dtypes()
 assert df.id.unique().size == len(df)
 
 # Split ID parts
-df = df.join(df.id.str.extract("(?P<id_pref>[A-Z]+)(?P<id_gauge>[0-9]+)(?P<id_suff>[A-Z]*)"), how="left")
+df = df.join(
+    df.id.str.extract("(?P<id_pref>[A-Z]+)(?P<id_gauge>[0-9]+)(?P<id_suff>[A-Z]*)"), how="left"
+)
 df["gauge"] = "." + df["id_gauge"]  # I think this should always be the case but maybe not
 df["group_id"] = df["id_pref"] + df["id_suff"]
 df = df.drop(columns="id_gauge")
 
 # Fix categories that are uppercase for some reason
-df.loc[df.category.str.isupper(), "category"] = (
-    df.category.str.title()    
-)
+df.loc[df.category.str.isupper(), "category"] = df.category.str.title()
 
 # Fix continued categories
 cont = " (cont.)"
-df.loc[df.category.str.lower().str.endswith(cont), "category"] = (
-    df.category.str.slice(stop=-len(cont))
+df.loc[df.category.str.lower().str.endswith(cont), "category"] = df.category.str.slice(
+    stop=-len(cont)
 )
-df.loc[df.group.str.lower().str.endswith(cont), "group"] = (
-    df.group.str.slice(stop=-len(cont))
-)
+df.loc[df.group.str.lower().str.endswith(cont), "group"] = df.group.str.slice(stop=-len(cont))
 
 # Group ID counts
 group_id_counts = df.groupby("group").apply(lambda g: g.group_id.value_counts().to_dict())
@@ -155,6 +151,7 @@ group_id_counts = df.groupby("group").apply(lambda g: g.group_id.value_counts().
 # Check some of the tension calculations
 import numpy as np
 from pyabc2 import Pitch
+
 # pip install --no-deps https://github.com/zmoon/pyabc2/archive/main.zip
 
 cats = ["Acoustic or Electric Guitar", "Acoustic Guitar", "Folk Guitar", "Classical Guitar"]
@@ -164,10 +161,12 @@ for i, row in df_.iterrows():
     UW = row.uw
     F = np.array([Pitch.from_name(note).etf if note is not None else np.nan for note in row.notes])
     # ^ frequency (Hz)
-    T = UW * (2 * L * F)**2 / 386.4
+    T = UW * (2 * L * F) ** 2 / 386.4
     # ^ tension (lb)
     T0 = np.array([ten if ten is not None else np.nan for ten in row.tens])
-    np.testing.assert_allclose(T[~np.isnan(T0)], T0[~np.isnan(T0)], atol=0.07, rtol=0, equal_nan=True)
+    np.testing.assert_allclose(
+        T[~np.isnan(T0)], T0[~np.isnan(T0)], atol=0.07, rtol=0, equal_nan=True
+    )
 
 # Save
 fn = "daddario-tension.csv"

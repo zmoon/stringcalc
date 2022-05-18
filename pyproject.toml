@@ -9,6 +9,7 @@ readme = "README.md"
 license = {file = "LICENSE"}
 classifiers = ["License :: OSI Approved :: MIT License"]
 dynamic = ["version", "description"]
+requires-python = "~=3.8"
 dependencies = [
     "numpy",
     "pandas",
@@ -25,3 +26,21 @@ test = [
 dev = [
     "ipython",
 ]
+
+
+[tool.black]
+line-length = 100
+
+[tool.flake8]  # pyproject-flake8
+max-line-length = 100
+ignore = [
+  "E203", # whitespace before ':' - doesn't work well with black
+  "E402", # module level import not at top of file
+  "E501", # line too long - let black worry about that
+  "W503", # line break before binary operator
+  "E226", # missing whitespace around arithmetic operator - not always more readable imho
+]
+
+[tool.isort]
+profile = "black"
+line_length = 100

@@ -5,13 +5,14 @@ Table retrieved from https://aquilacorde.com/en/string-gauge-converter/ on 25-Ap
 with additional data from https://aquilacorde.com/wp-content/uploads/2019/09/conversion.pdf added
 """
 # from pathlib import Path
-import sys; sys.path.append("../")
+import sys
+
+sys.path.append("../")
 
 # import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-
 from tension import load_data
 
 plt.close("all")
@@ -21,16 +22,17 @@ plt.close("all")
 
 df = pd.read_csv("aquila-nng-equiv.csv").convert_dtypes()
 
-df = df.rename(columns={
-    # From the web table:
-    'AQUILA NEW NYLGUT CODE': "id",
-    'NEW NYLGUT EQUIVALENT GUT/ACTUAL GAUGE': "gauge",
-    'NYLON GAUGES': "gauge_nylon",
-    'CARBON GAUGES': "gauge_carbon",
-    # From the PDF:
-    "NYLON 2 (mm)": "gauge_nylon2",
-    "PVF Carbon (mm)": "gauge_carbon2",
-    "Aquila D (gut-equiv mm * 100)": "gauge_d",
+df = df.rename(
+    columns={
+        # From the web table:
+        "AQUILA NEW NYLGUT CODE": "id",
+        "NEW NYLGUT EQUIVALENT GUT/ACTUAL GAUGE": "gauge",
+        "NYLON GAUGES": "gauge_nylon",
+        "CARBON GAUGES": "gauge_carbon",
+        # From the PDF:
+        "NYLON 2 (mm)": "gauge_nylon2",
+        "PVF Carbon (mm)": "gauge_carbon2",
+        "Aquila D (gut-equiv mm * 100)": "gauge_d",
     }
 )
 
@@ -61,5 +63,5 @@ df = df.dropna(subset=["id"])
 
 # Estimate density of D'Addario NYL strings
 df2 = load_data().query("group_id == 'NYL'").copy()
-df2["rho"] = (df2.uw / (np.pi * df2.gauge**2 / 4) * 1/(2.54**3) * 1e6 / 2.205)
+df2["rho"] = df2.uw / (np.pi * df2.gauge**2 / 4) * 1 / (2.54**3) * 1e6 / 2.205
 # The data suggest rho ~ 995.8 kg/m3, unless there is something wrong with my calculation...

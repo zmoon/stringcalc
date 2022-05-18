@@ -20,7 +20,7 @@ df = pd.read_csv("daddario-tension.csv", header=0).drop(columns=["tens", "notes"
 # TODO: make pitch range helper in pyabc2
 p0 = Pitch.from_name("C2")
 p1 = Pitch.from_name("B4")
-pitches = [Pitch(v) for v in range(p0.value, p1.value+1)]
+pitches = [Pitch(v) for v in range(p0.value, p1.value + 1)]
 F = np.array([p.etf for p in pitches])
 
 # Pitch labels, naturals only
@@ -41,7 +41,7 @@ df_ = df[df.id_pref == "PL"]
 colors = plt.cm.gray_r(np.linspace(0.15, 0.8, len(df_)))
 for (_, row), c in zip(df_.iterrows(), colors):
     UW = row.uw
-    T = UW * (2 * L * F)**2 / 386.
+    T = UW * (2 * L * F) ** 2 / 386.0
     ax.plot(T, label=row.id, c=c)
 
 # PB - Phosphor Bronze
@@ -49,7 +49,7 @@ df_ = df[df.id_pref == "PB"]
 colors = plt.cm.copper_r(np.linspace(0.05, 0.7, len(df_)))
 for (_, row), c in zip(df_.iterrows(), colors):
     UW = row.uw
-    T = UW * (2 * L * F)**2 / 386.
+    T = UW * (2 * L * F) ** 2 / 386.0
     ax.plot(T, label=row.id, c=c)
 
 ax.set_xticks(xticks)
@@ -62,8 +62,15 @@ ax.set_ylim((0, 30))
 
 ax.legend(ncol=2, fontsize=9, bbox_to_anchor=(1.01, 0.5), loc="center left")
 
-ax.text(0.96, 0.06, f"$L = {L}$ in", va="bottom", ha="right", transform=ax.transAxes,
-        bbox=dict(boxstyle="round", facecolor="0.85", alpha=0.8))
+ax.text(
+    0.96,
+    0.06,
+    f"$L = {L}$ in",
+    va="bottom",
+    ha="right",
+    transform=ax.transAxes,
+    bbox=dict(boxstyle="round", facecolor="0.85", alpha=0.8),
+)
 
 fig.tight_layout()
 
