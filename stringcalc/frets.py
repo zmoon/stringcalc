@@ -45,11 +45,12 @@ def d(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
     # TODO: d to +5 or +7 frets?
     # TODO: comparison to just intonation for specified root
 
-    df = pd.DataFrame({"n": n, "d": d, "Δd": dd}).set_index("n")
+    df = pd.DataFrame({"n": n, "d": d, "Δd": dd, "L−d": L - d}).set_index("n")
     desc = {
         "n": "fret number",
         "d": "distance from nut to fret",
         "Δd": "distance from previous fret to current",
+        "L−d": "distance from fret to saddle",
     }
     df.attrs.update(col_desc=desc)
 
