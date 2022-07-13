@@ -116,8 +116,11 @@ class String(NamedTuple):
 # TODO: TunedString class with Pitch
 
 
-def ten(s: String):
-    """Compute tension for :class:`String`."""
+def ten(s: String) -> float:
+    """Compute tension for :class:`String`.
+
+    Results are for a single type, e.g. plain steel or phosphor bronze.
+    """
 
     t = s.type
     g = s.gauge
@@ -127,10 +130,14 @@ def ten(s: String):
         tda = "PL"
     elif t in {"PB"}:  # phosphor bronze
         tda = "PB"
+    elif t in {"NYL", "N"}:  # plain "rectified" nylon
+        tda = "NYL"
+    elif t in {"NYLW", "NW"}:  # standard silver-wrapped nylon
+        tda = "NYLW"
     else:
         raise ValueError(f"string type {t!r} invalid or not supported")
 
-    data = load_data().query(f"id_pref == '{tda}'")
+    data = load_data().query(f"group_id == '{tda}'")
 
     rows = data.loc[data.gauge == g]
     if len(rows) == 0:
@@ -151,13 +158,19 @@ def ten(s: String):
 
 
 def from_ten(T: float, L: float, pitch: str, *, type: str = "PB", n: int = 3):
-    """For target tension and given scale length, return suggested gauge(s)."""
+    """For target tension and given scale length, return suggested gauge(s).
+
+    Results may include two types commonly used to make string sets, e.g.
+    plain steel + phosphor bronze or plain nylon + silver-wrapped nylon.
+    """
     from pyabc2 import Pitch
 
     t = type
 
     if t == "PB":  # implying PB | PL
         tda = ["PB", "PL"]  # noqa: F841
+    elif t in {"N", "NYL"}:  # implying NYL | NYLW
+        tda = ["NYL"]  # noqa: F841  both have same pref
     else:
         raise ValueError(f"string type {t!r} invalid or not supported")
 
