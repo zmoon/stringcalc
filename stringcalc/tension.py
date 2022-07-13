@@ -116,11 +116,12 @@ class String(NamedTuple):
 # TODO: TunedString class with Pitch
 
 
-def ten(s: String) -> float:
+def ten(s: String, pitch: str = "A4") -> float:
     """Compute tension for :class:`String`.
 
     Results are for a single type, e.g. plain steel or phosphor bronze.
     """
+    from pyabc2 import Pitch
 
     t = s.type
     g = s.gauge
@@ -150,7 +151,7 @@ def ten(s: String) -> float:
         raise ValueError("multiple matching gauges\n{rows.to_string()}")
 
     UW = float(rows.uw)
-    F = 440.0  # for testing
+    F = Pitch.from_name(pitch).etf
 
     T = UW * (2 * L * F) ** 2 / 386.0
 
