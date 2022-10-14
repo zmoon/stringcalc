@@ -33,6 +33,7 @@ def d_et(n: int | npt.ArrayLike, *, s: float) -> np.float_ | npt.NDArray[np.floa
 
 def d(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
     """Fret distance DataFrame for `N` frets and scale length `L`."""
+    assert N >= 1  # guarantees `d` is array with at least one value
     n = np.arange(1, N + 1)
 
     if method in {"et"}:
@@ -40,7 +41,7 @@ def d(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
     else:
         raise ValueError(f"invalid `method` {method!r}")
 
-    dd = np.append(d[0], np.diff(d))
+    dd = np.append(d[0], np.diff(d))  # type: ignore[index]
 
     # TODO: d to +5 or +7 frets?
     # TODO: comparison to just intonation for specified root
