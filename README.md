@@ -1,6 +1,6 @@
 # stringcalc
 
-Calculations for instrument strings on the command line
+Calculations for instrument strings
 
 ## Prior art
 
