@@ -158,16 +158,18 @@ def ten(s: String, pitch: str = "A4") -> float:
     # => T = mu (2 f L)^2  since the primary mode has wl = 2 L
     #
     # In the D'Addario formula:
-    # - UW: unit weight, aka. linear density (mu; mass / length) [lb/in]
+    # - UW: "unit weight", really linear density (mu; mass / length) [lbm/in]
     # - L: scale length [in]
     # - F: frequency [Hz := s-1]
-    # - T: "tension" [lb] (canonical Imperial unit for tension is lbf := ft lb s-1)
+    # - T: "tension" [lb] (technically lbf)
     #
-    # The scaling factor comes from the conversion lbf to lb
+    # The scaling factor comes from the conversion from lb (lbm) to lbf
     # i.e., it is gravity in the units of the RHS (seconds and inches)
-    # g = (9.80665 m s-2) * (3.28084 ft m-1) * (12 in ft-1)
-    #   = 386.09 in s-2
-    # TODO: mass vs force option for this fn?
+    # gc = (9.80665 m s-2) * (3.28084 ft m-1) * (12 in ft-1)
+    #    = 386.09 in s-2  (technically [in lbm lbf-1 s-2])
+    #
+    # At g0, 1 lbm exerts a force of 1 lbf = > lbf = g0 lbm = 32.174 lbm ft s-2
+    # https://en.wikipedia.org/wiki/Gc_(engineering)
 
     UW = float(rows.uw)
     F = Pitch.from_name(pitch).etf
