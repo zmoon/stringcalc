@@ -150,10 +150,29 @@ def ten(s: String, pitch: str = "A4") -> float:
     elif len(rows) > 1:
         raise ValueError("multiple matching gauges\n{rows.to_string()}")
 
+    # Starting from 
+    # 1 / v^2  = mu / T
+    # (derivation at https://phys.libretexts.org/Bookshelves/University_Physics/Book%3A_University_Physics_(OpenStax)/Book%3A_University_Physics_I_-_Mechanics_Sound_Oscillations_and_Waves_(OpenStax)/16%3A_Waves/16.04%3A_Wave_Speed_on_a_Stretched_String)
+    # => T = mu v^2        [mass / length] * [length time-1]^2 = [mass length time-2]]
+    # => T = mu (f wl)^2   since v = f wl
+    # => T = mu (2 f L)^2  since the primary mode has wl = 2 L
+    #
+    # In the D'Addario formula:
+    # - UW: unit weight, aka. linear density (mu; mass / length) [lb/in]
+    # - L: scale length [in]
+    # - F: frequency [Hz := s-1]
+    # - T: "tension" [lb] (canonical Imperial unit for tension is lbf := ft lb s-1)
+    #
+    # The scaling factor comes from the conversion lbf to lb
+    # i.e., it is gravity in the units of the RHS (seconds and inches)
+    # g = (9.80665 m s-2) * (3.28084 ft m-1) * (12 in ft-1)
+    #   = 386.09 in s-2
+    # TODO: mass vs force option for this fn?
+
     UW = float(rows.uw)
     F = Pitch.from_name(pitch).etf
 
-    T = UW * (2 * L * F) ** 2 / 386.0
+    T = UW * (2 * L * F) ** 2 / 386.09
 
     return T
 
