@@ -179,7 +179,7 @@ def ten(s: String, pitch: str = "A4") -> float:
     return T
 
 
-def from_ten(T: float, L: float, pitch: str, *, type: str = "PB", n: int = 3):
+def suggest_gauge(T: float, L: float, pitch: str, *, type: str = "PB", n: int = 3):
     """For target tension and given scale length, return suggested gauge(s).
 
     Results may include two types commonly used to make string sets, e.g.

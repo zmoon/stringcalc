@@ -1,6 +1,6 @@
 import pytest
 
-from stringcalc.tension import String, from_ten, ten
+from stringcalc.tension import String, suggest_gauge, ten
 
 
 @pytest.mark.parametrize(
@@ -44,8 +44,8 @@ def test_ten_sugg():
     L = 24.75
     pitch = "E4"  # top string in standard guitar tuning
 
-    ret = from_ten(T, L, pitch)
+    ret = suggest_gauge(T, L, pitch)
     assert ret.id.tolist() == ["PL011", "PL0115", "PL012"]
 
-    ret = from_ten(T, L, pitch, type="N")
+    ret = suggest_gauge(T, L, pitch, type="N")
     assert ret.id.tolist() == ["NYL031", "NYL032", "NYL033"]
