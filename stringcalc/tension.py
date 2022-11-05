@@ -202,7 +202,7 @@ def suggest_gauge(T: float, L: float, pitch: str, *, type: str = "PB", n: int = 
     T_all = UW * (2 * L * F) ** 2 / 386.0
 
     # Find closest ones
-    data_sort = data.iloc[(T_all - T).abs().argsort()[:n]].copy()
+    data_sort = data.iloc[(T_all - T).abs().argsort().iloc[:n]].copy()
     data_sort["T"] = T_all[data_sort.index]
     data_sort["T - T_in"] = data_sort["T"] - T
 
