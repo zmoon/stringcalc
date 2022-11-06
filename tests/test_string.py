@@ -1,6 +1,6 @@
 import pytest
 
-from stringcalc.tension import String, suggest_gauge, ten
+from stringcalc.tension import String, gauge, suggest_gauge, ten, uw
 
 
 @pytest.mark.parametrize(
@@ -39,7 +39,7 @@ def test_string_ten():
     assert ten(String.from_spec('25.5906" N .018')) == pytest.approx(12.03, abs=0.01)
 
 
-def test_ten_sugg():
+def test_suggest_gauge():
     T = 20
     L = 24.75
     pitch = "E4"  # top string in standard guitar tuning
@@ -49,3 +49,25 @@ def test_ten_sugg():
 
     ret = suggest_gauge(T, L, pitch, type="N")
     assert ret.id.tolist() == ["NYL031", "NYL032", "NYL033"]
+
+
+@pytest.mark.parametrize(
+    "T,pitch,expected",
+    [
+        (19.6, "E4", 0.00002680),  # PL011
+        (15.6, "D4", 0.00002680),  # PL011
+        (27.1, "D3", 0.00018660),  # PB030
+    ],
+)
+def test_uw_calc(T, pitch, expected):
+    # Data from the D'Addario chart
+    assert uw(T, 25.5, pitch) == pytest.approx(expected, rel=0.01)
+
+
+def test_gauge_calc():
+    # From Brauchli's Worth tension chart
+    rho = 0.06756  # 1.87 g/cm3 -> lb/in3
+    ten = 9.3  # lbf
+    len_ = 17.01  # 43.2 cm -> in
+    d_exp = 0.0291  # 0.074 cm -> in
+    assert gauge(rho, ten, len_, "C4") == pytest.approx(d_exp, rel=0.01)

@@ -5,6 +5,7 @@ e.g.
 - For specified strings, calculate tensions
 - For specified total or per-string tension, suggest strings
 """
+import math
 import re
 from functools import lru_cache
 from pathlib import Path
@@ -150,7 +151,7 @@ def ten(s: String, pitch: str = "A4") -> float:
     elif len(rows) > 1:
         raise ValueError("multiple matching gauges\n{rows.to_string()}")
 
-    # Starting from 
+    # Starting from
     # 1 / v^2  = mu / T
     # (derivation at https://phys.libretexts.org/Bookshelves/University_Physics/Book%3A_University_Physics_(OpenStax)/Book%3A_University_Physics_I_-_Mechanics_Sound_Oscillations_and_Waves_(OpenStax)/16%3A_Waves/16.04%3A_Wave_Speed_on_a_Stretched_String)
     # => T = mu v^2        [mass / length] * [length time-1]^2 = [mass length time-2]]
@@ -177,6 +178,32 @@ def ten(s: String, pitch: str = "A4") -> float:
     T = UW * (2 * L * F) ** 2 / 386.09
 
     return T
+
+
+def uw(T: float, L: float, pitch: str) -> float:
+    """From scale length, pitch, and desired tension, compute unit weight."""
+    from pyabc2 import Pitch
+
+    F = Pitch.from_name(pitch).etf
+
+    UW = (T * 386.09) / (2 * L * F) ** 2
+
+    return UW
+
+
+def gauge(density: float, T: float, L: float, pitch: str) -> float:
+    """From density, scale length, pitch, and desired tension, compute gauge.
+    Not nominal gauge, precise diameter.
+    """
+
+    UW = uw(T, L, pitch)
+
+    # mu = rho pi r^2
+    # => r = sqrt(mu / (rho pi))
+    # => d = 2 sqrt(mu / (rho pi))
+    d = 2 * math.sqrt(UW / (density * math.pi))
+
+    return d
 
 
 def suggest_gauge(T: float, L: float, pitch: str, *, type: str = "PB", n: int = 3):
