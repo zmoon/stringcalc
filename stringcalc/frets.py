@@ -3,9 +3,19 @@ Fret distances
 """
 from __future__ import annotations
 
+from typing import Union
+
 import numpy as np
 import numpy.typing as npt  # v1.21 needed
 import pandas as pd
+from pint import UnitRegistry, Quantity
+
+ureg = UnitRegistry()
+# Q_ = ureg.Quantity  # mypy doesn't like this one
+
+QLike = Union[Quantity, str]
+
+# Note also `pint._typing.UnitLike`
 
 
 def d_et(n: int | npt.ArrayLike, *, s: float) -> np.float_ | npt.NDArray[np.float_]:
@@ -58,13 +68,16 @@ def d(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
     return df
 
 
-def l_from_d(ab: tuple[int, None], d: float) -> float:
+def l_from_d(ab: tuple[int, None], d: float | QLike) -> float | Quantity:
     """Calculate the scale length implied by a->b distance `d`.
 
     `ab` is a 2-tuple specifying the bounds of the input distance in terms of fret number.
     Use ``None`` to indicate the bridge/saddle end of the fretboard
     (and ``0`` to indicate the nut end).
     """
+    if isinstance(d, str):
+        d = ureg(d)
+
     if not d > 0:
         raise ValueError("`d` must be positive")
 
