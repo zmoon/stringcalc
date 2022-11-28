@@ -15,7 +15,7 @@ from stringcalc import frets
     ],
 )
 def test_d_et_rel(n, expected):
-    np.testing.assert_allclose(frets.d_et(n, L=1), expected, rtol=1e-4)
+    np.testing.assert_allclose(frets.distance_et(n, L=1), expected, rtol=1e-4)
 
 
 @pytest.mark.parametrize(
@@ -29,14 +29,14 @@ def test_d_et_rel(n, expected):
     ],
 )
 def test_l_from_d(ab, d, expected):
-    assert frets.l_from_d(ab, d) == pytest.approx(expected, abs=5e-4)
+    assert frets.length_from_distance(ab, d) == pytest.approx(expected, abs=5e-4)
 
 
 def test_l_from_d_invalid_ab():
     with pytest.raises(ValueError, match="must be different"):
-        frets.l_from_d((0, 0), 10)
+        frets.length_from_distance((0, 0), 10)
 
 
 def test_l_from_d_invalid_d():
     with pytest.raises(ValueError, match="must be positive"):
-        frets.l_from_d((0, 1), -10)
+        frets.length_from_distance((0, 1), -10)

@@ -18,10 +18,10 @@ QLike = Union[Quantity, str]
 # Note also `pint._typing.UnitLike`
 
 
-def d_et(n: int | npt.ArrayLike, *, L: float) -> np.float_ | npt.NDArray[np.float_]:
-    """Exact equal temperament distance from nut for fret(s) `n` for scale length `s`.
+def distance_et(n: int | npt.ArrayLike, *, L: float) -> np.float_ | npt.NDArray[np.float_]:
+    """Exact equal-temperament distance from nut for fret(s) `n` for scale length `L`.
 
-    Using the 12th root of 2 method.
+    Using the 12th-root-of-2 method.
 
     Reference: https://www.liutaiomottola.com/formulae/fret.htm
 
@@ -41,13 +41,13 @@ def d_et(n: int | npt.ArrayLike, *, L: float) -> np.float_ | npt.NDArray[np.floa
     return L * (1 - 1 / (2 ** (n / 12)))
 
 
-def d(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
+def distances(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
     """Fret distance DataFrame for `N` frets and scale length `L`."""
     assert N >= 1  # guarantees `d` is array with at least one value
     n = np.arange(1, N + 1)
 
     if method in {"et"}:
-        d = d_et(n, L=L)
+        d = distance_et(n, L=L)
     else:
         raise ValueError(f"invalid `method` {method!r}")
 
@@ -68,7 +68,7 @@ def d(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
     return df
 
 
-def l_from_d(ab: tuple[int, None], d: float | QLike) -> float | Quantity:
+def length_from_distance(ab: tuple[int, None], d: float | QLike) -> float | Quantity:
     """Calculate the scale length implied by a->b distance `d`.
 
     `ab` is a 2-tuple specifying the bounds of the input distance in terms of fret number.
@@ -106,7 +106,7 @@ if __name__ == "__main__":
     units = "inches"
     float_format = "%.3f"
 
-    df = d(N, L=L)
+    df = distances(N, L=L)
 
     if units.lower() in {"inches", "in", "in.", '"'}:
         su_l = '"'
