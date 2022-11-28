@@ -32,6 +32,28 @@ def error(s: str) -> None:
     console.print(s, style=Style(color="red", bold=True), highlight=False)
 
 
+def _version_callback(show: bool):
+    if show:
+        from . import __version__
+
+        print(f"stringcalc {__version__}")
+
+        raise typer.Exit()
+
+
+@app.callback()
+def main(
+    version: bool = typer.Option(
+        False,
+        "--version/",
+        help="Print version and exit.",
+        callback=_version_callback,
+        is_eager=True,
+    )
+):
+    ...
+
+
 @app.command()
 def frets(
     N: int = typer.Option(
