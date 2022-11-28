@@ -14,11 +14,13 @@ dependencies = [
     "numpy >=1.21",
     "pandas",
     "pint",
-    "pyabc2 @ https://github.com/zmoon/PyABC2/archive/main.zip",
+    # "pyabc2 @ https://github.com/zmoon/PyABC2/archive/main.zip",
+    "pyabc2",
 ]
 
 [project.urls]
 Home = "https://github.com/zmoon/stringcalc"
+Source = "https://github.com/zmoon/stringcalc"
 
 [project.optional-dependencies]
 test = [
