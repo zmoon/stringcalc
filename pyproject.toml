@@ -29,6 +29,10 @@ test = [
 dev = [
     "ipython",
 ]
+cli = [
+    "rich",
+    "typer",
+]
 
 
 [tool.black]
