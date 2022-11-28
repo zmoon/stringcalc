@@ -6,9 +6,14 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-import typer
-from rich.console import Console
-from rich.style import Style
+try:
+    import typer
+    from rich.console import Console
+    from rich.style import Style
+except ImportError as e:
+    print("The stringcalc CLI requires typer and rich (included with the 'cli' extra).")
+    print(f"Error was: {e!r}")
+    raise SystemExit(1)
 
 from .frets import distances, length_from_distance
 
