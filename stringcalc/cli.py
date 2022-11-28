@@ -78,11 +78,20 @@ def _ab_interp(s: str) -> int | None:
         return int(s)
 
 
+def _ab_name(n: int | None) -> str:
+    if n == 0:
+        return "nut"
+    elif n is None:
+        return "saddle"
+    else:
+        return f"fret {n}"
+
+
 @app.command()
 def length(
-    spec: str = typer.Argument(
-        ...,
-    ),
+    spec: str = typer.Argument(...),
+    round_: int = typer.Option(None, "--round", help="Round result to this decimal precision."),
+    verbose: bool = typer.Option(False),
 ):
     """Calculate the scale length implied by spec 'a->b=d'.
 
@@ -103,7 +112,17 @@ def length(
 
     res = length_from_distance((a, b), d)
 
-    console.print(res)
+    if round_ is not None:
+        res = round(float(res), round_)
+
+    if verbose:
+        a_name = _ab_name(a)
+        b_name = _ab_name(b)
+        console.print(
+            f"A distance from {a_name} to {b_name} of {d} implies a scale length of {res}."
+        )
+    else:
+        console.print(res)
 
 
 if __name__ == "__main__":
