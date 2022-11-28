@@ -34,6 +34,9 @@ cli = [
     "typer",
 ]
 
+[project.scripts]
+stringcalc = "stringcalc.cli:app"
+
 
 [tool.black]
 line-length = 100

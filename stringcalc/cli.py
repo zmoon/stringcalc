@@ -101,7 +101,7 @@ def frets(
         console.print(f"[bold cyan]{k_display:{l+2}}[/]{v}")
 
 
-_RE_LENGTH_SPEC = re.compile(r"(?P<a>[0-9ns])->(?P<b>[0-9ns])=(?P<d>[0-9e\.\+\-\.]+)")
+_RE_LENGTH_SPEC = re.compile(r"(?P<a>[0-9ns])-(?P<b>[0-9ns])=(?P<d>[0-9e\.\+\-\.]+)")
 
 
 def _ab_interp(s: str) -> int | None:
@@ -128,7 +128,7 @@ def length(
     round_: int = typer.Option(None, "--round", help="Round result to this decimal precision."),
     verbose: bool = typer.Option(False),
 ):
-    """Calculate the scale length implied by spec 'a->b=d'.
+    """Calculate the scale length implied by spec 'a-b=d'.
 
     Where `a` and `b` are fret numbers
     (use '0' or 'n' for nut, 's' for saddle)
@@ -137,7 +137,7 @@ def length(
 
     m = _RE_LENGTH_SPEC.fullmatch(spec)
     if m is None:
-        error(f"Input failed to match a->b=d spec format regex {_RE_LENGTH_SPEC.pattern!r}")
+        error(f"Input failed to match a-b=d spec format regex {_RE_LENGTH_SPEC.pattern!r}")
         raise typer.Exit(2)
 
     dct = m.groupdict()
@@ -154,7 +154,9 @@ def length(
         a_name = _ab_name(a)
         b_name = _ab_name(b)
         console.print(
-            f"A distance from {a_name} to {b_name} of {d} implies a scale length of {res}."
+            f"A distance from [green]{a_name}[/] to [red]{b_name}[/] "
+            f"of [cyan]{d}[/] implies a scale length of [bold cyan underline]{res}[/].",
+            highlight=False,
         )
     else:
         console.print(res)
