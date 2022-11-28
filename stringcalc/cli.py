@@ -4,6 +4,7 @@ CLI
 from __future__ import annotations
 
 import re
+from pathlib import Path
 
 import typer
 from rich.console import Console
@@ -11,6 +12,7 @@ from rich.style import Style
 
 from .frets import distances, length_from_distance
 
+HERE = Path(__file__).parent
 _TRAN_SUPE_DIGIT = str.maketrans("0123456789", "⁰¹²³⁴⁵⁶⁷⁸⁹")
 
 console = Console()
@@ -34,9 +36,20 @@ def error(s: str) -> None:
 
 def _version_callback(show: bool):
     if show:
+        import subprocess
+
         from . import __version__
 
-        print(f"stringcalc {__version__}")
+        v = f"[rgb(184,115,51)]stringcalc[/] [bold blue]{__version__}[/]"
+        try:
+            cmd = ["git", "-C", HERE.as_posix(), "rev-parse", "--verify", "--short", "HEAD"]
+            cp = subprocess.run(cmd, text=True, capture_output=True, check=True)
+        except Exception:
+            pass
+        else:
+            v += f" [rgb(100,100,100)]({cp.stdout.strip()})[/]"
+
+        console.print(v, highlight=False)
 
         raise typer.Exit()
 
