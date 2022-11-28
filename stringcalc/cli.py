@@ -89,7 +89,10 @@ def frets(
 
     table = Table(title=f"Fret distances for L={L}")
     for col in df.columns:
-        table.add_column(col if not console.is_terminal else attrs["fancy_col"][col])
+        table.add_column(
+            col if not console.is_terminal else attrs["fancy_col"][col],
+            style="green" if col != "n" else None,
+        )
     for row in df_str.splitlines():
         table.add_row(*re.split(r"(?<=\S) ", row))
     console.print(table)
