@@ -7,8 +7,9 @@ import re
 
 import typer
 from rich.console import Console
+from rich.style import Style
 
-from .frets import distances
+from .frets import distances, length_from_distance
 
 _TRAN_SUPE_DIGIT = str.maketrans("0123456789", "⁰¹²³⁴⁵⁶⁷⁸⁹")
 
@@ -24,6 +25,11 @@ def _to_fancy_sci(s: str) -> str:
     b = str(int(b0)).replace("-", "⁻").translate(_TRAN_SUPE_DIGIT)
 
     return f"{a}×10{b}"
+
+
+def error(s: str) -> None:
+    """Print error message."""
+    console.print(s, style=Style(color="red", bold=True), highlight=False)
 
 
 @app.command()
@@ -58,6 +64,46 @@ def frets(
         k_display = k if not console.is_terminal else attrs["fancy_col"][k]
         v = attrs["col_desc"][k]
         console.print(f"[bold cyan]{k_display:{l+2}}[/]{v}")
+
+
+_RE_LENGTH_SPEC = re.compile(r"(?P<a>[0-9ns])->(?P<b>[0-9ns])=(?P<d>[0-9e\.\+\-\.]+)")
+
+
+def _ab_interp(s: str) -> int | None:
+    if s == "s":
+        return None
+    elif s == "n":
+        return 0
+    else:
+        return int(s)
+
+
+@app.command()
+def length(
+    spec: str = typer.Argument(
+        ...,
+    ),
+):
+    """Calculate the scale length implied by spec 'a->b=d'.
+
+    Where `a` and `b` are fret numbers
+    (use '0' or 'n' for nut, 's' for saddle)
+    and `d` is the corresponding distance.
+    """
+
+    m = _RE_LENGTH_SPEC.fullmatch(spec)
+    if m is None:
+        error(f"Input failed to match a->b=d spec format regex {_RE_LENGTH_SPEC.pattern!r}")
+        raise typer.Exit(2)
+
+    dct = m.groupdict()
+    a = _ab_interp(dct["a"])
+    b = _ab_interp(dct["b"])
+    d = float(dct["d"])
+
+    res = length_from_distance((a, b), d)
+
+    console.print(res)
 
 
 if __name__ == "__main__":
