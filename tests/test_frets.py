@@ -15,7 +15,7 @@ from stringcalc import frets
     ],
 )
 def test_d_et_rel(n, expected):
-    np.testing.assert_allclose(frets.d_et(n, s=1), expected, rtol=1e-4)
+    np.testing.assert_allclose(frets.d_et(n, L=1), expected, rtol=1e-4)
 
 
 @pytest.mark.parametrize(

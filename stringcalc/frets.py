@@ -8,7 +8,7 @@ from typing import Union
 import numpy as np
 import numpy.typing as npt  # v1.21 needed
 import pandas as pd
-from pint import UnitRegistry, Quantity
+from pint import Quantity, UnitRegistry
 
 ureg = UnitRegistry()
 # Q_ = ureg.Quantity  # mypy doesn't like this one
@@ -18,7 +18,7 @@ QLike = Union[Quantity, str]
 # Note also `pint._typing.UnitLike`
 
 
-def d_et(n: int | npt.ArrayLike, *, s: float) -> np.float_ | npt.NDArray[np.float_]:
+def d_et(n: int | npt.ArrayLike, *, L: float) -> np.float_ | npt.NDArray[np.float_]:
     """Exact equal temperament distance from nut for fret(s) `n` for scale length `s`.
 
     Using the 12th root of 2 method.
@@ -38,7 +38,7 @@ def d_et(n: int | npt.ArrayLike, *, s: float) -> np.float_ | npt.NDArray[np.floa
     if not np.all(n > 0):
         raise ValueError("input fret numbers should be positive")
 
-    return s * (1 - 1 / (2 ** (n / 12)))
+    return L * (1 - 1 / (2 ** (n / 12)))
 
 
 def d(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
@@ -47,7 +47,7 @@ def d(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
     n = np.arange(1, N + 1)
 
     if method in {"et"}:
-        d = d_et(n, s=L)
+        d = d_et(n, L=L)
     else:
         raise ValueError(f"invalid `method` {method!r}")
 
