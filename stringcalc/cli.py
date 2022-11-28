@@ -3,6 +3,8 @@ CLI
 """
 from __future__ import annotations
 
+import re
+
 import typer
 from rich.console import Console
 
@@ -21,21 +23,22 @@ def frets(
         ..., "-N", "--number", help="Number of frets, starting from nut (fret 0)."
     ),
     L: float = typer.Option(..., "-L", "--scale-length", help="Scale length."),
+    float_format: str = typer.Option("%.3f", help="Format for float-to-string conversion."),
     # TODO: `method`
     # TODO: `format` (rich, CSV, etc.)
 ):
     """Display fret distance table for `N` frets and scale length `L`."""
     from rich.table import Table
 
-    df = distances(N=N, L=L)
+    df = distances(N=N, L=L).reset_index()
     attrs = df.attrs.copy()  # doesn't seem to survive the following
-    df = df.reset_index().round(3).astype(str)
+    df_str = df.to_string(float_format=float_format, header=False, index=False)
 
     table = Table(title=f"Fret distances for L={L}")
     for col in df.columns:
         table.add_column(col if not console.is_terminal else attrs["fancy_col"][col])
-    for row in df.itertuples(index=False):
-        table.add_row(*row)
+    for row in df_str.splitlines():
+        table.add_row(*re.split(r"(?<=\S) ", row))
     console.print(table)
 
     l = max(len(c.header) for c in table.columns)  # noqa: E741
