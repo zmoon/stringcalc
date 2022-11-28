@@ -22,8 +22,6 @@ _TRAN_SUPE_DIGIT = str.maketrans("0123456789", "⁰¹²³⁴⁵⁶⁷⁸⁹")
 
 console = Console()
 
-console.is_terminal
-
 app = typer.Typer(add_completion=False)
 
 
