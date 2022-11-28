@@ -41,7 +41,7 @@ def frets(
         table.add_row(*re.split(r"(?<=\S) ", row))
     console.print(table)
 
-    l = max(len(c.header) for c in table.columns)  # noqa: E741
+    l = max(len(str(c.header)) for c in table.columns)  # noqa: E741
     for k in df.columns:
         k_display = k if not console.is_terminal else attrs["fancy_col"][k]
         v = attrs["col_desc"][k]
