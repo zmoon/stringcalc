@@ -169,7 +169,7 @@ def ten(s: String, pitch: str = "A4") -> float:
     # gc = (9.80665 m s-2) * (3.28084 ft m-1) * (12 in ft-1)
     #    = 386.09 in s-2  (technically [in lbm lbf-1 s-2])
     #
-    # At g0, 1 lbm exerts a force of 1 lbf = > lbf = g0 lbm = 32.174 lbm ft s-2
+    # At g0, 1 lbm exerts a force of 1 lbf => lbf = g0 lbm = 32.174 lbm ft s-2
     # https://en.wikipedia.org/wiki/Gc_(engineering)
 
     UW = float(rows.uw)
