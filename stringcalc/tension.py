@@ -117,7 +117,7 @@ class String(NamedTuple):
 # TODO: TunedString class with Pitch
 
 
-def ten(s: String, pitch: str = "A4") -> float:
+def tension(s: String, pitch: str = "A4") -> float:
     """Compute tension for :class:`String`.
 
     Results are for a single type, e.g. plain steel or phosphor bronze.
@@ -180,7 +180,7 @@ def ten(s: String, pitch: str = "A4") -> float:
     return T
 
 
-def uw(T: float, L: float, pitch: str) -> float:
+def unit_weight(T: float, L: float, pitch: str) -> float:
     """From scale length, pitch, and desired tension, compute unit weight."""
     from pyabc2 import Pitch
 
@@ -196,7 +196,7 @@ def gauge(density: float, T: float, L: float, pitch: str) -> float:
     Not nominal gauge, precise diameter.
     """
 
-    UW = uw(T, L, pitch)
+    UW = unit_weight(T, L, pitch)
 
     # mu = rho pi r^2
     # => r = sqrt(mu / (rho pi))
@@ -206,7 +206,7 @@ def gauge(density: float, T: float, L: float, pitch: str) -> float:
     return d
 
 
-def suggest_gauge(T: float, L: float, pitch: str, *, type: str = "PB", n: int = 3):
+def suggest_gauge(T: float, L: float, pitch: str, *, type: str = "PB", n: int = 3) -> pd.DataFrame:
     """For target tension and given scale length, return suggested gauge(s).
 
     Results may include two types commonly used to make string sets, e.g.

@@ -1,6 +1,6 @@
 import pytest
 
-from stringcalc.tension import String, gauge, suggest_gauge, ten, uw
+from stringcalc.tension import String, gauge, suggest_gauge, tension, unit_weight
 
 
 @pytest.mark.parametrize(
@@ -31,12 +31,12 @@ def test_str(s):
 
 
 def test_string_ten():
-    assert ten(String.from_spec('14" PL .015')) == pytest.approx(19.6, abs=0.01)
+    assert tension(String.from_spec('14" PL .015')) == pytest.approx(19.6, abs=0.01)
     # TODO: confirm the check # somehow
 
     # http://chordgen.rattree.co.uk/tensiontool.php gives 12.03
     # for 25.6" A4 with .018p N
-    assert ten(String.from_spec('25.5906" N .018')) == pytest.approx(12.03, abs=0.01)
+    assert tension(String.from_spec('25.5906" N .018')) == pytest.approx(12.03, abs=0.01)
 
 
 def test_suggest_gauge():
@@ -61,7 +61,7 @@ def test_suggest_gauge():
 )
 def test_uw_calc(T, pitch, expected):
     # Data from the D'Addario chart
-    assert uw(T, 25.5, pitch) == pytest.approx(expected, rel=0.01)
+    assert unit_weight(T, 25.5, pitch) == pytest.approx(expected, rel=0.01)
 
 
 def test_gauge_calc():
