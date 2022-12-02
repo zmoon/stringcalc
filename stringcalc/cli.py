@@ -184,13 +184,13 @@ def gauge(
     ),
     suggest: bool = typer.Option(
         False,
-        help=("If true, suggest D'Addario gauges. " "If false, compute exact gauge."),
+        help=("If true, suggest D'Addario gauges. If false, compute exact gauge."),
     ),
     types: list[str] = typer.Option(
         None, "--type", help="String type. Can specify multiple times."
     ),
     nsuggest: int = typer.Option(
-        3, "-N", "--nsuggest", help="Number of suggestions (only relevant if `--suggest`."
+        3, "-N", "--nsuggest", help="Number of suggestions (only relevant if `--suggest`)."
     ),
     verbose: bool = typer.Option(False),
 ):
