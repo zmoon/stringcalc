@@ -180,17 +180,17 @@ def gauge(
     T: float = typer.Option(..., "-T", "--tension", help="Desired tension"),
     L: float = typer.Option(..., "-L", "--length", help="String length (scale length)."),
     P: str = typer.Option(
-        ..., "-P", "--pitch", help="Pitch in scientific pitch notation (e.g. 'A4')."
+        ..., "-P", "--pitch", help="Pitch in scientific pitch notation (e.g. 'E4')."
     ),
     suggest: bool = typer.Option(
         False,
         help=("If true, suggest D'Addario gauges. If false, compute exact gauge."),
     ),
     types: list[str] = typer.Option(
-        None, "--type", help="String type. Can specify multiple times."
+        None, "--type", help="String type. Can specify multiple times if using --suggest."
     ),
     nsuggest: int = typer.Option(
-        3, "-N", "--nsuggest", help="Number of suggestions (only relevant if `--suggest`)."
+        3, "-N", "--nsuggest", help="Number of suggestions. Only relevant if using --suggest."
     ),
     verbose: bool = typer.Option(False),
 ):
