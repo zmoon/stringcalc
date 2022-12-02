@@ -5,6 +5,8 @@ e.g.
 - For specified strings, calculate tensions
 - For specified total or per-string tension, suggest strings
 """
+from __future__ import annotations
+
 import math
 import re
 from functools import lru_cache
@@ -191,6 +193,22 @@ def unit_weight(T: float, L: float, pitch: str) -> float:
     return UW
 
 
+DENSITY_LB_IN = {
+    "plain steel": 0.285,
+    "plain nylon": 0.0412,  # 1.14 g/cm3
+}
+
+_STRING_TYPE_ALIASES = {
+    "plain steel": {"PL", "PS", "S"},
+    "plain nylon": {"N", "NYL"},
+    # "silver-wound nylon": {"NW", "NYLW"},
+}
+
+_STRING_TYPE_ALIAS_TO_VERBOSE = {
+    alias: k for k, aliases in _STRING_TYPE_ALIASES.items() for alias in aliases
+}
+
+
 def gauge(density: float, T: float, L: float, pitch: str) -> float:
     """From density, scale length, pitch, and desired tension, compute gauge.
     Not nominal gauge, precise diameter.
@@ -206,7 +224,9 @@ def gauge(density: float, T: float, L: float, pitch: str) -> float:
     return d
 
 
-def suggest_gauge(T: float, L: float, pitch: str, *, type: str = "PB", n: int = 3) -> pd.DataFrame:
+def suggest_gauge(
+    T: float, L: float, pitch: str, *, types: set[str] | None = None, n: int = 3
+) -> pd.DataFrame:
     """For target tension and given scale length, return suggested gauge(s).
 
     Results may include two types commonly used to make string sets, e.g.
@@ -214,16 +234,17 @@ def suggest_gauge(T: float, L: float, pitch: str, *, type: str = "PB", n: int = 
     """
     from pyabc2 import Pitch
 
-    t = type
+    if types is None:
+        types = {"PB", "PL"}
 
-    if t == "PB":  # implying PB | PL
-        tda = ["PB", "PL"]  # noqa: F841
-    elif t in {"N", "NYL"}:  # implying NYL | NYLW
-        tda = ["NYL"]  # noqa: F841  both have same pref
-    else:
-        raise ValueError(f"string type {t!r} invalid or not supported")
+    data_all = load_data()
+    data = data_all.query("group_id in @types")
+    if data.empty:
+        raise ValueError(
+            f"string type IDs {sorted(types)} not found in dataset. "
+            f"Use one of {sorted(data_all.group_id.cat.categories)}."
+        )
 
-    data = load_data().query("id_pref in @tda")
     UW = data.uw
     F = Pitch.from_name(pitch).etf
     T_all = UW * (2 * L * F) ** 2 / 386.0

@@ -1,6 +1,15 @@
+import itertools
+
 import pytest
 
-from stringcalc.tension import String, gauge, suggest_gauge, tension, unit_weight
+from stringcalc.tension import (
+    _STRING_TYPE_ALIASES,
+    String,
+    gauge,
+    suggest_gauge,
+    tension,
+    unit_weight,
+)
 
 
 @pytest.mark.parametrize(
@@ -47,7 +56,7 @@ def test_suggest_gauge():
     ret = suggest_gauge(T, L, pitch)
     assert ret.id.tolist() == ["PL011", "PL0115", "PL012"]
 
-    ret = suggest_gauge(T, L, pitch, type="N")
+    ret = suggest_gauge(T, L, pitch, types={"NYL"})
     assert ret.id.tolist() == ["NYL031", "NYL032", "NYL033"]
 
 
@@ -71,3 +80,13 @@ def test_gauge_calc():
     len_ = 17.01  # 43.2 cm -> in
     d_exp = 0.0291  # 0.074 cm -> in
     assert gauge(rho, ten, len_, "C4") == pytest.approx(d_exp, rel=0.01)
+
+
+def test_aliases_unique():
+    all_aliases = list(
+        itertools.chain.from_iterable(aliases for aliases in _STRING_TYPE_ALIASES.values())
+    )
+    verbose_keys = _STRING_TYPE_ALIASES.keys()
+    all_aliases_set = set(all_aliases)
+    assert len(all_aliases) == len(all_aliases_set)
+    assert len(all_aliases + list(verbose_keys)) == len(all_aliases_set | verbose_keys)

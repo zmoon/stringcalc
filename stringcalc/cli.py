@@ -15,7 +15,6 @@ except ImportError as e:
     print(f"Error was: {e!r}")
     raise SystemExit(1)
 
-from .frets import distances, length_from_distance
 
 HERE = Path(__file__).parent
 _TRAN_SUPE_DIGIT = str.maketrans("0123456789", "⁰¹²³⁴⁵⁶⁷⁸⁹")
@@ -35,6 +34,11 @@ def _to_fancy_sci(s: str) -> str:
 def error(s: str) -> None:
     """Print error message."""
     console.print(s, style=Style(color="red", bold=True), highlight=False)
+
+
+def info(s: str) -> None:
+    """Print info message."""
+    console.print(s, style=Style(color="cyan", bold=True), highlight=False)
 
 
 def _version_callback(show: bool):
@@ -82,6 +86,8 @@ def frets(
 ):
     """Display fret distance table for `N` frets and scale length `L`."""
     from rich.table import Table
+
+    from .frets import distances
 
     df = distances(N=N, L=L).reset_index()
     attrs = df.attrs.copy()  # doesn't seem to survive the following
@@ -140,6 +146,7 @@ def length(
     (use '0' or 'n' for nut, 's' for saddle)
     and `d` is the corresponding distance.
     """
+    from frets import length_from_distance
 
     m = _RE_LENGTH_SPEC.fullmatch(spec)
     if m is None:
@@ -166,6 +173,77 @@ def length(
         )
     else:
         console.print(res)
+
+
+@app.command()
+def gauge(
+    T: float = typer.Option(..., "-T", "--tension", help="Desired tension"),
+    L: float = typer.Option(..., "-L", "--length", help="String length (scale length)."),
+    P: str = typer.Option(
+        ..., "-P", "--pitch", help="Pitch in scientific pitch notation (e.g. 'A4')."
+    ),
+    suggest: bool = typer.Option(
+        False,
+        help=("If true, suggest D'Addario gauges. " "If false, compute exact gauge."),
+    ),
+    types: list[str] = typer.Option(
+        None, "--type", help="String type. Can specify multiple times."
+    ),
+    nsuggest: int = typer.Option(
+        3, "-N", "--nsuggest", help="Number of suggestions (only relevant if `--suggest`."
+    ),
+    verbose: bool = typer.Option(False),
+):
+    """Compute gauge from string information.
+
+    IMPORTANT: currently must use T in lbf and L in inches,
+    returning results in inches.
+    """
+    from .tension import _STRING_TYPE_ALIAS_TO_VERBOSE, DENSITY_LB_IN, gauge, suggest_gauge
+
+    if suggest:
+        if not types:
+            if verbose:
+                info("No string types specified, defaulting to PB + PL.")
+            types = {"PB", "PL"}
+
+        g_df = suggest_gauge(
+            T=T, L=L, pitch=P, types=set(types) if types is not None else None, n=nsuggest
+        )
+
+        print(g_df)
+
+    else:
+        if not types:
+            error("Must supply type to use exact gauge calculation.")
+            raise typer.Exit(2)
+
+        if len(types) > 1:
+            error("Only specify one type for exact gauge calculation. Got {types}.")
+            raise typer.Exit(2)
+
+        type_ = types[0]
+        allowed_type_keys = sorted(
+            list(DENSITY_LB_IN) + list(_STRING_TYPE_ALIAS_TO_VERBOSE), key=lambda s: s.lower()
+        )
+        if type_ not in allowed_type_keys:
+            error(f"Type {type_!r} not allowed. Use one of {allowed_type_keys}.")
+            raise typer.Exit(2)
+
+        type_verbose = type_ if type_ in DENSITY_LB_IN else _STRING_TYPE_ALIAS_TO_VERBOSE[type_]
+        dens = DENSITY_LB_IN[type_verbose]
+
+        g = gauge(dens, T=T, L=L, pitch=P)
+
+        if verbose:
+            console.print(
+                f"To get tension of [green]{T} lbf[/] on a [green]type[/] string "
+                f'of length [green]{L}"[/] tuned to [cyan]{P}[/], '
+                f'gauge [bold cyan underline]{g:.3g}"[/] should be used.',
+                highlight=False,
+            )
+        else:
+            console.print(g)
 
 
 if __name__ == "__main__":
