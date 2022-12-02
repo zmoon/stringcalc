@@ -146,7 +146,7 @@ def length(
     (use '0' or 'n' for nut, 's' for saddle)
     and `d` is the corresponding distance.
     """
-    from frets import length_from_distance
+    from .frets import length_from_distance
 
     m = _RE_LENGTH_SPEC.fullmatch(spec)
     if m is None:
@@ -175,8 +175,8 @@ def length(
         console.print(res)
 
 
-@app.command()
-def gauge(
+@app.command(name="gauge")
+def gauge_(
     T: float = typer.Option(..., "-T", "--tension", help="Desired tension"),
     L: float = typer.Option(..., "-L", "--length", help="String length (scale length)."),
     P: str = typer.Option(
@@ -202,14 +202,15 @@ def gauge(
     from .tension import _STRING_TYPE_ALIAS_TO_VERBOSE, DENSITY_LB_IN, gauge, suggest_gauge
 
     if suggest:
+        types_set: set[str]
         if not types:
             if verbose:
                 info("No string types specified, defaulting to PB + PL.")
-            types = {"PB", "PL"}
+            types_set = {"PB", "PL"}
+        else:
+            types_set = set(types)
 
-        g_df = suggest_gauge(
-            T=T, L=L, pitch=P, types=set(types) if types is not None else None, n=nsuggest
-        )
+        g_df = suggest_gauge(T=T, L=L, pitch=P, types=types_set, n=nsuggest)
 
         print(g_df)
 
