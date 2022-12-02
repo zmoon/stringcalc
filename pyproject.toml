@@ -39,6 +39,9 @@ cli = [
 [project.scripts]
 stringcalc = "stringcalc.cli:app"
 
+[tool.flit.sdist]
+exclude = ["data/"]
+
 
 [tool.black]
 line-length = 100
