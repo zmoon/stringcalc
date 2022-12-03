@@ -31,9 +31,11 @@ def _to_fancy_sci(s: str) -> str:
     return f"{a}×10{b}"
 
 
-def error(s: str) -> None:
+def error(s: str, *, rc: int = 1) -> None:
     """Print error message."""
     console.print(s, style=Style(color="red", bold=True), highlight=False)
+    assert rc != 0
+    raise typer.Exit(rc)
 
 
 def info(s: str) -> None:
@@ -58,7 +60,7 @@ def _version_callback(show: bool):
 
         console.print(v, highlight=False)
 
-        raise typer.Exit()
+        raise typer.Exit(0)
 
 
 @app.callback()
@@ -150,8 +152,7 @@ def length(
 
     m = _RE_LENGTH_SPEC.fullmatch(spec)
     if m is None:
-        error(f"Input failed to match a-b=d spec format regex {_RE_LENGTH_SPEC.pattern!r}")
-        raise typer.Exit(2)
+        error(f"Input failed to match a-b=d spec format regex {_RE_LENGTH_SPEC.pattern!r}", rc=2)
 
     dct = m.groupdict()
     a = _ab_interp(dct["a"])
@@ -216,20 +217,17 @@ def gauge_(
 
     else:
         if not types:
-            error("Must supply type to use exact gauge calculation.")
-            raise typer.Exit(2)
+            error("Must supply type to use exact gauge calculation.", rc=2)
 
         if len(types) > 1:
-            error("Only specify one type for exact gauge calculation. Got {types}.")
-            raise typer.Exit(2)
+            error("Only specify one type for exact gauge calculation. Got {types}.", rc=2)
 
         type_ = types[0]
         allowed_type_keys = sorted(
             list(DENSITY_LB_IN) + list(_STRING_TYPE_ALIAS_TO_VERBOSE), key=lambda s: s.lower()
         )
         if type_ not in allowed_type_keys:
-            error(f"Type {type_!r} not allowed. Use one of {allowed_type_keys}.")
-            raise typer.Exit(2)
+            error(f"Type {type_!r} not allowed. Use one of {allowed_type_keys}.", rc=2)
 
         type_verbose = type_ if type_ in DENSITY_LB_IN else _STRING_TYPE_ALIAS_TO_VERBOSE[type_]
         dens = DENSITY_LB_IN[type_verbose]
