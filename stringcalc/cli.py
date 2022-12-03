@@ -76,43 +76,83 @@ def main(
     ...
 
 
-@app.command()
-def frets(
-    N: int = typer.Option(
-        ..., "-N", "--number", help="Number of frets, starting from nut (fret 0)."
-    ),
-    L: float = typer.Option(..., "-L", "--scale-length", help="Scale length."),
-    float_format: str = typer.Option("%.3f", help="Format for float-to-string conversion."),
-    # TODO: `method`
-    # TODO: `format` (rich, CSV, etc.)
-):
-    """Display fret distance table for `N` frets and scale length `L`."""
+def _with_float_nonext_dtypes(df):
+    """Convert float extension dtypes (e.g. 'Float64') to standard NumPy float64."""
+    import numpy as np
+    import pandas as pd
+
+    df = df.copy()
+
+    for col in df.columns:
+        dtype = df[col].dtype
+        if pd.api.types.is_float_dtype(dtype) and pd.api.types.is_extension_array_dtype(dtype):
+            df[col] = df[col].astype(np.float64)
+
+    return df
+
+
+def pprint_table(df, *, title: str, float_format: str) -> None:
     from rich.table import Table
 
-    from .frets import distances
-
-    df = distances(N=N, L=L).reset_index()
-    attrs = df.attrs.copy()  # doesn't seem to survive the following
-    df_str = df.to_string(float_format=float_format, header=False, index=False)
+    attrs = df.attrs.copy()
+    df_str = _with_float_nonext_dtypes(df).to_string(
+        float_format=float_format, header=False, index=False
+    )
+    # NOTE: `.to_string` with `float_format` doesn't seem to work for the float extension dtypes
 
     if "e" in df_str and console.is_terminal:
         df_str = re.sub(r"\S*e[+-][0-9]*", lambda m: _to_fancy_sci(m.group()), df_str)
 
-    table = Table(title=f"Fret distances for L={L}")
+    def maybe_fancy_col_name(col: str) -> str:
+        fancy_col: str | None
+        try:
+            fancy_col = attrs["fancy_col"][col]
+        except KeyError:
+            fancy_col = None
+
+        if fancy_col is None or not console.is_terminal:
+            return col
+        else:
+            return fancy_col
+
+    # Table itself
+    table = Table(title=title)
     for col in df.columns:
         table.add_column(
-            col if not console.is_terminal else attrs["fancy_col"][col],
+            maybe_fancy_col_name(col),
             style="green" if col != "n" else None,
         )
     for row in df_str.splitlines():
         table.add_row(*re.split(r"(?<=\S) ", row))
     console.print(table)
 
+    # Column descriptions
+    if "col_desc" not in attrs:
+        return
     l = max(len(str(c.header)) for c in table.columns)  # noqa: E741
-    for k in df.columns:
-        k_display = k if not console.is_terminal else attrs["fancy_col"][k]
-        v = attrs["col_desc"][k]
-        console.print(f"[bold cyan]{k_display:{l+2}}[/]{v}")
+    for col in df.columns:
+        v = attrs["col_desc"].get(col)
+        if v is None:
+            continue
+        console.print(f"[bold cyan]{maybe_fancy_col_name(col):{l+2}}[/]{v}")
+
+
+@app.command()
+def frets(
+    N: int = typer.Option(
+        ..., "-N", "--number", help="Number of frets, starting from nut (fret 0)."
+    ),
+    L: float = typer.Option(..., "-L", "--scale-length", help="Scale length."),
+    float_format: str = typer.Option(r"%.3f", help="Format for float-to-string conversion."),
+    # TODO: `method`
+    # TODO: `format` (rich, CSV, etc.)
+):
+    """Display fret distance table for `N` frets and scale length `L`."""
+    from .frets import distances
+
+    df = distances(N=N, L=L).reset_index()
+
+    pprint_table(df, title=f"Fret distances for L={L}", float_format=float_format)
 
 
 _RE_LENGTH_SPEC = re.compile(r"(?P<a>[0-9ns])-(?P<b>[0-9ns])=(?P<d>[0-9e\.\+\-\.]+)")
@@ -154,6 +194,7 @@ def length(
     if m is None:
         error(f"Input failed to match a-b=d spec format regex {_RE_LENGTH_SPEC.pattern!r}", rc=2)
 
+    assert m is not None
     dct = m.groupdict()
     a = _ab_interp(dct["a"])
     b = _ab_interp(dct["b"])
@@ -193,6 +234,9 @@ def gauge_(
     nsuggest: int = typer.Option(
         3, "-N", "--nsuggest", help="Number of suggestions. Only relevant if using --suggest."
     ),
+    float_format: str = typer.Option(
+        r"%.3f", help="Format for float-to-string conversion. Only relevant if using --suggest."
+    ),
     verbose: bool = typer.Option(False),
 ):
     """Compute gauge from string information.
@@ -213,7 +257,7 @@ def gauge_(
 
         g_df = suggest_gauge(T=T, L=L, pitch=P, types=types_set, n=nsuggest)
 
-        print(g_df)
+        pprint_table(g_df, title="Closest D'Addario gauges", float_format=float_format)
 
     else:
         if not types:

@@ -252,10 +252,21 @@ def suggest_gauge(
     # Find closest ones
     data_sort = data.iloc[(T_all - T).abs().argsort().iloc[:n]].copy()
     data_sort["T"] = T_all[data_sort.index]
-    data_sort["T - T_in"] = data_sort["T"] - T
+    data_sort["dT"] = data_sort["T"] - T
 
     # TODO: warning if edge is one of the closest
 
-    df = data_sort[["id", "T", "T - T_in"]].sort_values(by="id").reset_index(drop=True)
+    df = data_sort[["id", "T", "dT"]].sort_values(by="id").reset_index(drop=True)
+    desc = {
+        "id": "Product ID",
+        "T": "Tension",
+        "dT": "Tension difference from target tension",
+    }
+    fancy_col = {
+        "id": "ID",
+        "T": "T",
+        "dT": "ΔT",
+    }
+    df.attrs.update(col_desc=desc, fancy_col=fancy_col)
 
     return df
