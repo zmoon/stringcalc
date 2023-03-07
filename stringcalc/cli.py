@@ -32,9 +32,9 @@ def _to_fancy_sci(s: str) -> str:
     return f"{a}×10{b}"
 
 
-def error(s: str, *, rc: int = 1) -> None:
+def error(s: str, *, rc: int = 1, markup: bool = True) -> None:
     """Print error message."""
-    console.print(s, style=Style(color="red", bold=True), highlight=False)
+    console.print(s, style=Style(color="red", bold=True), highlight=False, markup=markup)
     assert rc != 0
     raise typer.Exit(rc)
 
@@ -176,7 +176,7 @@ def frets(
     pprint_table(df, title=f"Fret distances for L={L}", float_format=float_format)
 
 
-_RE_LENGTH_SPEC = re.compile(r"(?P<a>[0-9ns])-(?P<b>[0-9ns])=(?P<d>[0-9e\.\+\-\.]+)")
+_RE_LENGTH_SPEC = re.compile(r"(?P<a>[0-9]+|[ns])-(?P<b>[0-9]+|[ns])=(?P<d>[0-9e\.\+\-\.]+)")
 
 
 def _ab_interp(s: str) -> int | None:
@@ -213,15 +213,25 @@ def length(
 
     m = _RE_LENGTH_SPEC.fullmatch(spec)
     if m is None:
-        error(f"Input failed to match a-b=d spec format regex {_RE_LENGTH_SPEC.pattern!r}", rc=2)
+        error(
+            f"Input failed to match a-b=d spec format regex {_RE_LENGTH_SPEC.pattern!r}",
+            rc=2,
+            markup=False,
+        )
 
     assert m is not None
     dct = m.groupdict()
-    a = _ab_interp(dct["a"])
-    b = _ab_interp(dct["b"])
-    d = float(dct["d"])
+    try:
+        a = _ab_interp(dct["a"])
+        b = _ab_interp(dct["b"])
+        d = float(dct["d"])
+    except ValueError as e:
+        error(f"Failed to convert input to frets. Message: {e}", rc=2)
 
-    res = length_from_distance((a, b), d)
+    try:
+        res = length_from_distance((a, b), d)
+    except ValueError as e:
+        error(f"Failed to compute scale length. Message: {e}", rc=2)
 
     if round_ is not None:
         res = round(float(res), round_)
