@@ -61,6 +61,22 @@ def test_suggest_gauge():
 
 
 @pytest.mark.parametrize(
+    "pitch",
+    ["G1", "G4"],
+)
+def test_suggest_gauge_bounds_warning(pitch):
+    T = 15
+    L = 21
+    types = {"PB"}
+
+    with pytest.warns(
+        UserWarning,
+        match=r"You are outside the range of what string type group\(s\) \{'PB'\} can provide\.",
+    ):
+        suggest_gauge(T=T, L=L, pitch=pitch, types=types)
+
+
+@pytest.mark.parametrize(
     "T,pitch,expected",
     [
         (19.6, "E4", 0.00002680),  # PL011
