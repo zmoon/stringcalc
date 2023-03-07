@@ -258,7 +258,7 @@ def suggest_gauge(
     b = 1.7  # TODO: allow to set this?
     if (data_sort["dT"] > b).all() or (data_sort["dT"] < -b).all():
         warnings.warn(
-            f"You are outside the range of what string type groups {types} can provide. "
+            f"You are outside the range of what string type group(s) {types} can provide. "
             "Maybe a different string type can give the tension/pitch/length you desire.",
             stacklevel=2,
         )
