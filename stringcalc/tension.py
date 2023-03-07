@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import math
 import re
+import warnings
 from functools import lru_cache
 from pathlib import Path
 from typing import NamedTuple
@@ -254,7 +255,13 @@ def suggest_gauge(
     data_sort["T"] = T_all[data_sort.index]
     data_sort["dT"] = data_sort["T"] - T
 
-    # TODO: warning if edge is one of the closest
+    b = 1.7  # TODO: allow to set this?
+    if (data_sort["dT"] > b).all() or (data_sort["dT"] < -b).all():
+        warnings.warn(
+            f"You are outside the range of what string type groups {types} can provide. "
+            "Maybe a different string type can give the tension/pitch/length you desire.",
+            stacklevel=2,
+        )
 
     df = data_sort[["id", "T", "dT"]].sort_values(by="dT").reset_index(drop=True)
     desc = {
