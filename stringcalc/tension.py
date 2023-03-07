@@ -256,7 +256,7 @@ def suggest_gauge(
 
     # TODO: warning if edge is one of the closest
 
-    df = data_sort[["id", "T", "dT"]].sort_values(by="id").reset_index(drop=True)
+    df = data_sort[["id", "T", "dT"]].sort_values(by="dT").reset_index(drop=True)
     desc = {
         "id": "Product ID",
         "T": "Tension",
