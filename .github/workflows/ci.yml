@@ -35,4 +35,4 @@ jobs:
 
       - name: Check type annotations
         run: |
-          mypy --install-types --non-interactive .
+          mypy --non-interactive .

@@ -65,3 +65,5 @@ exclude = [
     "^venv/",
     "^data/",
 ]
+install_types = true
+ignore_missing_imports = true
