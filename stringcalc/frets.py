@@ -28,7 +28,7 @@ def distance_et(n: int | npt.ArrayLike, *, L: float) -> np.float_ | npt.NDArray[
     Parameters
     ----------
     n
-        Fret number.
+        Fret number (or array-like of them).
         If floats are passed, they will be floored before computing.
     s
         Scale length.
