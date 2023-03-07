@@ -3,6 +3,7 @@ CLI
 """
 from __future__ import annotations
 
+import functools
 import re
 from pathlib import Path
 
@@ -41,6 +42,26 @@ def error(s: str, *, rc: int = 1) -> None:
 def info(s: str) -> None:
     """Print info message."""
     console.print(s, style=Style(color="cyan", bold=True), highlight=False)
+
+
+def warning(s: str) -> None:
+    """Print warning message."""
+    console.print(s, style=Style(color="red", bold=False), highlight=False)
+
+
+def pretty_warnings(f):
+    """Decorator to catch warnings and pretty-print them with Rich after running `f`."""
+    import warnings
+
+    @functools.wraps(f)
+    def inner(*args, **kwargs):
+        with warnings.catch_warnings(record=True) as w:
+            f(*args, **kwargs)
+
+            for i in range(len(w)):
+                warning(f"- {w[i].message}")
+
+    return inner
 
 
 def _version_callback(show: bool):
@@ -218,6 +239,7 @@ def length(
 
 
 @app.command(name="gauge")
+@pretty_warnings
 def gauge_(
     T: float = typer.Option(..., "-T", "--tension", help="Desired tension"),
     L: float = typer.Option(..., "-L", "--length", help="String length (scale length)."),
