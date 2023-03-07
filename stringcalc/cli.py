@@ -140,7 +140,7 @@ def pprint_table(df, *, title: str, float_format: str) -> None:
 @app.command()
 def frets(
     N: int = typer.Option(
-        ..., "-N", "--number", help="Number of frets, starting from nut (fret 0)."
+        17, "-N", "--number", help="Number of frets, starting from nut (fret 0)."
     ),
     L: float = typer.Option(..., "-L", "--scale-length", help="Scale length."),
     float_format: str = typer.Option(r"%.3f", help="Format for float-to-string conversion."),
