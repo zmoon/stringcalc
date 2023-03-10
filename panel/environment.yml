@@ -1,0 +1,24 @@
+name: stringcalc-panel
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.9
+  #
+  # stringcalc
+  - numpy>=1.21
+  - pandas
+  - pint
+  #
+  # Panel
+  - panel
+  #
+  # Jupyter
+  # - ipywidgets
+  # - jupyterlab
+  #
+  - pip
+  - pip:
+      #
+      # stringcalc
+      - pyabc2
