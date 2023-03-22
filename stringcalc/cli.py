@@ -289,7 +289,14 @@ def gauge_(
 
         g_df = suggest_gauge(T=T, L=L, pitch=P, types=types_set, n=nsuggest)
 
-        pprint_table(g_df, title="Closest D'Addario gauges", float_format=float_format)
+        if verbose:
+            info(f"Searching string types: {types_set}")
+        g_df.attrs["col_desc"]["dT"] += f" ({T} lbf)"
+        pprint_table(
+            g_df,
+            title=f"Closest D'Addario gauges\nfor {L}\" @ {P}",
+            float_format=float_format,
+        )
 
     else:
         if not types:
