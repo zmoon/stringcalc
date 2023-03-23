@@ -60,7 +60,6 @@ def test_suggest_gauge():
     assert ret.id.tolist() == ["NYL031", "NYL032", "NYL033"]
 
 
-@pytest.mark.xfail(reason="currently PB doesn't load PB056")
 def test_suggest_gauge_pb056():
     # GH #7
     T = 22
