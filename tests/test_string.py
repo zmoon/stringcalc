@@ -60,6 +60,16 @@ def test_suggest_gauge():
     assert ret.id.tolist() == ["NYL031", "NYL032", "NYL033"]
 
 
+def test_suggest_gauge_pb056():
+    # GH #7
+    T = 23
+    L = 25.5
+    pitch = "D2"  # dropped D
+
+    ret = suggest_gauge(T, L, pitch, types={"PB"})
+    assert ret.id.tolist() == ["PB053", "PB056D", "PB059"]
+
+
 @pytest.mark.parametrize(
     "pitch",
     ["G1", "G4"],
