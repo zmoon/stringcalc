@@ -62,8 +62,8 @@ def test_suggest_gauge():
 
 def test_suggest_gauge_pb056():
     # GH #7
-    T = 22
-    L = 24.75
+    T = 23
+    L = 25.5
     pitch = "D2"  # dropped D
 
     ret = suggest_gauge(T, L, pitch, types={"PB"})
