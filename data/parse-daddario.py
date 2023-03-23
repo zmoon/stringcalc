@@ -3,8 +3,11 @@ Parsing the D'Addario extracted string tension data
 converting to a DataFrame
 """
 import re
+from pathlib import Path
 
 import pandas as pd
+
+HERE = Path(__file__).parent
 
 # e.g. `PL009 .00001794 18.6 14.7 13.1 10.4 8.3 7.4 5.8 4.6`
 re_entry = re.compile(r"(?P<id>[A-Z0-9]+) (?P<uw>\.[0-9]+) (?P<tens>(.+){8})")
@@ -39,7 +42,7 @@ Banjo = 26 1/4" (19 5/8" for 5th string)
 
 
 def convert_note(s: str) -> str:
-    """Convert note from the D'Addario format to piano key.
+    """Convert note from the D'Addario format to SPN.
 
     Pitch Notation
     --------------
@@ -81,7 +84,7 @@ rows = []
 cat = None
 subcat = None
 notes = None
-with open("daddario-tension.txt", encoding="utf-8") as f:
+with open(HERE / "daddario-tension.txt", encoding="utf-8") as f:
     for line in f:
         line = line.strip()
 
@@ -170,6 +173,9 @@ for i, row in df_.iterrows():
 
 # Save
 fn = "daddario-tension.csv"
-df.to_csv(fn, index=False)
+fp = HERE / "../stringcalc/data" / fn
+assert fp.parent.is_dir()
+df.to_csv(fp, index=False)
 
-df2 = pd.read_csv(fn, header=0)
+# Reload
+df2 = pd.read_csv(fp, header=0)
