@@ -137,6 +137,11 @@ df["gauge"] = "." + df["id_gauge"]  # I think this should always be the case but
 df["group_id"] = df["id_pref"] + df["id_suff"]
 df = df.drop(columns="id_gauge")
 
+# Fix PB056
+assert len(df.loc[df.id == "PB056D"]) == 1
+assert (df.loc[df.id == "PB056D", "group_id"] == "PBD").all()
+df.loc[df.id == "PB056D", "group_id"] = "PB"
+
 # Fix categories that are uppercase for some reason
 df.loc[df.category.str.isupper(), "category"] = df.category.str.title()
 
