@@ -319,7 +319,7 @@ def gauge_(
 
         if verbose:
             console.print(
-                f"To get tension of [green]{T} lbf[/] on a [green]type[/] string "
+                f"To get tension of [green]{T} lbf[/] on a [green]{type_verbose}[/] string "
                 f'of length [green]{L}"[/] tuned to [cyan]{P}[/], '
                 f'gauge [bold cyan underline]{g:.3g}"[/] should be used.',
                 highlight=False,
