@@ -320,6 +320,14 @@ def gauge_(
         if len(types) > 1:
             error("Only specify one type for exact gauge calculation. Got {types}.", rc=2)
 
+        try:
+            (T_,), (L_,), (P_,) = T, L, P
+        except ValueError:
+            error(
+                f"Only supply one value for each of T, L, P. Got {len(T)}, {len(L)}, {len(P)}.",
+                rc=2,
+            )
+
         type_ = types[0]
         allowed_type_keys = sorted(
             list(DENSITY_LB_IN) + list(_STRING_TYPE_ALIAS_TO_VERBOSE), key=lambda s: s.lower()
@@ -330,12 +338,12 @@ def gauge_(
         type_verbose = type_ if type_ in DENSITY_LB_IN else _STRING_TYPE_ALIAS_TO_VERBOSE[type_]
         dens = DENSITY_LB_IN[type_verbose]
 
-        g = gauge(dens, T=T, L=L, pitch=P)
+        g = gauge(dens, T=T_, L=L_, pitch=P_)
 
         if verbose:
             console.print(
-                f"To get tension of [green]{T} lbf[/] on a [green]{type_verbose}[/] string "
-                f'of length [green]{L}"[/] tuned to [cyan]{P}[/], '
+                f"To get tension of [green]{T_} lbf[/] on a [green]{type_verbose}[/] string "
+                f'of length [green]{L_}"[/] tuned to [cyan]{P_}[/], '
                 f'gauge [bold cyan underline]{g:.3g}"[/] should be used.',
                 highlight=False,
             )
