@@ -348,7 +348,7 @@ def gauge_(
             error("Must supply type to use exact gauge calculation.", rc=2)
 
         if len(types) > 1:
-            error("Only specify one type for exact gauge calculation. Got {types}.", rc=2)
+            error(f"Only specify one type for exact gauge calculation. Got {types}.", rc=2)
 
         try:
             (T_,), (L_,), (P_,) = T, L, P
