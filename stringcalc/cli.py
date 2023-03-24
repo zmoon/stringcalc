@@ -136,6 +136,8 @@ def pprint_table(df, *, title: str, float_format: str) -> None:
         else:
             return fancy_col
 
+    to_print = []
+
     # Table itself
     table = Table(title=title)
     for col in df.columns:
@@ -144,18 +146,32 @@ def pprint_table(df, *, title: str, float_format: str) -> None:
             style="green" if col != "n" else None,
         )
     for row in df_str.splitlines():
+        # TODO: highlight min dT row if at least 2 rows
         table.add_row(*re.split(r"(?<=\S) ", row))
-    console.print(table)
+    # console.print(table)
+    to_print.append(table)
 
     # Column descriptions
     if "col_desc" not in attrs:
         return
     l = max(len(str(c.header)) for c in table.columns)  # noqa: E741
+    sub_lines = []
     for col in df.columns:
         v = attrs["col_desc"].get(col)
         if v is None:
             continue
-        console.print(f"[bold cyan]{maybe_fancy_col_name(col):{l+2}}[/]{v}")
+        # console.print(f"[bold cyan]{maybe_fancy_col_name(col):{l+2}}[/]{v}")
+        # to_print.append(f"[bold cyan]{maybe_fancy_col_name(col):{l+2}}[/]{v}")
+        sub_lines.append(f"[bold cyan]{maybe_fancy_col_name(col):{l+2}}[/]{v}")
+
+    # return to_print
+
+    from rich.console import Group
+    from rich.panel import Panel
+
+    # return Panel(table, subtitle="\n".join(sub_lines), expand=False)
+
+    return Panel(Group(table, "\n".join(sub_lines)), expand=False)
 
 
 @app.command()
@@ -300,6 +316,7 @@ def gauge_(
                 rc=2,
             )
 
+        blahs = []
         for n, (T_, L_, P_) in enumerate(zip(cycle(T), cycle(L), cycle(P))):
             if n >= n_cases:
                 break
@@ -307,11 +324,24 @@ def gauge_(
             g_df = suggest_gauge(T=T_, L=L_, pitch=P_, types=types_set, n=nsuggest)
 
             g_df.attrs["col_desc"]["dT"] += f" ({T_} lbf)"
-            pprint_table(
+            to_print = pprint_table(
                 g_df,
                 title=f"Closest D'Addario gauges\nfor {L_}\" @ {P_}",
                 float_format=float_format,
             )
+            # console.print(*to_print)
+            blahs.append(to_print)
+
+        from rich.columns import Columns
+
+        # from rich.layout import Layout
+        # from rich.panel import Panel
+        # layout = Layout()
+        # layout.split_row(*[Panel(*blah) for blah in blahs])
+        # layout.split_row(*blahs)
+        # console.print(layout)
+
+        console.print(Columns(blahs))
 
     else:
         if not types:
