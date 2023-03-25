@@ -326,7 +326,7 @@ def gauge_(
                 g_df,
                 title=f"Closest D'Addario gauges\nfor {L_}\" @ {P_}",
                 float_format=float_format,
-                panel=True,
+                panel=n_cases > 1,
             )
             # console.print(*to_print)
             blahs.append(to_print)
