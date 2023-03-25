@@ -9,7 +9,7 @@ from pathlib import Path
 
 try:
     import typer
-    from rich.console import Console
+    from rich.console import Console, RenderableType
     from rich.style import Style
 except ImportError as e:
     print("The stringcalc CLI requires typer and rich (included with the 'cli' extra).")
@@ -112,7 +112,9 @@ def _with_float_nonext_dtypes(df):
     return df
 
 
-def pprint_table(df, *, title: str, float_format: str) -> None:
+def _rich_table(df, *, title: str, float_format: str, panel: bool = False) -> RenderableType:
+    from rich.console import Group
+    from rich.panel import Panel
     from rich.table import Table
 
     attrs = df.attrs.copy()
@@ -136,8 +138,6 @@ def pprint_table(df, *, title: str, float_format: str) -> None:
         else:
             return fancy_col
 
-    to_print = []
-
     # Table itself
     table = Table(title=title)
     for col in df.columns:
@@ -148,30 +148,28 @@ def pprint_table(df, *, title: str, float_format: str) -> None:
     for row in df_str.splitlines():
         # TODO: highlight min dT row if at least 2 rows
         table.add_row(*re.split(r"(?<=\S) ", row))
-    # console.print(table)
-    to_print.append(table)
 
     # Column descriptions
+    r: RenderableType
     if "col_desc" not in attrs:
-        return
-    l = max(len(str(c.header)) for c in table.columns)  # noqa: E741
-    sub_lines = []
-    for col in df.columns:
-        v = attrs["col_desc"].get(col)
-        if v is None:
-            continue
-        # console.print(f"[bold cyan]{maybe_fancy_col_name(col):{l+2}}[/]{v}")
-        # to_print.append(f"[bold cyan]{maybe_fancy_col_name(col):{l+2}}[/]{v}")
-        sub_lines.append(f"[bold cyan]{maybe_fancy_col_name(col):{l+2}}[/]{v}")
+        r = table
+    else:
+        l = max(len(str(c.header)) for c in table.columns)  # noqa: E741
+        sub_lines = []
+        for col in df.columns:
+            v = attrs["col_desc"].get(col)
+            if v is None:
+                continue
+            sub_lines.append(f"[bold cyan]{maybe_fancy_col_name(col):{l+2}}[/]{v}")
 
-    # return to_print
+        r = Group(table, "\n".join(sub_lines))
 
-    from rich.console import Group
-    from rich.panel import Panel
+    return Panel(r, expand=False) if panel else r
 
-    # return Panel(table, subtitle="\n".join(sub_lines), expand=False)
 
-    return Panel(Group(table, "\n".join(sub_lines)), expand=False)
+def pprint_table(df, *, title: str, float_format: str, panel=False) -> None:
+    """Pretty-print a pandas DataFrame as a Rich table."""
+    console.print(_rich_table(df, title=title, float_format=float_format))
 
 
 @app.command()
@@ -309,7 +307,7 @@ def gauge_(
             info(f"Searching string types: {types_set}")
 
         n_cases = max(len(T), len(L), len(P))
-        if not all(len(x) == n_cases or len(x) == 1 for x in (T, L, P)):
+        if not all(len(x) == n_cases or len(x) == 1 for x in (T, L, P)):  # type: ignore[arg-type]
             error(
                 "Must supply single or same number of values for each of T, L, P. "
                 f"Got {len(T)}, {len(L)}, {len(P)}.",
@@ -324,10 +322,11 @@ def gauge_(
             g_df = suggest_gauge(T=T_, L=L_, pitch=P_, types=types_set, n=nsuggest)
 
             g_df.attrs["col_desc"]["dT"] += f" ({T_} lbf)"
-            to_print = pprint_table(
+            to_print = _rich_table(
                 g_df,
                 title=f"Closest D'Addario gauges\nfor {L_}\" @ {P_}",
                 float_format=float_format,
+                panel=True,
             )
             # console.print(*to_print)
             blahs.append(to_print)
