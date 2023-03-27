@@ -119,6 +119,7 @@ def _rich_table(
     float_format: str,
     panel: bool = False,
     column_info: bool = True,
+    ihighlight: int | None = None,
 ) -> RenderableType:
     from rich.console import Group
     from rich.panel import Panel
@@ -149,14 +150,16 @@ def _rich_table(
 
     # Table itself
     table = Table(title=title)
+    hl_style = "bold"
+    if len(df) >= 5:
+        hl_style += " underline overline"
     for col in df.columns:
         table.add_column(
             maybe_fancy_col_name(col),
             style="green" if col != "n" else None,
         )
-    for row in df_str.splitlines():
-        # TODO: highlight min dT row if at least 2 rows
-        table.add_row(*re.split(r"(?<=\S) ", row))
+    for i, row in enumerate(df_str.splitlines()):
+        table.add_row(*re.split(r"(?<=\S) ", row), style=hl_style if i == ihighlight else None)
 
     # Column descriptions
     r: RenderableType
@@ -343,6 +346,7 @@ def gauge_(
                 float_format=float_format,
                 panel=n_cases > 1,
                 column_info=column_info,
+                ihighlight=g_df.dT.abs().argmin() if len(g_df) >= 2 else None,
             )
             tables.append(table)
 
