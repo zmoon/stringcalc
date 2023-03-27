@@ -346,7 +346,7 @@ def gauge_(
                 float_format=float_format,
                 panel=n_cases > 1,
                 column_info=column_info,
-                ihighlight=g_df.dT.abs().argmin() if len(g_df) >= 2 else None,
+                ihighlight=int(g_df.dT.abs().argmin()) if len(g_df) >= 2 else None,
             )
             tables.append(table)
 
