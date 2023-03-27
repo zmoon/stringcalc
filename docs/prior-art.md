@@ -1,0 +1,50 @@
+## Web apps
+
+- D'Addario String Tension Pro -- <https://www.daddario.com/string-tension-pro/>
+  - has been down for some time, partially inspiring this work
+  - but I remember it being pretty nice
+- <https://stringtensioncalculator.com/>
+  - specifically for [Kalium strings](https://kaliummusic.com/strings/)
+  - somewhat similar to D'Addario String Tension Pro (from what I remember)
+  - select scale length (0.25" increments), pitch, and gauge -> shows tension and frequency
+  - shows 6 (or more) strings at once
+  - scale length presets include a few multi-scale options
+  - source: <https://github.com/aaronabramov/string-tension-calculator>
+- Shelquist -- <https://wahiduddin.net/calc/calc_guitar_tension_from_size.htm>
+  - input scale length (in | cm), diameter (in | mm), pitch class, octave
+    -> shows tension in lb and kg for several D'Addario steel-core string types
+  - lots of info on the page
+  - some nice messages if tension is too high or low
+- Curt Mangan -- <https://www.curtmangan.com/string-tension-calculator/>
+  - 6, 7, or 8 strings
+  - multiple scale length presets, including many multi-scale, but can't set your own
+  - (guitar / electric bass focused)
+  - standard tuning default, but a selector allows tuning down all strings by 1--4 half steps
+  - for each string individually, can change gauge and pitch
+  - shows tension plot and sum
+- Stringjoy -- <https://tension.stringjoy.com/>
+  - some useful info on the page
+  - for [Stringjoy strings](https://stringjoy.com/shop/strings/)
+  - select string type, # of strings (6--9 | 12), scale length (any float, inches)
+  - for each string individually, can change scale length, pitch, gauge
+  - shows individual tensions and total tension interactively (i.e. don't need to submit)
+- [Theo Parmakis](http://parmakis-instruments.co.uk/about-theo) -- <http://chordgen.rattree.co.uk/tensiontool.php>
+  - some useful info on the page (« show more information... »)
+  - unique feature: offers presets for different instruments, including different tunings
+  - reference presets "are mostly based upon my own instruments, and the gauges I usually string them with"
+  - once, you find a preset you like, click and can edit
+  - for whole set, can change scale length (any float, in | mm), string material, winding material (can't set individually), whether to double all
+  - for each string, can change pitch, plain or wound, string material (steel, nylon, gut, Nylgut), gauge, single or double
+  - shows tensions for each course and the total
+  - unique feature: "equalize" button, defaults to tension on top string but can choose which one you want to equalize to
+  - based on the D'Addario data but also extrapolating to some other materials
+  - can show tension (lb), string gauge, and frequency (Hz) plots
+  - nice text format, e.g. `.026 w N @ 25" = 13.165 lb`
+  - can handle strings starting arbitrarily further up the fretboard (after the `@` in the tuning editor)
+  - purports to offer the source code, but the link currently (2022-04-15) doesn't work
+- <https://rodrigocfd.github.io/string-tension-calc/>
+  - compare multiple string sets using string tensions and a tension plot (though not total tension)
+  - electric guitar focused, including a few 7- and 8-string sets
+  - after selecting a set, can adjust individual strings (gauge and plain/wound) and pitches (-5--+1 half steps)
+  - can also choose to tune down the whole set by up to 4 half steps, like the Curt Mangan app
+  - source: <https://github.com/rodrigocfd/string-tension-calc>
