@@ -9,7 +9,7 @@ from pathlib import Path
 
 try:
     import typer
-    from rich.console import Console
+    from rich.console import Console, RenderableType
     from rich.style import Style
 except ImportError as e:
     print("The stringcalc CLI requires typer and rich (included with the 'cli' extra).")
@@ -112,12 +112,23 @@ def _with_float_nonext_dtypes(df):
     return df
 
 
-def pprint_table(df, *, title: str, float_format: str) -> None:
+def _rich_table(
+    df,
+    *,
+    title: str,
+    float_format: str,
+    panel: bool = False,
+    column_info: bool = True,
+) -> RenderableType:
+    from rich.console import Group
+    from rich.panel import Panel
     from rich.table import Table
 
     attrs = df.attrs.copy()
     df_str = _with_float_nonext_dtypes(df).to_string(
-        float_format=float_format, header=False, index=False
+        float_format=float_format,
+        header=False,
+        index=False,
     )
     # NOTE: `.to_string` with `float_format` doesn't seem to work for the float extension dtypes
 
@@ -144,18 +155,30 @@ def pprint_table(df, *, title: str, float_format: str) -> None:
             style="green" if col != "n" else None,
         )
     for row in df_str.splitlines():
+        # TODO: highlight min dT row if at least 2 rows
         table.add_row(*re.split(r"(?<=\S) ", row))
-    console.print(table)
 
     # Column descriptions
-    if "col_desc" not in attrs:
-        return
-    l = max(len(str(c.header)) for c in table.columns)  # noqa: E741
-    for col in df.columns:
-        v = attrs["col_desc"].get(col)
-        if v is None:
-            continue
-        console.print(f"[bold cyan]{maybe_fancy_col_name(col):{l+2}}[/]{v}")
+    r: RenderableType
+    if "col_desc" not in attrs or not column_info:
+        r = table
+    else:
+        l = max(len(str(c.header)) for c in table.columns)  # noqa: E741
+        sub_lines = []
+        for col in df.columns:
+            v = attrs["col_desc"].get(col)
+            if v is None:
+                continue
+            sub_lines.append(f"[bold cyan]{maybe_fancy_col_name(col):{l+2}}[/]{v}")
+
+        r = Group(table, "\n".join(sub_lines))
+
+    return Panel(r, expand=False) if panel else r
+
+
+def pprint_table(df, *, title: str, float_format: str, panel=False) -> None:
+    """Pretty-print a pandas DataFrame as a Rich table."""
+    console.print(_rich_table(df, title=title, float_format=float_format, panel=panel))
 
 
 @app.command()
@@ -251,9 +274,9 @@ def length(
 @app.command(name="gauge")
 @pretty_warnings
 def gauge_(
-    T: float = typer.Option(..., "-T", "--tension", help="Desired tension"),
-    L: float = typer.Option(..., "-L", "--length", help="String length (scale length)."),
-    P: str = typer.Option(
+    T: list[float] = typer.Option(..., "-T", "--tension", help="Desired tension"),
+    L: list[float] = typer.Option(..., "-L", "--length", help="String length (scale length)."),
+    P: list[str] = typer.Option(
         ..., "-P", "--pitch", help="Pitch in scientific pitch notation (e.g. 'E4')."
     ),
     suggest: bool = typer.Option(
@@ -269,6 +292,10 @@ def gauge_(
     float_format: str = typer.Option(
         r"%.3f", help="Format for float-to-string conversion. Only relevant if using --suggest."
     ),
+    column_info: bool = typer.Option(
+        True,
+        help="Print column definitions under table. Only relevant if using --suggest.",
+    ),
     verbose: bool = typer.Option(False),
 ):
     """Compute gauge from string information.
@@ -276,9 +303,13 @@ def gauge_(
     IMPORTANT: currently must use T in lbf and L in inches,
     returning results in inches.
     """
+    from itertools import cycle
+
     from .tension import _STRING_TYPE_ALIAS_TO_VERBOSE, DENSITY_LB_IN, gauge, suggest_gauge
 
     if suggest:
+        from rich.columns import Columns
+
         types_set: set[str]
         if not types:
             if verbose:
@@ -287,23 +318,50 @@ def gauge_(
         else:
             types_set = set(types)
 
-        g_df = suggest_gauge(T=T, L=L, pitch=P, types=types_set, n=nsuggest)
-
         if verbose:
             info(f"Searching string types: {types_set}")
-        g_df.attrs["col_desc"]["dT"] += f" ({T} lbf)"
-        pprint_table(
-            g_df,
-            title=f"Closest D'Addario gauges\nfor {L}\" @ {P}",
-            float_format=float_format,
-        )
+
+        n_cases = max(len(T), len(L), len(P))
+        if not all(len(x) == n_cases or len(x) == 1 for x in (T, L, P)):  # type: ignore[arg-type]
+            error(
+                "Must supply single or same number of values for each of T, L, P. "
+                f"Got {len(T)}, {len(L)}, {len(P)}.",
+                rc=2,
+            )
+
+        tables = []
+        for n, (T_, L_, P_) in enumerate(zip(cycle(T), cycle(L), cycle(P))):
+            if n >= n_cases:
+                break
+
+            g_df = suggest_gauge(T=T_, L=L_, pitch=P_, types=types_set, n=nsuggest)
+
+            g_df.attrs["col_desc"]["dT"] += f" ({T_} lbf)"
+            table = _rich_table(
+                g_df,
+                title=f"Closest D'Addario gauges\nfor {L_}\" @ {P_}",
+                float_format=float_format,
+                panel=n_cases > 1,
+                column_info=column_info,
+            )
+            tables.append(table)
+
+        console.print(Columns(tables))
 
     else:
         if not types:
             error("Must supply type to use exact gauge calculation.", rc=2)
 
         if len(types) > 1:
-            error("Only specify one type for exact gauge calculation. Got {types}.", rc=2)
+            error(f"Only specify one type for exact gauge calculation. Got {types}.", rc=2)
+
+        try:
+            (T_,), (L_,), (P_,) = T, L, P
+        except ValueError:
+            error(
+                f"Only supply one value for each of T, L, P. Got {len(T)}, {len(L)}, {len(P)}.",
+                rc=2,
+            )
 
         type_ = types[0]
         allowed_type_keys = sorted(
@@ -315,12 +373,12 @@ def gauge_(
         type_verbose = type_ if type_ in DENSITY_LB_IN else _STRING_TYPE_ALIAS_TO_VERBOSE[type_]
         dens = DENSITY_LB_IN[type_verbose]
 
-        g = gauge(dens, T=T, L=L, pitch=P)
+        g = gauge(dens, T=T_, L=L_, pitch=P_)
 
         if verbose:
             console.print(
-                f"To get tension of [green]{T} lbf[/] on a [green]{type_verbose}[/] string "
-                f'of length [green]{L}"[/] tuned to [cyan]{P}[/], '
+                f"To get tension of [green]{T_} lbf[/] on a [green]{type_verbose}[/] string "
+                f'of length [green]{L_}"[/] tuned to [cyan]{P_}[/], '
                 f'gauge [bold cyan underline]{g:.3g}"[/] should be used.',
                 highlight=False,
             )
