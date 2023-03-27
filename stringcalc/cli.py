@@ -113,7 +113,12 @@ def _with_float_nonext_dtypes(df):
 
 
 def _rich_table(
-    df, *, title: str, float_format: str, panel: bool = False, column_info: bool = True
+    df,
+    *,
+    title: str,
+    float_format: str,
+    panel: bool = False,
+    column_info: bool = True,
 ) -> RenderableType:
     from rich.console import Group
     from rich.panel import Panel
@@ -121,7 +126,9 @@ def _rich_table(
 
     attrs = df.attrs.copy()
     df_str = _with_float_nonext_dtypes(df).to_string(
-        float_format=float_format, header=False, index=False
+        float_format=float_format,
+        header=False,
+        index=False,
     )
     # NOTE: `.to_string` with `float_format` doesn't seem to work for the float extension dtypes
 
@@ -171,7 +178,7 @@ def _rich_table(
 
 def pprint_table(df, *, title: str, float_format: str, panel=False) -> None:
     """Pretty-print a pandas DataFrame as a Rich table."""
-    console.print(_rich_table(df, title=title, float_format=float_format))
+    console.print(_rich_table(df, title=title, float_format=float_format, panel=panel))
 
 
 @app.command()
@@ -301,6 +308,8 @@ def gauge_(
     from .tension import _STRING_TYPE_ALIAS_TO_VERBOSE, DENSITY_LB_IN, gauge, suggest_gauge
 
     if suggest:
+        from rich.columns import Columns
+
         types_set: set[str]
         if not types:
             if verbose:
@@ -320,7 +329,7 @@ def gauge_(
                 rc=2,
             )
 
-        blahs = []
+        tables = []
         for n, (T_, L_, P_) in enumerate(zip(cycle(T), cycle(L), cycle(P))):
             if n >= n_cases:
                 break
@@ -328,26 +337,16 @@ def gauge_(
             g_df = suggest_gauge(T=T_, L=L_, pitch=P_, types=types_set, n=nsuggest)
 
             g_df.attrs["col_desc"]["dT"] += f" ({T_} lbf)"
-            to_print = _rich_table(
+            table = _rich_table(
                 g_df,
                 title=f"Closest D'Addario gauges\nfor {L_}\" @ {P_}",
                 float_format=float_format,
                 panel=n_cases > 1,
                 column_info=column_info,
             )
-            # console.print(*to_print)
-            blahs.append(to_print)
+            tables.append(table)
 
-        from rich.columns import Columns
-
-        # from rich.layout import Layout
-        # from rich.panel import Panel
-        # layout = Layout()
-        # layout.split_row(*[Panel(*blah) for blah in blahs])
-        # layout.split_row(*blahs)
-        # console.print(layout)
-
-        console.print(Columns(blahs))
+        console.print(Columns(tables))
 
     else:
         if not types:
