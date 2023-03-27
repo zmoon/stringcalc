@@ -112,7 +112,9 @@ def _with_float_nonext_dtypes(df):
     return df
 
 
-def _rich_table(df, *, title: str, float_format: str, panel: bool = False) -> RenderableType:
+def _rich_table(
+    df, *, title: str, float_format: str, panel: bool = False, column_info: bool = True
+) -> RenderableType:
     from rich.console import Group
     from rich.panel import Panel
     from rich.table import Table
@@ -151,7 +153,7 @@ def _rich_table(df, *, title: str, float_format: str, panel: bool = False) -> Re
 
     # Column descriptions
     r: RenderableType
-    if "col_desc" not in attrs:
+    if "col_desc" not in attrs or not column_info:
         r = table
     else:
         l = max(len(str(c.header)) for c in table.columns)  # noqa: E741
@@ -283,6 +285,10 @@ def gauge_(
     float_format: str = typer.Option(
         r"%.3f", help="Format for float-to-string conversion. Only relevant if using --suggest."
     ),
+    column_info: bool = typer.Option(
+        True,
+        help="Print column definitions under table. Only relevant if using --suggest.",
+    ),
     verbose: bool = typer.Option(False),
 ):
     """Compute gauge from string information.
@@ -327,6 +333,7 @@ def gauge_(
                 title=f"Closest D'Addario gauges\nfor {L_}\" @ {P_}",
                 float_format=float_format,
                 panel=n_cases > 1,
+                column_info=column_info,
             )
             # console.print(*to_print)
             blahs.append(to_print)
