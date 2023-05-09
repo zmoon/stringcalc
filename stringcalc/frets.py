@@ -13,7 +13,7 @@ from pint import Quantity, UnitRegistry
 ureg = UnitRegistry()
 # Q_ = ureg.Quantity  # mypy doesn't like this one
 
-QLike = Union[Quantity, str]
+QLike = Union[Quantity, str]  # type: ignore[valid-type]
 
 # Note also `pint._typing.UnitLike`
 
@@ -74,7 +74,7 @@ def distances(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
     return df
 
 
-def length_from_distance(ab: tuple[int | None, int | None], d: float | QLike) -> float | Quantity:
+def length_from_distance(ab: tuple[int | None, int | None], d: float | QLike) -> float | Quantity:  # type: ignore[valid-type]
     """Calculate the scale length implied by a->b distance `d`.
 
     `ab` is a 2-tuple specifying the bounds of the input distance in terms of fret number.
