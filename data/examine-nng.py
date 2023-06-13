@@ -79,7 +79,7 @@ df["gauge_da_nylon"] = np.sqrt(1300 * df.gauge**2 / rho_bar)
 
 # Compute UW (depends on density assumption)
 # -> lbm/in3, apply cross-sectional area
-df["uw"] = 1300 * 2.205 / 1e6 * (2.53**3) * (np.pi * df.gauge**2 / 4)
+df["uw"] = 1300 * 2.205 / 1e6 * (2.54**3) * (np.pi * df.gauge**2 / 4)
 
 
 # %% Save

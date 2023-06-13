@@ -56,7 +56,7 @@ def load_aquila_data(*, nng_density=1300, drop_gauge_eqvs=True):
 
     # Compute UW
     # TODO: use Pint
-    df["uw"] = nng_density * 2.205 / 1e6 * (2.53**3) * (np.pi * df.gauge**2 / 4)
+    df["uw"] = nng_density * 2.205 / 1e6 * (2.54**3) * (np.pi * df.gauge**2 / 4)
 
     # Set group ID (used to select string type)
     df["group_id"] = "NNG"
