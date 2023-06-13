@@ -28,7 +28,7 @@ DATA = _get_data()
 
 
 @lru_cache(1)
-def load_data():
+def load_data() -> pd.DataFrame:
     """Load all string data.
 
     Use the individual `load_*_data` functions for more control.
@@ -70,7 +70,7 @@ def load_data():
 
 
 @lru_cache(2)
-def load_daddario_data(*, drop_sample_tensions=True):
+def load_daddario_data(*, drop_sample_tensions: bool = True) -> pd.DataFrame:
     """Load the data (currently only D'Addario) needed for the calculations."""
 
     df = pd.read_csv(DATA.joinpath("daddario-tension.csv"), header=0).convert_dtypes()
@@ -86,12 +86,12 @@ def load_daddario_data(*, drop_sample_tensions=True):
 
 
 @lru_cache
-def load_aquila_data(*, nng_density=1300, drop_gauge_eqvs=True):
+def load_aquila_data(*, nng_density: float = 1300, drop_gauge_eqvs: bool = True) -> pd.DataFrame:
     """Load Aquila NNG (New Nylgut) data.
 
     Parameters
     ----------
-    nng_density : float
+    nng_density
         Assumed density of Aquila NNG strings, in kg/m3.
         They are supposed to be the same density as gut.
         https://www.cs.helsinki.fi/u/wikla/mus/Calcs/wwwscalc.html says gut is 1276 kg/m3;
@@ -122,7 +122,7 @@ def load_aquila_data(*, nng_density=1300, drop_gauge_eqvs=True):
 
 
 @lru_cache(1)
-def load_worth_data():
+def load_worth_data() -> pd.DataFrame:
     """Load Worth fluorocarbon data."""
 
     df = pd.read_csv(DATA.joinpath("worth.csv"), header=0).convert_dtypes()
