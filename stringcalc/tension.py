@@ -72,6 +72,18 @@ def load_aquila_data(*, nng_density=1300, drop_gauge_eqvs=True):
     return df
 
 
+@lru_cache(1)
+def load_worth_data():
+    """Load Worth fluorocarbon data."""
+    df = pd.read_csv(DATA / "worth.csv", header=0)
+
+    # Set group ID (used to select string type)
+    df["group_id"] = "FC"
+    df["group_id"] = df["group_id"].astype("category")
+
+    return df
+
+
 _re_string_spec = re.compile(
     r"(?P<L>[\.0-9]+)"
     r" *(?P<Lu>\"|m{2})"
