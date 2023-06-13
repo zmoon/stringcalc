@@ -13,7 +13,11 @@ plt.close("all")
 
 # %% Load
 
-df = pd.read_csv("daddario-tension.csv", header=0).drop(columns=["tens", "notes"]).convert_dtypes()
+df = (
+    pd.read_csv("../stringcalc/data/daddario-tension.csv", header=0)
+    .drop(columns=["tens", "notes"])
+    .convert_dtypes()
+)
 
 
 # %% Plot

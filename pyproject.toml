@@ -34,6 +34,9 @@ cli = [
     "rich",
     "typer",
 ]
+doc = [
+    "matplotlib",
+]
 
 [project.scripts]
 stringcalc = "stringcalc.cli:app"
