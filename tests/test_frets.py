@@ -40,7 +40,7 @@ def test_ds_invalid():
 )
 def test_d_et_invalid(n):
     with pytest.raises(ValueError, match="input fret numbers should be positive"):
-        frets.distance_et(n=-1, L=25)
+        frets.distance_et(n=n, L=25)
 
 
 @pytest.mark.parametrize(
