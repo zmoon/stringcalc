@@ -11,21 +11,27 @@ import math
 import re
 import warnings
 from functools import lru_cache
-from pathlib import Path
 from typing import NamedTuple
 
 import pandas as pd
 
-HERE = Path(__file__).parent
-DATA = HERE / "data"
+
+def _get_data():
+    from importlib.resources import files
+
+    from . import data
+
+    return files(data)
+
+
+DATA = _get_data()
 
 
 @lru_cache(2)
 def load_data(*, drop_sample_tensions=True):
     """Load the data (currently only D'Addario) needed for the calculations."""
 
-    df = pd.read_csv(DATA / "daddario-tension.csv", header=0)
-    # TODO: use importlib.resources
+    df = pd.read_csv(DATA.joinpath("daddario-tension.csv"), header=0)
 
     if drop_sample_tensions:
         df = df.drop(columns=["notes", "tens"])
@@ -52,7 +58,7 @@ def load_aquila_data(*, nng_density=1300, drop_gauge_eqvs=True):
     """
     import numpy as np
 
-    df = pd.read_csv(DATA / "aquila-nng.csv", header=0)
+    df = pd.read_csv(DATA.joinpath("aquila-nng.csv"), header=0)
 
     # Compute UW
     # TODO: use Pint
@@ -75,7 +81,7 @@ def load_aquila_data(*, nng_density=1300, drop_gauge_eqvs=True):
 @lru_cache(1)
 def load_worth_data():
     """Load Worth fluorocarbon data."""
-    df = pd.read_csv(DATA / "worth.csv", header=0)
+    df = pd.read_csv(DATA.joinpath("worth.csv"), header=0)
 
     # Set group ID (used to select string type)
     df["group_id"] = "FC"
