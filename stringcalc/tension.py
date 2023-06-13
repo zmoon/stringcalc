@@ -175,7 +175,7 @@ def tension(s: String, pitch: str = "A4") -> float:
     # At g0, 1 lbm exerts a force of 1 lbf => lbf = g0 lbm = 32.174 lbm ft s-2
     # https://en.wikipedia.org/wiki/Gc_(engineering)
 
-    UW = float(rows.uw)
+    UW = float(rows.uw.iloc[0])
     F = Pitch.from_name(pitch).etf
 
     T = UW * (2 * L * F) ** 2 / 386.09
