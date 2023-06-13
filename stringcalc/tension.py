@@ -38,6 +38,40 @@ def load_data(*, drop_sample_tensions=True):
     return df
 
 
+@lru_cache
+def load_aquila_data(*, nng_density=1300, drop_gauge_eqvs=True):
+    """Load Aquila NNG (New Nylgut) data.
+
+    Parameters
+    ----------
+    nng_density : float
+        Assumed density of Aquila NNG strings, in kg/m3.
+        They are supposed to be the same density as gut.
+        https://www.cs.helsinki.fi/u/wikla/mus/Calcs/wwwscalc.html says gut is 1276 kg/m3;
+        I have seen 1300 elsewhere.
+    """
+    import numpy as np
+
+    df = pd.read_csv(DATA / "aquila-nng.csv", header=0)
+
+    # Compute UW
+    # TODO: use Pint
+    df["uw"] = nng_density * 2.205 / 1e6 * (2.53**3) * (np.pi * df.gauge**2 / 4)
+
+    # Set group ID (used to select string type)
+    df["group_id"] = "NNG"
+    df["group_id"] = df["group_id"].astype("category")
+
+    # Include gauge equivalents?
+    gauge_eqv_cols = [col for col in df.columns if col.startswith("gauge_")]
+    if drop_gauge_eqvs:
+        df = df.drop(columns=gauge_eqv_cols)
+    else:
+        df = df.rename(columns={col: col.replace("gauge_", "gauge_eqv_") for col in gauge_eqv_cols})
+
+    return df
+
+
 _re_string_spec = re.compile(
     r"(?P<L>[\.0-9]+)"
     r" *(?P<Lu>\"|m{2})"
