@@ -6,6 +6,7 @@ from stringcalc.tension import (
     _STRING_TYPE_ALIASES,
     String,
     gauge,
+    load_data,
     suggest_gauge,
     tension,
     unit_weight,
@@ -116,3 +117,10 @@ def test_aliases_unique():
     all_aliases_set = set(all_aliases)
     assert len(all_aliases) == len(all_aliases_set)
     assert len(all_aliases + list(verbose_keys)) == len(all_aliases_set | verbose_keys)
+
+
+def test_load_data_categories():
+    df = load_data()
+
+    for name in ["category", "group", "id_pref", "id_suff", "group_id"]:
+        assert df[name].dtype == "category"
