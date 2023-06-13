@@ -1,5 +1,7 @@
 """
 Plot the tension data for some of the string types I usually buy
+
+TODO: move to docs example
 """
 import matplotlib.pyplot as plt
 import numpy as np
