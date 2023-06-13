@@ -123,7 +123,7 @@ if __name__ == "__main__":
         raise ValueError(f"invalid `units` {units!r}")
 
     print(f'L = {L}" (scale length)')
-    print(df.to_string(float_format=float_format))
+    print(df.to_string(float_format=float_format))  # type: ignore[call-overload]
     l = max(len(s) for s in df.attrs["col_desc"])  # noqa: E741
     for k, v in df.attrs["col_desc"].items():
         print(f"{k:{l+2}}{v}{'' if k == 'n' else f' ({su_si})'}")
