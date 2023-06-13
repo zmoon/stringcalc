@@ -23,7 +23,7 @@ HERE = Path(__file__).parent
 
 # %% Load
 
-df = pd.read_csv("aquila-nng-equiv.csv").convert_dtypes()
+df = pd.read_csv(HERE / "aquila-nng-equiv.csv").convert_dtypes()
 
 df = df.rename(
     columns={
@@ -89,7 +89,7 @@ fp = HERE / "../stringcalc/data" / fn
 assert fp.parent.is_dir()
 
 # Not UW, so that NNG density can be an input
-df.drop(columns="uw").to_csv(fp, index=False)
+df.drop(columns="uw").to_csv(fp, index=False, float_format="%.3g")
 
 # Reload
 dfr = pd.read_csv(fp, header=0)
