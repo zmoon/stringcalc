@@ -11,28 +11,126 @@ import math
 import re
 import warnings
 from functools import lru_cache
-from pathlib import Path
 from typing import NamedTuple
 
 import pandas as pd
 
-HERE = Path(__file__).parent
-DATA = HERE / "data"
+
+def _get_data():
+    from importlib.resources import files
+
+    from . import data
+
+    return files(data)
+
+
+DATA = _get_data()
+
+
+@lru_cache(1)
+def load_data() -> pd.DataFrame:
+    """Load all string data.
+
+    Use the individual `load_*_data` functions for more control.
+    """
+    import itertools
+
+    daddario = load_daddario_data()
+    aquila = load_aquila_data()
+    worth = load_worth_data().drop(columns="rho")
+
+    # Check no overlap in group IDs
+    # TODO: move to test suite?
+    for a, b in itertools.product(
+        [
+            set(daddario.group_id.cat.categories),
+            set(aquila.group_id.cat.categories),
+            set(worth.group_id.cat.categories),
+        ],
+        repeat=2,
+    ):
+        if a is b:
+            continue
+        if a & b:
+            raise AssertionError(f"Group IDs {a & b} found in multiple datasets.")
+
+    df = pd.concat(
+        [
+            daddario,
+            aquila,
+            worth,
+        ],
+        ignore_index=True,
+    )
+
+    for name in ["group", "group_id"]:
+        df[name] = df[name].astype("category")
+
+    return df
 
 
 @lru_cache(2)
-def load_data(*, drop_sample_tensions=True):
+def load_daddario_data(*, drop_sample_tensions: bool = True) -> pd.DataFrame:
     """Load the data (currently only D'Addario) needed for the calculations."""
 
-    df = pd.read_csv(DATA / "daddario-tension.csv", header=0)
-    # TODO: use importlib.resources
+    df = pd.read_csv(DATA.joinpath("daddario-tension.csv"), header=0).convert_dtypes()
 
     if drop_sample_tensions:
         df = df.drop(columns=["notes", "tens"])
 
     # Set categorical columns
-    df = df.convert_dtypes()
-    for name in ["category", "group", "id_pref", "group_id"]:
+    for name in ["category", "group", "id_pref", "id_suff", "group_id"]:
+        df[name] = df[name].astype("category")
+
+    return df
+
+
+@lru_cache
+def load_aquila_data(*, nng_density: float = 1300, drop_gauge_eqvs: bool = True) -> pd.DataFrame:
+    """Load Aquila NNG (New Nylgut) data.
+
+    Parameters
+    ----------
+    nng_density
+        Assumed density of Aquila NNG strings, in kg/m3.
+        They are supposed to be the same density as gut.
+        https://www.cs.helsinki.fi/u/wikla/mus/Calcs/wwwscalc.html says gut is 1276 kg/m3;
+        I have seen 1300 elsewhere.
+    """
+    import numpy as np
+
+    df = pd.read_csv(DATA.joinpath("aquila-nng.csv"), header=0).convert_dtypes()
+
+    # Compute UW
+    # TODO: use Pint
+    df["uw"] = nng_density * 2.205 / 1e6 * (2.54**3) * (np.pi * df.gauge**2 / 4)
+
+    # Set group ID (used to select string type)
+    df["group"] = "Aquila New Nylgut"
+    df["group_id"] = "NNG"
+    for name in ["group", "group_id"]:
+        df[name] = df[name].astype("category")
+
+    # Include gauge equivalents?
+    gauge_eqv_cols = [col for col in df.columns if col.startswith("gauge_")]
+    if drop_gauge_eqvs:
+        df = df.drop(columns=gauge_eqv_cols)
+    else:
+        df = df.rename(columns={col: col.replace("gauge_", "gauge_eqv_") for col in gauge_eqv_cols})
+
+    return df
+
+
+@lru_cache(1)
+def load_worth_data() -> pd.DataFrame:
+    """Load Worth fluorocarbon data."""
+
+    df = pd.read_csv(DATA.joinpath("worth.csv"), header=0).convert_dtypes()
+
+    # Set group ID (used to select string type)
+    df["group"] = "Worth Fluorocarbon"
+    df["group_id"] = "WFC"
+    for name in ["group", "group_id"]:
         df[name] = df[name].astype("category")
 
     return df
