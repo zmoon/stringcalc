@@ -3,6 +3,7 @@ from bokeh.models.formatters import PrintfTickFormatter
 from pyabc2 import Pitch
 
 import panel as pn
+from stringcalc.frets import distances
 from stringcalc.tension import DENSITY_LB_IN, gauge, load_data, suggest_gauge
 
 WIDTH = 450
@@ -65,7 +66,9 @@ def suggest_gauge_pane():
     @pn.depends(tension_input, length_input, pitch_input, types_input, n_input)
     def table(T, L, pitch, types, n):
         df = suggest_gauge(T=T, L=L, pitch=pitch, types=types, n=n)
+        df = df.rename(columns=df.attrs["fancy_col"])
 
+        # TODO: highlight best option
         return pn.Column(
             df.hvplot.table(sortable=True, selectable=True, width=WIDTH),
         )
@@ -132,11 +135,47 @@ def exact_gauge_pane():
 
 
 def frets_pane():
-    ...
+    info = pn.pane.Markdown(
+        "Compute fret positions. " "This uses the equal-temperament 12th-root-of-2 method."
+    )
+
+    length_input = pn.widgets.FloatSlider(
+        name="Scale length",
+        start=10,
+        end=50,
+        step=0.1,
+        value=22.5,
+        width=int(WIDTH * 2 / 3),
+        format=PrintfTickFormatter(format='%.1f"'),
+    )
+
+    n_input = pn.widgets.IntSlider(
+        name="Number of frets",
+        start=1,
+        end=30,
+        value=17,
+        width=int(WIDTH / 3),
+    )
+
+    @pn.depends(length_input, n_input)
+    def res(L, N):
+        df = distances(N=N, L=L)
+        df = df.reset_index(drop=False).rename(columns=df.attrs["fancy_col"])
+        return pn.Column(
+            df.hvplot.table(sortable=False, selectable=True, width=WIDTH),
+        )
+
+    return pn.Column(
+        info,
+        length_input,
+        n_input,
+        res,
+    )
 
 
 app = pn.Tabs(
-    ("Suggest gauge", suggest_gauge_pane()),
+    ("Suggest strings", suggest_gauge_pane()),
     ("Exact gauge", exact_gauge_pane()),
+    ("Frets", frets_pane()),
 )
 app.servable()
