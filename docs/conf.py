@@ -15,6 +15,7 @@ extensions = [
     "sphinx.ext.mathjax",
     # "sphinx.ext.viewcode",
     # "sphinx_jinja",
+    "sphinx_click",
     "myst_parser",
 ]
 

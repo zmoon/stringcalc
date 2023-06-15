@@ -3,7 +3,7 @@
 Calculations for instrument strings.
 
 - {doc}`Python library <api>`
-- CLI
+- {doc}`Command-line interface <cli>`
 - Panel app
 - ...
 
@@ -20,6 +20,7 @@ pip install stringcalc
 :hidden:
 
 api.rst
+cli.rst
 prior-art.md
 GitHub <https://github.com/zmoon/stringcalc>
 ```

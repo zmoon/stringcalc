@@ -22,7 +22,7 @@ _TRAN_SUPE_DIGIT = str.maketrans("0123456789", "⁰¹²³⁴⁵⁶⁷⁸⁹")
 
 console = Console()
 
-app = typer.Typer(add_completion=False)
+app = typer.Typer(add_completion=False, name="stringcalc")
 
 
 def _to_fancy_sci(s: str) -> str:
@@ -284,7 +284,7 @@ def gauge_(
     ),
     suggest: bool = typer.Option(
         False,
-        help=("If true, suggest D'Addario gauges. If false, compute exact gauge."),
+        help=("If true, suggest gauges (strings) to use. If false, compute exact gauge."),
     ),
     types: list[str] = typer.Option(
         None, "--type", help="String type. Can specify multiple times if using --suggest."
@@ -301,10 +301,10 @@ def gauge_(
     ),
     verbose: bool = typer.Option(False),
 ):
-    """Compute gauge from string information.
+    """Compute gauge(s) from string information.
 
-    IMPORTANT: currently must use T in lbf and L in inches,
-    returning results in inches.
+    IMPORTANT: currently must use `T` in lbf and `L` in inches,
+    returning result(s) in inches.
     """
     from itertools import cycle
 
@@ -388,6 +388,9 @@ def gauge_(
             )
         else:
             console.print(g)
+
+
+_typer_click_object = typer.main.get_command(app)  # for sphinx-click in docs
 
 
 if __name__ == "__main__":
