@@ -15,6 +15,9 @@ dependencies:
   - hvplot
   - panel=1.*
   #
+  # Dev
+  - mypy
+  #
   - pip
   - pip:
       #

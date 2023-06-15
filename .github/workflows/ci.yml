@@ -91,3 +91,7 @@ jobs:
 
       - name: Run the app script
         run: python panel/app.py
+
+      - name: Run mypy
+        run: |
+          mypy --non-interactive panel/app.py
