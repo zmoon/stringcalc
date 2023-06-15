@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.9", "3.10", "3.11"]
 
     steps:
       - uses: actions/checkout@v3
@@ -28,7 +28,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install flit
-          flit install --extras=test
+          flit install
 
       - name: Test with pytest
         run: pytest -v
@@ -36,3 +36,26 @@ jobs:
       - name: Check type annotations
         run: |
           mypy --non-interactive .
+
+      - name: Check data prep scripts still work
+        run: |
+          # Copy to temp location
+          mkdir -p ../tmp/stringcalc
+          cp -vr data ../tmp/stringcalc/
+          cp -vr stringcalc ../tmp/stringcalc/
+
+          # Run scripts
+          cd ../tmp/stringcalc/data
+          for f in *.py; do
+            if [ $f == "daddario_extract.py" ]; then continue; fi
+            python $f
+          done
+
+          # Compare results to those in the repo
+          cd ../stringcalc/data
+          rc=0
+          for f in *.csv; do
+            echo $f
+            cmp $f $GITHUB_WORKSPACE/stringcalc/data/$f || rc=$?
+          done
+          exit $rc

@@ -1,5 +1,7 @@
 """
 Plot the tension data for some of the string types I usually buy
+
+TODO: move to docs example
 """
 import matplotlib.pyplot as plt
 import numpy as np
@@ -11,7 +13,11 @@ plt.close("all")
 
 # %% Load
 
-df = pd.read_csv("daddario-tension.csv", header=0).drop(columns=["tens", "notes"]).convert_dtypes()
+df = (
+    pd.read_csv("../stringcalc/data/daddario-tension.csv", header=0)
+    .drop(columns=["tens", "notes"])
+    .convert_dtypes()
+)
 
 
 # %% Plot

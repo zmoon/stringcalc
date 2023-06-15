@@ -6,6 +6,7 @@ from stringcalc.tension import (
     _STRING_TYPE_ALIASES,
     String,
     gauge,
+    load_data,
     suggest_gauge,
     tension,
     unit_weight,
@@ -60,6 +61,16 @@ def test_suggest_gauge():
     assert ret.id.tolist() == ["NYL031", "NYL032", "NYL033"]
 
 
+def test_suggest_gauge_pb056():
+    # GH #7
+    T = 23
+    L = 25.5
+    pitch = "D2"  # dropped D
+
+    ret = suggest_gauge(T, L, pitch, types={"PB"})
+    assert ret.id.tolist() == ["PB053", "PB056D", "PB059"]
+
+
 @pytest.mark.parametrize(
     "pitch",
     ["G1", "G4"],
@@ -106,3 +117,10 @@ def test_aliases_unique():
     all_aliases_set = set(all_aliases)
     assert len(all_aliases) == len(all_aliases_set)
     assert len(all_aliases + list(verbose_keys)) == len(all_aliases_set | verbose_keys)
+
+
+def test_load_data_categories():
+    df = load_data()
+
+    for name in ["category", "group", "id_pref", "id_suff", "group_id"]:
+        assert df[name].dtype == "category"
