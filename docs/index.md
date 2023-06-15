@@ -15,7 +15,14 @@ stringcalc is available on PyPI:
 pip install stringcalc
 ```
 
+For the CLI, include the `cli` extra:
+
+```
+pip install stringcalc[cli]
+```
+
 ```{toctree}
+:hidden:
 
 panel.rst
 ```

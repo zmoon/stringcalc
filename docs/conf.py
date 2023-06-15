@@ -1,8 +1,11 @@
+import stringcalc
+
 project = "stringcalc"
 copyright = "2022\u20132023 zmoon"
-author = "zmoon"
+# author = "zmoon"
 
-release = "0.1"
+version = stringcalc.__version__.split("+")[0]
+release = stringcalc.__version__
 
 extensions = [
     "sphinx.ext.autodoc",
@@ -16,6 +19,7 @@ extensions = [
     # "sphinx.ext.viewcode",
     # "sphinx_jinja",
     "sphinx_click",
+    "sphinx_copybutton",
     "myst_parser",
 ]
 
@@ -29,12 +33,25 @@ exclude_patterns = ["_build"]
 html_title = "stringcalc"
 html_theme = "sphinx_book_theme"
 
+html_theme_options = {
+    "path_to_docs": "docs/",
+    "repository_url": "https://github.com/zmoon/stringcalc",
+    "repository_branch": "main",
+    "use_repository_button": True,
+    "use_issues_button": True,
+    "use_edit_page_button": True,
+    "use_download_button": False,
+    "extra_footer": f"""\
+    <span style="font-size: 0.8em;">stringcalc version in this docs build:
+    <strong>{version}</strong>.</span>
+    """,
+}
+
 napoleon_google_docstring = False
 napoleon_numpy_docstring = True
 napoleon_preprocess_types = True
 napoleon_use_param = True
 napoleon_use_rtype = False
-
 
 autodoc_typehints = "description"
 autosummary_generate = True
