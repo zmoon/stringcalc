@@ -208,10 +208,13 @@ def scale_length_pane():
 
     @pn.depends(a_input, b_input, d_input)
     def res(a, b, d):
-        a_ = _ab_interp(a)
-        b_ = _ab_interp(b)
-        L = length_from_distance((a_, b_), d)
-        return pn.pane.Markdown(f'**Scale length:** {L:.4g}"')
+        if a == b:
+            return pn.pane.Markdown("<span style='color:red'>⚠ a and b must be different!</span>")
+        else:
+            a_ = _ab_interp(a)
+            b_ = _ab_interp(b)
+            L = length_from_distance((a_, b_), d)
+            return pn.pane.Markdown(f'**Scale length:** {L:.4g}"')
 
     return pn.Column(
         info,
