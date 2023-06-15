@@ -9,7 +9,7 @@ WIDTH = 450
 
 DATA_ALL = load_data()
 # TYPE_OPTIONS = sorted(DATA_ALL.group_id.cat.categories)
-TYPE_OPTIONS = ["PB", "PL", "LE", "LEW", "NYL", "NYLW"]
+TYPE_OPTIONS = ["PB", "PL", "LE", "LEW", "NYL", "NYLW", "NNG", "WFC"]
 TYPE_DEFAULTS = ["PB", "PL"]
 
 
