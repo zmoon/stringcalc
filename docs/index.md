@@ -4,7 +4,7 @@ Calculations for instrument strings.
 
 - {doc}`Python library <api>`
 - {doc}`Command-line interface <cli>`
-- Panel app
+- {doc}`panel`
 - ...
 
 ## Installation
@@ -13,6 +13,11 @@ stringcalc is available on PyPI:
 
 ```
 pip install stringcalc
+```
+
+```{toctree}
+
+panel.rst
 ```
 
 ```{toctree}
