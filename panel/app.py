@@ -3,7 +3,7 @@ from bokeh.models.formatters import PrintfTickFormatter
 from pyabc2 import Pitch
 
 import panel as pn
-from stringcalc.frets import distances
+from stringcalc.frets import distances, length_from_distance
 from stringcalc.tension import DENSITY_LB_IN, gauge, load_data, suggest_gauge
 
 WIDTH = 450
@@ -173,9 +173,59 @@ def frets_pane():
     )
 
 
+def scale_length_pane():
+    info = pn.pane.Markdown("Compute the scale length implied by fretboard distance a → b.")
+
+    opts = ["nut"] + list(range(1, 31)) + ["saddle"]
+
+    a_input = pn.widgets.DiscreteSlider(
+        name="a",
+        options=opts,
+        value="nut",
+        width=int(WIDTH * 2 / 3),
+    )
+
+    b_input = a_input.clone(name="b", value=1)
+
+    step = 0.05
+    d_input = pn.widgets.FloatSlider(
+        name="Distance",
+        start=step,
+        end=50,
+        step=step,
+        value=1.0,
+        width=int(WIDTH * 2 / 3),
+        format=PrintfTickFormatter(format='%.2f"'),
+    )
+
+    def _ab_interp(x):
+        if x == "nut":
+            return 0
+        elif x == "saddle":
+            return None
+        else:
+            return x
+
+    @pn.depends(a_input, b_input, d_input)
+    def res(a, b, d):
+        a_ = _ab_interp(a)
+        b_ = _ab_interp(b)
+        L = length_from_distance((a_, b_), d)
+        return pn.pane.Markdown(f'**Scale length:** {L:.4g}"')
+
+    return pn.Column(
+        info,
+        a_input,
+        b_input,
+        d_input,
+        res,
+    )
+
+
 app = pn.Tabs(
     ("Suggest strings", suggest_gauge_pane()),
     ("Exact gauge", exact_gauge_pane()),
     ("Frets", frets_pane()),
+    ("Scale length", scale_length_pane()),
 )
 app.servable()
