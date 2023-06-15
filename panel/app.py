@@ -17,7 +17,7 @@ TYPE_DEFAULTS = ["PB", "PL"]
 def suggest_gauge_pane():
     info = pn.pane.Markdown(
         "Suggest strings based on string tension data. "
-        "Most of the data is "
+        "Most of the data are "
         "[from D'Addario](https://www.daddario.com/globalassets/pdfs/accessories/tension_chart_13934.pdf)."
     )
 
