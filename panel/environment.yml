@@ -3,20 +3,17 @@ channels:
   - conda-forge
   - nodefaults
 dependencies:
-  - python=3.9
+  - python=3.10
+  - pip
   #
   # stringcalc
   - numpy>=1.21
   - pandas
-  - pint
+  - pint>=0.22
   #
   # Panel
   - hvplot
-  - panel
-  #
-  # Jupyter
-  # - ipywidgets
-  # - jupyterlab
+  - panel=1.*
   #
   - pip
   - pip:
