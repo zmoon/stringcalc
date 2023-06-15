@@ -1,5 +1,10 @@
-# Hi
+# stringcalc
 
-```{python-apigen-group} public-members
-:notoc:
+```{toctree}
+:caption: Reference
+:hidden:
+
+api.rst
+prior-art.md
+GitHub <https://github.com/zmoon/stringcalc>
 ```

@@ -38,7 +38,7 @@ doc = [
     "matplotlib",
     "myst-parser",
     "sphinx",
-    "sphinx-immaterial",
+    "sphinx-book-theme",
 ]
 
 [project.scripts]

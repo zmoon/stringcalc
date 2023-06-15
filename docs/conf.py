@@ -6,6 +6,7 @@ release = "0.1"
 
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
     # "sphinx.ext.doctest",
     # "sphinx.ext.extlinks",
     "sphinx.ext.intersphinx",
@@ -13,15 +14,8 @@ extensions = [
     # "sphinx.ext.todo",
     "sphinx.ext.mathjax",
     # "sphinx.ext.viewcode",
-    # "sphinx_immaterial.theme_result",
-    # "sphinx_immaterial.kbd_keys",
-    "sphinx_immaterial.apidoc.format_signatures",
-    # "sphinx_immaterial.apidoc.json.domain",
-    "sphinx_immaterial.apidoc.python.apigen",
-    # "sphinx_immaterial.graphviz",
     # "sphinx_jinja",
     "myst_parser",
-    "sphinx_immaterial",
 ]
 
 intersphinx_mapping = {
@@ -32,23 +26,14 @@ intersphinx_mapping = {
 exclude_patterns = ["_build"]
 
 html_title = "stringcalc"
-html_theme = "sphinx_immaterial"
+html_theme = "sphinx_book_theme"
 
-python_apigen_modules = {
-    "stringcalc.tension": "api/",
-}
+napoleon_google_docstring = False
+napoleon_numpy_docstring = True
+napoleon_preprocess_types = True
+napoleon_use_param = True
+napoleon_use_rtype = False
 
-python_apigen_default_groups = [
-    ("class:.*", "Classes"),
-    (r".*:.*\.__(init|new)__", "Constructors"),
-    (r".*:.*\.__eq__", "Comparison operators"),
-    (r".*:.*\.__(str|repr)__", "String representation"),
-]
 
-python_apigen_rst_prolog = """
-.. default-role:: py:obj
-
-.. default-literal-role:: python
-
-.. highlight:: python
-"""
+autodoc_typehints = "description"
+autosummary_generate = True

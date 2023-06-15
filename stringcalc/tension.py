@@ -1,9 +1,10 @@
 """
-String tension calculations
+String tension calculations.
 
-e.g.
-- For specified strings, calculate tensions
-- For specified total or per-string tension, suggest strings
+For example:
+
+- For specified strings, calculate tensions.
+- For specified total or per-string tension, suggest strings.
 """
 from __future__ import annotations
 
@@ -31,7 +32,31 @@ DATA = _get_data()
 def load_data() -> pd.DataFrame:
     """Load all string data.
 
-    Use the individual `load_*_data` functions for more control.
+    .. note::
+       Important columns:
+
+       - ``id``: String (product) ID
+         (e.g. "PB053" for the string used for the low E in
+         D'Addario phosphor bronze acoustic guitar light set
+         `EJ16 <https://www.daddario.com/products/guitar/acoustic-guitar/phosphor-bronze/ej16-phosphor-bronze-acoustic-guitar-strings-light-12-53/>`__).
+
+       - ``group_id``: String group ID (e.g. "PB" for D'Addario phosphor bronze)
+         used to identify a group of strings with the same manufacturer, material, etc.
+
+       - ``uw``: String unit weight (mass per unit length) [lbm/in]
+         For PB053 this value is 0.000570.
+
+       - ``gauge``: String gauge (diameter) [in].
+         For PB053 this value is 0.053.
+
+    .. note::
+       Use the individual ``load_*_data`` functions for more control.
+
+    See Also
+    --------
+    load_daddario_data
+    load_aquila_data
+    load_worth_data
     """
     import itertools
 
@@ -71,7 +96,13 @@ def load_data() -> pd.DataFrame:
 
 @lru_cache(2)
 def load_daddario_data(*, drop_sample_tensions: bool = True) -> pd.DataFrame:
-    """Load the data (currently only D'Addario) needed for the calculations."""
+    """Load D'Addario data.
+
+    Parameters
+    ---------
+    drop_sample_tensions
+        Drop columns containing tensions and corresponding pitches from the D'Addario document.
+    """
 
     df = pd.read_csv(DATA.joinpath("daddario-tension.csv"), header=0).convert_dtypes()
 
@@ -92,10 +123,12 @@ def load_aquila_data(*, nng_density: float = 1300, drop_gauge_eqvs: bool = True)
     Parameters
     ----------
     nng_density
-        Assumed density of Aquila NNG strings, in kg/m3.
+        Assumed density of Aquila NNG strings, in [kg m-3].
         They are supposed to be the same density as gut.
-        https://www.cs.helsinki.fi/u/wikla/mus/Calcs/wwwscalc.html says gut is 1276 kg/m3;
+        https://www.cs.helsinki.fi/u/wikla/mus/Calcs/wwwscalc.html says gut is 1276 kg m-3;
         I have seen 1300 elsewhere.
+    drop_gauge_eqvs
+        Drop columns of nylon and carbon gauge-equivalent diameters.
     """
     import numpy as np
 
@@ -149,7 +182,7 @@ class String(NamedTuple):
     L: float
     """Scale length."""
     type: str
-    """Currently D'Addario string type abbreviation, such as 'PB', 'PL', or 'NYL'."""
+    """String type abbreviation, such as D'Addario "PB", "PL", or "NYL"."""
     gauge: float
     """String gauge."""
     wound: bool
@@ -162,6 +195,7 @@ class String(NamedTuple):
 
     @classmethod
     def from_spec(cls, s: str):
+        """Create a string from spec, e.g. ``'22.9" PB .042w'``."""
         m = _re_string_spec.match(s.strip())
         if m is None:
             raise ValueError(
@@ -222,6 +256,13 @@ def tension(s: String, pitch: str = "A4") -> float:
     """Compute tension for :class:`String`.
 
     Results are for a single type, e.g. plain steel or phosphor bronze.
+
+    Parameters
+    ----------
+    s
+        String of interest.
+    pitch
+        Pitch name in SPN, e.g. "A4".
     """
     from pyabc2 import Pitch
 
@@ -282,7 +323,18 @@ def tension(s: String, pitch: str = "A4") -> float:
 
 
 def unit_weight(T: float, L: float, pitch: str) -> float:
-    """From scale length, pitch, and desired tension, compute unit weight."""
+    """From scale length, pitch, and desired tension, compute unit weight
+    (mass per unit length) [lbm in-1].
+
+    Parameters
+    ----------
+    T
+        Tension [lbf].
+    L
+        Scale length [in].
+    pitch
+        Pitch name in SPN, e.g. "A4".
+    """
     from pyabc2 import Pitch
 
     F = Pitch.from_name(pitch).etf
@@ -311,6 +363,22 @@ _STRING_TYPE_ALIAS_TO_VERBOSE = {
 def gauge(density: float, T: float, L: float, pitch: str) -> float:
     """From density, scale length, pitch, and desired tension, compute gauge.
     Not nominal gauge, precise diameter.
+
+    Parameters
+    ----------
+    density
+        String material density [lbm in-3].
+
+        .. important::
+           Although [kg m-3] and [g cm-3] units are more common for density,
+           currently you must convert to [lbm in-3] in order to get a correct answer.
+           But Pint support for this is coming soon!
+    T
+        Tension [lbf].
+    L
+        Scale length [in].
+    pitch
+        Pitch name in SPN, e.g. "A4".
     """
 
     UW = unit_weight(T, L, pitch)
@@ -330,6 +398,22 @@ def suggest_gauge(
 
     Results may include two types commonly used to make string sets, e.g.
     plain steel + phosphor bronze or plain nylon + silver-wrapped nylon.
+
+    Parameters
+    ----------
+    T
+        Tension [lbf].
+    L
+        Scale length [in].
+    pitch
+        Pitch name in SPN, e.g. "A4".
+    types
+        String type IDs
+        (column ``group_id`` in the :func:`data table <load_data>`)
+        to consider.
+        If unset, defaults to ``{'PB', 'PL'}``, phosphor bronze and plain steel.
+    n
+        Number of suggestions to include in the returned frame.
     """
     from pyabc2 import Pitch
 
