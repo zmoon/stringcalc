@@ -59,3 +59,35 @@ jobs:
             cmp $f $GITHUB_WORKSPACE/stringcalc/data/$f || rc=$?
           done
           exit $rc
+
+  panel:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+    strategy:
+      matrix:
+        stringcalc: ["local", "pypi"]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies (micromamba)
+        uses: mamba-org/setup-micromamba@v1
+        with:
+          environment-file: panel/environment.yml
+          cache-environment: true
+          cache-downloads: true
+
+      - name: Install stringcalc (${{ matrix.stringcalc }})
+        run: |
+          if [ "${{ matrix.stringcalc }}" == "local" ]; then
+            pip install -e . --no-deps
+          elif [ "${{ matrix.stringcalc }}" == "pypi" ]; then
+            pip install stringcalc
+          else
+            exit 1
+          fi
+
+      - name: Run the app script
+        run: python panel/app.py
