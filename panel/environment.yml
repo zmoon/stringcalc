@@ -1,0 +1,25 @@
+name: stringcalc-panel
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.10
+  - pip
+  #
+  # stringcalc
+  - numpy>=1.21
+  - pandas
+  - pint>=0.22
+  #
+  # Panel
+  - hvplot
+  - panel=1.*
+  #
+  # Dev
+  - mypy
+  #
+  - pip
+  - pip:
+      #
+      # stringcalc
+      - pyabc2

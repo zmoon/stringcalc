@@ -66,6 +66,7 @@ line_length = 100
 exclude = [
     "^venv/",
     "^data/",
+    "^panel/",
 ]
 install_types = true
 ignore_missing_imports = true
