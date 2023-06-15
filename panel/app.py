@@ -9,7 +9,6 @@ from stringcalc.tension import DENSITY_LB_IN, gauge, load_data, suggest_gauge
 WIDTH = 450
 
 DATA_ALL = load_data()
-# TYPE_OPTIONS = sorted(DATA_ALL.group_id.cat.categories)
 TYPE_OPTIONS = ["PB", "PL", "LE", "LEW", "NYL", "NYLW", "NNG", "WFC"]
 TYPE_DEFAULTS = ["PB", "PL"]
 
@@ -149,27 +148,20 @@ def frets_pane():
         format=PrintfTickFormatter(format='%.1f"'),
     )
 
-    n_input = pn.widgets.IntSlider(
-        name="Number of frets",
-        start=1,
-        end=30,
-        value=17,
-        width=int(WIDTH / 3),
-    )
-
-    @pn.depends(length_input, n_input)
-    def res(L, N):
-        df = distances(N=N, L=L)
+    @pn.depends(length_input)
+    def res(L):
+        df = distances(N=30, L=L)
         df = df.reset_index(drop=False).rename(columns=df.attrs["fancy_col"])
         return pn.Column(
-            df.hvplot.table(sortable=False, selectable=True, width=WIDTH),
+            df.hvplot.table(sortable=False, selectable=True, width=WIDTH, height=450),
         )
+        # NOTE: height chosen to get 17 frets to show
 
     return pn.Column(
         info,
         length_input,
-        n_input,
         res,
+        width=WIDTH,
     )
 
 
@@ -222,16 +214,27 @@ def scale_length_pane():
         b_input,
         d_input,
         res,
+        width=WIDTH,
     )
 
 
+foot_html = """\
+<div style="font-size: 0.7rem; color: #888">
+These calculations use the Python package
+<a href="https://github.com/zmoon/stringcalc">stringcalc</a>.
+</div>
+"""
+
 app = pn.Column(
-    pn.Tabs(
-        ("Suggest strings", suggest_gauge_pane()),
-        ("Exact gauge", exact_gauge_pane()),
-        ("Frets", frets_pane()),
-        ("Scale length", scale_length_pane()),
+    pn.Column(
+        pn.Tabs(
+            ("Suggest strings", suggest_gauge_pane()),
+            ("Exact gauge", exact_gauge_pane()),
+            ("Frets", frets_pane()),
+            ("Scale length", scale_length_pane()),
+        ),
+        sizing_mode="stretch_height",
     ),
-    "[stringcalc](https://github.com/zmoon/stringcalc)",
+    pn.pane.HTML(foot_html),
 )
-app.servable()
+app.servable(title="stringcalc")
