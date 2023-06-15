@@ -36,6 +36,9 @@ cli = [
 ]
 doc = [
     "matplotlib",
+    "myst-parser",
+    "sphinx",
+    "sphinx-immaterial",
 ]
 
 [project.scripts]
