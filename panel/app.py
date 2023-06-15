@@ -64,7 +64,7 @@ def suggest_gauge_pane():
     )
 
     @pn.depends(tension_input, length_input, pitch_input, types_input, n_input)
-    def table(T, L, pitch, types, n):
+    def res(T, L, pitch, types, n):
         df = suggest_gauge(T=T, L=L, pitch=pitch, types=types, n=n)
         df = df.rename(columns=df.attrs["fancy_col"])
 
@@ -80,7 +80,7 @@ def suggest_gauge_pane():
         pitch_input,
         n_input,
         types_input,
-        table,
+        res,
         width=WIDTH,
     )
 
@@ -222,10 +222,13 @@ def scale_length_pane():
     )
 
 
-app = pn.Tabs(
-    ("Suggest strings", suggest_gauge_pane()),
-    ("Exact gauge", exact_gauge_pane()),
-    ("Frets", frets_pane()),
-    ("Scale length", scale_length_pane()),
+app = pn.Column(
+    pn.Tabs(
+        ("Suggest strings", suggest_gauge_pane()),
+        ("Exact gauge", exact_gauge_pane()),
+        ("Frets", frets_pane()),
+        ("Scale length", scale_length_pane()),
+    ),
+    "[stringcalc](https://github.com/zmoon/stringcalc)",
 )
 app.servable()
