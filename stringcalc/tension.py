@@ -346,7 +346,7 @@ def suggest_gauge(
 
     UW = data.uw
     F = Pitch.from_name(pitch).etf
-    T_all = UW * (2 * L * F) ** 2 / 386.0
+    T_all = UW * (2 * L * F) ** 2 / 386.09
 
     # Find closest ones
     data_sort = data.iloc[(T_all - T).abs().argsort().iloc[:n]].copy()

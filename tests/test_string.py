@@ -124,3 +124,12 @@ def test_load_data_categories():
 
     for name in ["category", "group", "id_pref", "id_suff", "group_id"]:
         assert df[name].dtype == "category"
+
+
+def test_string_suggest_t_consistency():
+    s = String.from_spec('25.5" PB .042')
+    P = "A2"
+    T = tension(s, pitch=P)
+    df = suggest_gauge(T, s.L, P, types={"PB"}, n=1)
+    assert df["T"].tolist() == [T]
+    assert df.dT.tolist() == [0]
