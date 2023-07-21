@@ -42,7 +42,7 @@ doc = [
 stringcalc = "stringcalc.cli:app"
 
 [tool.flit.sdist]
-exclude = ["data/"]
+exclude = ["data/", ".github/", "panel/", ".gitignore"]
 
 
 [tool.black]
