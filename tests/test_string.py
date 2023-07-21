@@ -3,10 +3,12 @@ import itertools
 import pytest
 
 from stringcalc.tension import (
+    _DATA_LOADERS,
     _STRING_TYPE_ALIASES,
     String,
     gauge,
     load_data,
+    load_stringjoy_data,
     suggest_gauge,
     tension,
     unit_weight,
@@ -119,8 +121,46 @@ def test_aliases_unique():
     assert len(all_aliases + list(verbose_keys)) == len(all_aliases_set | verbose_keys)
 
 
-def test_load_data_categories():
+def test_load_data_group_ids_unique():
+    dfs = [fn() for fn in _DATA_LOADERS]
+    for a, b in itertools.product(
+        [set(df.group_id.cat.categories) for df in dfs],
+        repeat=2,
+    ):
+        if a is b:
+            continue
+        if a & b:
+            raise AssertionError(f"Group IDs {a & b} found in multiple datasets.")
+
+
+def test_load_data_cat_dtypes():
     df = load_data()
 
     for name in ["category", "group", "id_pref", "id_suff", "group_id"]:
         assert df[name].dtype == "category"
+
+
+def test_load_data_ids_unique():
+    df = load_data()
+    id_counts = df["id"].value_counts()
+    id_counts_gt1 = id_counts[id_counts > 1]
+    assert id_counts_gt1.empty, f"Duplicate IDs found: {sorted(id_counts_gt1.index)}"
+
+
+def test_stringjoy_data_ids():
+    df = load_stringjoy_data()
+    assert df.group_id.str.len().isin((3, 4)).all()
+    assert df.group_id.str.startswith("SJ").all()
+    assert df.id.str.startswith("SJ").all()
+    assert (
+        ("." + df.apply(lambda row: row.id[len(row.group_id) :], axis=1)).astype(float) == df.gauge
+    ).all()
+
+
+def test_string_suggest_t_consistency():
+    s = String.from_spec('25.5" PB .042')
+    P = "A2"
+    T = tension(s, pitch=P)
+    df = suggest_gauge(T, s.L, P, types={"PB"}, n=1)
+    assert df["T"].tolist() == [T]
+    assert df.dT.tolist() == [0]
