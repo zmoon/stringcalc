@@ -2,10 +2,15 @@
 Get Stringjoy data
 used in https://tension.stringjoy.com/
 """
+import sys
 from pathlib import Path
 
 import pandas as pd
 import requests
+
+if sys.version_info < (3, 10):
+    print("Python version >= 3.10 required.")
+    raise SystemExit(0)
 
 HERE = Path(__file__).parent
 
