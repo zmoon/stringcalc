@@ -8,6 +8,7 @@ from stringcalc.tension import (
     String,
     gauge,
     load_data,
+    load_stringjoy_data,
     suggest_gauge,
     tension,
     unit_weight,
@@ -137,6 +138,23 @@ def test_load_data_cat_dtypes():
 
     for name in ["category", "group", "id_pref", "id_suff", "group_id"]:
         assert df[name].dtype == "category"
+
+
+def test_load_data_ids_unique():
+    df = load_data()
+    id_counts = df["id"].value_counts()
+    id_counts_gt1 = id_counts[id_counts > 1]
+    assert id_counts_gt1.empty, f"Duplicate IDs found: {sorted(id_counts_gt1.index)}"
+
+
+def test_stringjoy_data_ids():
+    df = load_stringjoy_data()
+    assert df.group_id.str.len().isin((3, 4)).all()
+    assert df.group_id.str.startswith("SJ").all()
+    assert df.id.str.startswith("SJ").all()
+    assert (
+        ("." + df.apply(lambda row: row.id[len(row.group_id) :], axis=1)).astype(float) == df.gauge
+    ).all()
 
 
 def test_string_suggest_t_consistency():
