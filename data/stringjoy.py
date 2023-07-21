@@ -2,11 +2,12 @@
 Get Stringjoy data
 used in https://tension.stringjoy.com/
 """
-# import json
-# import re
+from pathlib import Path
 
 import pandas as pd
 import requests
+
+HERE = Path(__file__).parent
 
 # %% Load source code that it is in
 
@@ -30,16 +31,11 @@ for i, c in enumerate(s[a + len(start) :]):
         b = a + len(start) + i
         break
 
-
 # %% Parse
 
 chunk = s[a + len(start) : b + 1]
 assert chunk[0] == "{" and chunk[-1] == "}"
 print(chunk)
-
-# # Make keys strings?? (so can load as JSON)
-# chunk_json = re.sub(r"[a-z]{2,}", lambda m: f"\"{m.group()}\"", chunk)
-# data_raw = json.loads(chunk)
 
 # Hack: add key names to globals
 while True:
@@ -53,7 +49,6 @@ while True:
     else:
         break
 
-
 # %% Construct DataFrame
 
 dfs = []
@@ -66,5 +61,34 @@ for k, data in data_raw.items():
     dfs.append(df_)
 
 df = pd.concat(dfs)
+df0 = df.copy()
 
-# gauge: df.name.str.rstrip("wp").astype(float)
+df["gauge"] = df.name.str.rstrip("wp").astype(float)
+
+group_stuff = {
+    # original group name: (new group name, group ID pref)
+    "bassNickel": ("Bass Nickel", "BN"),
+    "brass": ("80/20 Bronze", "B"),
+    "bronze": ("Phosophor Bronze", "PB"),
+    "nickel": ("Nickel", "N"),
+    "plain": ("Plain Steel", "PL"),
+    "pure": ("Pure Nickel", "PN"),
+}
+assert set(group_stuff) == set(df.key.unique())
+
+# D'Addario-like IDs
+df["group"] = df.key.map({k: v[0] for k, v in group_stuff.items()})
+df["group_id"] = df.key.map({k: v[1] for k, v in group_stuff.items()})
+df = df.drop(columns=["key", "name"])
+df.insert(0, "id", df.group_id + df.gauge.astype(str).str.slice(2, None))
+
+# %% Save
+
+fn = "stringjoy.csv"
+fp = HERE / "../stringcalc/data" / fn
+assert fp.parent.is_dir()
+
+df.to_csv(fp, index=False, float_format="%.5g")
+
+# Reload
+dfr = pd.read_csv(fp, header=0)
