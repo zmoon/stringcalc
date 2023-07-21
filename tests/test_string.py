@@ -139,6 +139,13 @@ def test_load_data_cat_dtypes():
         assert df[name].dtype == "category"
 
 
+def test_load_data_ids_unique():
+    df = load_data()
+    id_counts = df["id"].value_counts()
+    id_counts_gt1 = id_counts[id_counts > 1]
+    assert id_counts_gt1.empty, f"Duplicate IDs found: {sorted(id_counts_gt1.index)}"
+
+
 def test_string_suggest_t_consistency():
     s = String.from_spec('25.5" PB .042')
     P = "A2"
