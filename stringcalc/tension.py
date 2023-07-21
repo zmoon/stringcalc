@@ -121,6 +121,7 @@ def load_stringjoy_data() -> pd.DataFrame:
     df = pd.read_csv(DATA.joinpath("stringjoy.csv"), header=0).convert_dtypes()
 
     # Differentiate from D'Addario
+    df["id"] = "SJ" + df["id"]
     df["group"] = "Stringjoy " + df["group"]
     df["group_id"] = "SJ" + df["group_id"]
     for name in ["group", "group_id"]:
