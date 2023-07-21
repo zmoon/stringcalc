@@ -38,6 +38,7 @@ def load_data() -> pd.DataFrame:
     daddario = load_daddario_data()
     aquila = load_aquila_data()
     worth = load_worth_data().drop(columns="rho")
+    stringjoy = load_stringjoy_data()
 
     # Check no overlap in group IDs
     # TODO: move to test suite?
@@ -46,6 +47,7 @@ def load_data() -> pd.DataFrame:
             set(daddario.group_id.cat.categories),
             set(aquila.group_id.cat.categories),
             set(worth.group_id.cat.categories),
+            set(stringjoy.group_id.cat.categories),
         ],
         repeat=2,
     ):
@@ -59,6 +61,7 @@ def load_data() -> pd.DataFrame:
             daddario,
             aquila,
             worth,
+            stringjoy,
         ],
         ignore_index=True,
     )
@@ -130,6 +133,24 @@ def load_worth_data() -> pd.DataFrame:
     # Set group ID (used to select string type)
     df["group"] = "Worth Fluorocarbon"
     df["group_id"] = "WFC"
+    for name in ["group", "group_id"]:
+        df[name] = df[name].astype("category")
+
+    return df
+
+
+@lru_cache(1)
+def load_stringjoy_data() -> pd.DataFrame:
+    """Load Stringjoy data.
+
+    https://tension.stringjoy.com/
+    """
+
+    df = pd.read_csv(DATA.joinpath("stringjoy.csv"), header=0).convert_dtypes()
+
+    # Differentiate from D'Addario
+    df["group"] = "Stringjoy " + df["group"]
+    df["group_id"] = "SJ" + df["group_id"]
     for name in ["group", "group_id"]:
         df[name] = df[name].astype("category")
 
