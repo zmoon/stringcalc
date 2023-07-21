@@ -11,7 +11,7 @@ import math
 import re
 import warnings
 from functools import lru_cache
-from typing import NamedTuple
+from typing import Callable, NamedTuple
 
 import pandas as pd
 
@@ -33,33 +33,8 @@ def load_data() -> pd.DataFrame:
 
     Use the individual `load_*_data` functions for more control.
     """
-    import itertools
-
-    daddario = load_daddario_data()
-    aquila = load_aquila_data()
-    worth = load_worth_data().drop(columns="rho")
-
-    # Check no overlap in group IDs
-    # TODO: move to test suite?
-    for a, b in itertools.product(
-        [
-            set(daddario.group_id.cat.categories),
-            set(aquila.group_id.cat.categories),
-            set(worth.group_id.cat.categories),
-        ],
-        repeat=2,
-    ):
-        if a is b:
-            continue
-        if a & b:
-            raise AssertionError(f"Group IDs {a & b} found in multiple datasets.")
-
     df = pd.concat(
-        [
-            daddario,
-            aquila,
-            worth,
-        ],
+        [fn() for fn in _DATA_LOADERS],
         ignore_index=True,
     )
 
@@ -134,6 +109,32 @@ def load_worth_data() -> pd.DataFrame:
         df[name] = df[name].astype("category")
 
     return df
+
+
+@lru_cache(1)
+def load_stringjoy_data() -> pd.DataFrame:
+    """Load Stringjoy data.
+
+    https://tension.stringjoy.com/
+    """
+
+    df = pd.read_csv(DATA.joinpath("stringjoy.csv"), header=0).convert_dtypes()
+
+    # Differentiate from D'Addario
+    df["group"] = "Stringjoy " + df["group"]
+    df["group_id"] = "SJ" + df["group_id"]
+    for name in ["group", "group_id"]:
+        df[name] = df[name].astype("category")
+
+    return df
+
+
+_DATA_LOADERS: list[Callable[[], pd.DataFrame]] = [
+    load_daddario_data,
+    load_aquila_data,
+    lambda: load_worth_data().drop(columns="rho"),
+    load_stringjoy_data,
+]
 
 
 _re_string_spec = re.compile(

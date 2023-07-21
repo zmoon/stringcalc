@@ -3,6 +3,7 @@ import itertools
 import pytest
 
 from stringcalc.tension import (
+    _DATA_LOADERS,
     _STRING_TYPE_ALIASES,
     String,
     gauge,
@@ -119,7 +120,19 @@ def test_aliases_unique():
     assert len(all_aliases + list(verbose_keys)) == len(all_aliases_set | verbose_keys)
 
 
-def test_load_data_categories():
+def test_load_data_group_ids_unique():
+    dfs = [fn() for fn in _DATA_LOADERS]
+    for a, b in itertools.product(
+        [set(df.group_id.cat.categories) for df in dfs],
+        repeat=2,
+    ):
+        if a is b:
+            continue
+        if a & b:
+            raise AssertionError(f"Group IDs {a & b} found in multiple datasets.")
+
+
+def test_load_data_cat_dtypes():
     df = load_data()
 
     for name in ["category", "group", "id_pref", "id_suff", "group_id"]:
