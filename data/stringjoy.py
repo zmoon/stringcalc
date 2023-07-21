@@ -65,6 +65,9 @@ df0 = df.copy()
 
 df["gauge"] = df.name.str.rstrip("wp").astype(float)
 
+# Looks like "mass" is just UW (lbm/in) already
+df = df.rename(columns={"mass": "uw"})
+
 group_stuff = {
     # original group name: (new group name, group ID pref)
     "bassNickel": ("Bass Nickel", "BN"),
@@ -80,7 +83,8 @@ assert set(group_stuff) == set(df.key.unique())
 df["group"] = df.key.map({k: v[0] for k, v in group_stuff.items()})
 df["group_id"] = df.key.map({k: v[1] for k, v in group_stuff.items()})
 df = df.drop(columns=["key", "name"])
-df.insert(0, "id", df.group_id + df.gauge.astype(str).str.slice(2, None))
+df0.name.str.startswith(".").all()
+df.insert(0, "id", df.group_id + df0.name.str.rstrip("wp").str.lstrip("."))
 
 # %% Save
 
