@@ -48,7 +48,7 @@ def _maybe_export_output(cmd):
     def inner(*args, **kwargs):
         ret = cmd(*args, **kwargs)
 
-        p: Path | None
+        p: Path | None  # type: ignore[annotation-unchecked]
         if _RICH_EXPORT == "1":
             p = Path("stringcalc-rich-export.svg")
         elif _RICH_EXPORT == "0":
