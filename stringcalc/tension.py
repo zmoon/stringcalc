@@ -43,7 +43,7 @@ def load_data() -> pd.DataFrame:
        - ``group_id``: String group ID (e.g. "PB" for D'Addario phosphor bronze)
          used to identify a group of strings with the same manufacturer, material, etc.
 
-       - ``uw``: String unit weight (mass per unit length) [lbm/in]
+       - ``uw``: String unit weight (mass per unit length) [lbm/in].
          For PB053 this value is 0.000570.
 
        - ``gauge``: String gauge (diameter) [in].
@@ -54,8 +54,9 @@ def load_data() -> pd.DataFrame:
 
     See Also
     --------
-    load_daddario_data
     load_aquila_data
+    load_daddario_data
+    load_stringjoy_data
     load_worth_data
     """
     df = pd.concat(
@@ -73,8 +74,10 @@ def load_data() -> pd.DataFrame:
 def load_daddario_data(*, drop_sample_tensions: bool = True) -> pd.DataFrame:
     """Load D'Addario data.
 
+    Although outdated in some cases, this data set has the most string types.
+
     Parameters
-    ---------
+    ----------
     drop_sample_tensions
         Drop columns containing tensions and corresponding pitches from the D'Addario document.
     """
