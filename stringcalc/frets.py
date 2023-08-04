@@ -100,7 +100,7 @@ def length_from_distance(ab: tuple[int | None, int | None], d: float | QLike) ->
 
         .. note::
            Can use a quantity string that Pint will recognize, e.g. ``'25.5 in'``.
-           Then, the output will be a Pint quantity with the same units.
+           Then, the output will be a :class:`pint.Quantity` with the same units.
 
     Examples
     --------
