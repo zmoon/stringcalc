@@ -19,9 +19,13 @@ QLike = Union[Quantity, str]
 
 
 def distance_et(n: int | npt.ArrayLike, *, L: float) -> np.float_ | npt.NDArray[np.float_]:
-    """Exact equal-temperament distance from nut for fret(s) `n` for scale length `L`.
+    r"""Exact equal-temperament distance from nut for fret(s) `n` for scale length `L`.
 
     Using the 12th-root-of-2 method.
+
+    .. math::
+
+       d_n = L \left( 1 - 2^{-n/12} \right)
 
     Reference: https://www.liutaiomottola.com/formulae/fret.htm
 
@@ -38,7 +42,7 @@ def distance_et(n: int | npt.ArrayLike, *, L: float) -> np.float_ | npt.NDArray[
     if not np.all(n > 0):
         raise ValueError("input fret numbers should be positive")
 
-    return L * (1 - 1 / (2 ** (n / 12)))
+    return L * (1 - 2 ** (-n / 12))
 
 
 def distances(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
