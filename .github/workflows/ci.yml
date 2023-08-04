@@ -33,6 +33,9 @@ jobs:
       - name: Test with pytest
         run: pytest -v
 
+      - name: Docstring doctest
+        run: pytest --doctest-modules stringcalc -v
+
       - name: Check type annotations
         run: |
           mypy --non-interactive .
