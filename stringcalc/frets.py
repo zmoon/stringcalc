@@ -30,7 +30,7 @@ def distance_et(n: int | npt.ArrayLike, *, L: float) -> np.float_ | npt.NDArray[
     n
         Fret number (or array-like of them).
         If floats are passed, they will be floored before computing.
-    s
+    L
         Scale length.
     """
     n = np.floor(n, dtype=float)
@@ -42,7 +42,19 @@ def distance_et(n: int | npt.ArrayLike, *, L: float) -> np.float_ | npt.NDArray[
 
 
 def distances(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
-    """Fret distance DataFrame for `N` frets and scale length `L`."""
+    """Fret distance DataFrame for `N` frets and scale length `L`.
+
+    Parameters
+    ----------
+    N
+        Number of frets (not including nut) to compute.
+    L
+        Scale length.
+    method
+        Method to use for computing fret distances.
+
+        - ``'et'``: equal temperament (:func:`distance_et`)
+    """
     assert N >= 1  # guarantees `d` is array with at least one value
     n = np.arange(1, N + 1)
 
@@ -77,9 +89,27 @@ def distances(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
 def length_from_distance(ab: tuple[int | None, int | None], d: float | QLike) -> float | Quantity:
     """Calculate the scale length implied by a->b distance `d`.
 
-    `ab` is a 2-tuple specifying the bounds of the input distance in terms of fret number.
-    Use ``None`` to indicate the bridge/saddle end of the fretboard
-    (and ``0`` to indicate the nut end).
+    Parameters
+    ----------
+    ab
+        `ab` is a 2-tuple ``(a, b)`` specifying the bounds of the input distance `d` in terms of fret number.
+        Use ``None`` to indicate the bridge/saddle end of the fretboard
+        (and ``0`` to indicate the nut end).
+    d
+        Distance between ``a`` and ``b``.
+
+        .. note::
+           Can use a quantity string that Pint will recognize, e.g. ``'25.5 in'``.
+           Then, the output will be a Pint quantity with the same units.
+
+    Examples
+    --------
+
+    >>> from stringcalc.frets import length_from_distance
+    >>> round(length_from_distance((0, 1), 1.4), 2)
+    24.94
+    >>> round(length_from_distance((0, 1), "3 cm").to("inch"), 2)
+    <Quantity(21.04, 'inch')>
     """
     if isinstance(d, str):
         d = ureg(d)

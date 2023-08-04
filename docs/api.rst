@@ -38,3 +38,19 @@ String class
    :recursive:
 
    stringcalc.tension.String
+
+Frets
+=====
+
+.. automodule:: stringcalc.frets
+
+
+Distance
+--------
+
+.. autosummary::
+   :toctree: api/
+
+   stringcalc.frets.distance_et
+   stringcalc.frets.distances
+   stringcalc.frets.length_from_distance
