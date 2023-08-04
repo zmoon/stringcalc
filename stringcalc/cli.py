@@ -4,6 +4,7 @@ CLI
 from __future__ import annotations
 
 import functools
+import os
 import re
 from pathlib import Path
 
@@ -16,11 +17,12 @@ except ImportError as e:
     print(f"Error was: {e!r}")
     raise SystemExit(1)
 
+_RICH_EXPORT: str = os.environ.get("STRINGCALC_RICH_EXPORT", "0")
 
 HERE = Path(__file__).parent
 _TRAN_SUPE_DIGIT = str.maketrans("0123456789", "⁰¹²³⁴⁵⁶⁷⁸⁹")
 
-console = Console()
+console = Console(record=_RICH_EXPORT != "0")
 
 app = typer.Typer(add_completion=False, name="stringcalc")
 
@@ -30,6 +32,36 @@ def _to_fancy_sci(s: str) -> str:
     b = str(int(b0)).replace("-", "⁻").translate(_TRAN_SUPE_DIGIT)
 
     return f"{a}×10{b}"
+
+
+def _maybe_export_output(cmd):
+    """Export CLI command's Rich output to SVG,
+    dependent on the value of the ``STRINGCALC_RICH_EXPORT`` environment variable.
+
+    - ``0`` or unset: Do not export.
+    - ``1``: Export to ``stringcalc-rich-export.svg``.
+    - Any other value: Export to ``<value>.svg``
+      (or just ``value`` if it already ends in ``.svg``).
+    """
+
+    @functools.wraps(cmd)
+    def inner(*args, **kwargs):
+        ret = cmd(*args, **kwargs)
+
+        p: Path | None
+        if _RICH_EXPORT == "1":
+            p = Path("stringcalc-rich-export.svg")
+        elif _RICH_EXPORT == "0":
+            p = None
+        else:
+            p = Path(_RICH_EXPORT).with_suffix(".svg")
+
+        if p is not None:
+            console.save_svg(p)
+
+        return ret
+
+    return inner
 
 
 def error(s: str, *, rc: int = 1, markup: bool = True) -> None:
@@ -185,6 +217,7 @@ def pprint_table(df, *, title: str, float_format: str, panel=False) -> None:
 
 
 @app.command()
+@_maybe_export_output
 def frets(
     N: int = typer.Option(
         17, "-N", "--number", help="Number of frets, starting from nut (fret 0)."
@@ -224,6 +257,7 @@ def _ab_name(n: int | None) -> str:
 
 
 @app.command()
+@_maybe_export_output
 def length(
     spec: str = typer.Argument(...),
     round_: int = typer.Option(None, "--round", help="Round result to this decimal precision."),
@@ -276,6 +310,7 @@ def length(
 
 @app.command(name="gauge")
 @pretty_warnings
+@_maybe_export_output
 def gauge_(
     T: list[float] = typer.Option(..., "-T", "--tension", help="Desired tension"),
     L: list[float] = typer.Option(..., "-L", "--length", help="String length (scale length)."),
