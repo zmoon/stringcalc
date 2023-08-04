@@ -7,8 +7,7 @@ _Calculations for [string instrument](https://en.wikipedia.org/wiki/String_instr
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 
 ```sh
-stringcalc gauge --suggest -T 17 -L 23 -P G2 -P D3 -P A3 -P E4 -N 6
- --type NW --type PL --no-column-info
+stringcalc gauge --suggest -T 17 -L 23 -P G2 -P D3 -P A3 -P E4 -N 6 --type NW --type PL --no-column-info
 ```
 
 ![CLI gauge suggestion output for 23" TB](./docs/cli_gauge-suggest_tb23nw.svg)
