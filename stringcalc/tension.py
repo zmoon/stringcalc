@@ -340,9 +340,13 @@ def suggest_gauge(
 
     data_all = load_data()
     data = data_all.query("group_id in @types")
-    if data.empty:
+
+    # Validate types
+    all_types = set(data_all.group_id.cat.categories)
+    invalid_passed_types = types - all_types
+    if invalid_passed_types:
         raise ValueError(
-            f"string type IDs {sorted(types)} not found in dataset. "
+            f"string type IDs {sorted(invalid_passed_types)} not found in dataset. "
             f"Use one of {sorted(data_all.group_id.cat.categories)}."
         )
 
