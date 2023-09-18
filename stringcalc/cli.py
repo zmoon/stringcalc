@@ -337,7 +337,10 @@ def gauge_(
             if n >= n_cases:
                 break
 
-            g_df = suggest_gauge(T=T_, L=L_, pitch=P_, types=types_set, n=nsuggest)
+            try:
+                g_df = suggest_gauge(T=T_, L=L_, pitch=P_, types=types_set, n=nsuggest)
+            except ValueError as e:
+                error(f"Failed to compute gauge suggestions. Message: {e}", rc=2)
 
             g_df.attrs["col_desc"]["dT"] += f" ({T_} lbf)"
             table = _rich_table(
