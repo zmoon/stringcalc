@@ -90,6 +90,25 @@ def test_suggest_gauge_bounds_warning(pitch):
 
 
 @pytest.mark.parametrize(
+    "types",
+    [
+        {"asdf"},
+        {"PB", "asdf"},
+    ],
+    ids=[
+        "all invalid",
+        "one invalid",
+    ],
+)
+def test_suggest_gauge_invalid_types(types):
+    T = 15
+    L = 21
+    P = "D3"
+    with pytest.raises(ValueError, match=r"string type IDs \['asdf'\] not found in dataset."):
+        suggest_gauge(T=T, L=L, pitch=P, types=types)
+
+
+@pytest.mark.parametrize(
     "T,pitch,expected",
     [
         (19.6, "E4", 0.00002680),  # PL011
