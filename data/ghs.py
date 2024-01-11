@@ -3,7 +3,7 @@ from pypdf import PdfReader
 
 reader = PdfReader("C:/Users/zmoon/OneDrive/h/music/ghs_acoustic_guitar_string_guide.pdf")
 
-page = reader.pages[2]
+page = reader.pages[3]
 text = page.extract_text()
 
 # First two header lines,
@@ -17,7 +17,11 @@ for i, line in enumerate(text.splitlines()):
 
     line = line.strip()
 
-    if line in {"By Individual String"} or line.startswith("Play With The Best"):
+    if (
+        line in {"By Individual String"}
+        or line.startswith("Play With The Best")  # right footer
+        or " GHS Acoustic Guitar String Guide" in line  # left footer
+    ):
         continue
 
     if "Unit Weight " in line:
