@@ -29,7 +29,7 @@ for i, line in enumerate(text.splitlines()):
         last = True
 
     if line.startswith("."):
-        if len(line) == 9:
+        if len(line) == 9:  # leading dot, then 8 digits
             uw = line
         elif len(line) > 9:
             uw, first_id = line[:9], line[9:]
@@ -50,5 +50,6 @@ for i, id_ in enumerate(ids):
 assert len(ids) == len(uws)
 
 df = pd.DataFrame({"id": ids, "uw": uws})
+df["uw"] = df["uw"].astype(float)
 
 print(df)
