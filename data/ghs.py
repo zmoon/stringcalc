@@ -1,55 +1,116 @@
+"""
+Get GHS data
+from the calculator https://www.ghsstrings.com/pages/tension-calc
+"""
+import re
+import sys
+from pathlib import Path
+
 import pandas as pd
-from pypdf import PdfReader
+import requests
 
-reader = PdfReader("C:/Users/zmoon/OneDrive/h/music/ghs_acoustic_guitar_string_guide.pdf")
+if sys.version_info < (3, 10):
+    print("Python version >= 3.10 required.")
+    raise SystemExit(0)
 
-page = reader.pages[3]
-text = page.extract_text()
+HERE = Path(__file__).parent
 
-# First two header lines,
-# then seems that the UW's come out first,
-# then the IDs, with last one having the UW column header in it
-uws = []
-ids = []
-last = False
-for i, line in enumerate(text.splitlines()):
-    print(f"=={i:03d}=={line}==")
+# %% Load from the embedded JavaScript
 
-    line = line.strip()
+url = "https://www.ghsstrings.com/pages/tension-calc"
 
-    if (
-        line in {"By Individual String"}
-        or line.startswith("Play With The Best")  # right footer
-        or " GHS Acoustic Guitar String Guide" in line  # left footer
-    ):
-        continue
+r = requests.get(url)
+r.raise_for_status()
+s = r.text
 
-    if "Unit Weight " in line:
-        line = line[: line.index("Unit Weight ")]
-        last = True
-
-    if line.startswith("."):
-        if len(line) == 9:  # leading dot, then 8 digits
-            uw = line
-        elif len(line) > 9:
-            uw, first_id = line[:9], line[9:]
-            ids.insert(0, first_id)
-        else:
-            raise AssertionError(line)
-        uws.append(uw)
-    else:
-        ids.append(line)
-
-    if last:
+# Get the data snippet
+# Top-level keys are 'Acoustic', 'Electric', 'Bass'
+start = "const weights = "
+a = s.find(start)
+assert a != -1
+b = None
+n = 0
+for i, c in enumerate(s[a + len(start) :]):
+    if c == "{":
+        n += 1
+    elif c == "}":
+        n -= 1
+    if n == 0:
+        b = a + len(start) + i
         break
 
-for i, id_ in enumerate(ids):
-    if " 1/2" in id_:
-        ids[i] = id_.replace(" 1/2", "5")
+# %% Parse
 
-assert len(ids) == len(uws)
+chunk = s[a + len(start) : b + 1]
+print(chunk)
+assert chunk[0] == "{" and chunk[-1] == "}"
 
-df = pd.DataFrame({"id": ids, "uw": uws})
-df["uw"] = df["uw"].astype(float)
+# Remove comments
+chunk = re.sub(r" ?// ?[^\n]*", "", chunk)
 
-print(df)
+# Hack: add key names to globals
+while True:
+    try:
+        data_raw = eval(chunk)
+    except NameError as e:
+        print(e.name)  # `.name` only in 3.10+
+        globals().update({e.name: e.name})
+    except Exception:
+        raise
+    else:
+        break
+
+# %% Construct DataFrame
+
+dfs = []
+
+for meta_group, group_data in data_raw.items():
+    for group, id_to_uw in group_data.items():
+        df_ = pd.DataFrame(id_to_uw.items(), columns=["id", "uw"])
+        df_["group"] = group
+        df_["meta_group"] = meta_group
+
+        # Manipulate IDs for plain to normalize
+        # - replace dot
+        # - zero-pad those with gauge less than 10 (D'Addario would have two zeros)
+        # - add 'PL' prefix
+        # Technically, the SKUs are like '008', '008 1/2', etc.
+        # https://www.ghsstrings.com/products/21932-plain-steel-strings
+        if group == "Plain":
+            df_["id"] = df_["id"].where(df_["id"].astype(float).gt(9.999), "0" + df_["id"])
+            df_["id"] = df_["id"].str.replace(".", "")
+            df_["id"] = "PL0" + df_["id"]
+
+        dfs.append(df_)
+
+df = pd.concat(dfs, ignore_index=True)
+df0 = df.copy()
+
+# group_stuff = {
+#     # original group name: (new group name, group ID pref)
+#     "bassNickel": ("Bass Nickel", "BN"),
+#     "brass": ("80/20 Bronze", "B"),
+#     "bronze": ("Phosophor Bronze", "PB"),
+#     "nickel": ("Nickel", "N"),
+#     "plain": ("Plain Steel", "PL"),
+#     "pure": ("Pure Nickel", "PN"),
+# }
+# assert set(group_stuff) == set(df.key.unique())
+
+# # D'Addario-like IDs
+# df["group"] = df.key.map({k: v[0] for k, v in group_stuff.items()})
+# df["group_id"] = df.key.map({k: v[1] for k, v in group_stuff.items()})
+# df = df.drop(columns=["key", "name"])
+# df0.name.str.startswith(".").all()
+# df.insert(0, "id", df.group_id + df0.name.str.rstrip("wp").str.lstrip("."))
+
+# %% Save
+
+# fn = "ghs.csv"
+# fp = HERE / "../stringcalc/data" / fn
+# assert fp.parent.is_dir()
+
+# df.to_csv(fp, index=False, float_format="%.5g")
+
+# # Reload
+# dfr = pd.read_csv(fp, header=0)
