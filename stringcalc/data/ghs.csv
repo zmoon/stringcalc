@@ -1,0 +1,560 @@
+id,uw,gauge,group,group_id
+PL009,1.81e-05,0.009,Acoustic - Plain,PL
+PL0095,2.159e-05,0.0095,Acoustic - Plain,PL
+PL010,2.27e-05,0.01,Acoustic - Plain,PL
+PL0105,2.5e-05,0.0105,Acoustic - Plain,PL
+PL011,2.95e-05,0.011,Acoustic - Plain,PL
+PL0115,3.08e-05,0.0115,Acoustic - Plain,PL
+PL012,3.4e-05,0.012,Acoustic - Plain,PL
+PL0125,3.54e-05,0.0125,Acoustic - Plain,PL
+PL013,3.86e-05,0.013,Acoustic - Plain,PL
+PL014,4.77e-05,0.014,Acoustic - Plain,PL
+PL015,5.28e-05,0.015,Acoustic - Plain,PL
+PL016,5.9e-05,0.016,Acoustic - Plain,PL
+PL017,6.81e-05,0.017,Acoustic - Plain,PL
+PL018,7.27e-05,0.018,Acoustic - Plain,PL
+PL019,7.72e-05,0.019,Acoustic - Plain,PL
+PL020,8.41e-05,0.02,Acoustic - Plain,PL
+PL021,9.32e-05,0.021,Acoustic - Plain,PL
+PL022,0.0001159,0.022,Acoustic - Plain,PL
+PL023,0.0001365,0.023,Acoustic - Plain,PL
+PL024,0.0001432,0.024,Acoustic - Plain,PL
+PL026,0.0001568,0.026,Acoustic - Plain,PL
+PL028,0.0001706,0.028,Acoustic - Plain,PL
+BB18,7.672e-05,0.018,Acoustic - Bright Bronze,BB
+BB20,9.339e-05,0.02,Acoustic - Bright Bronze,BB
+BB22,0.0001053,0.022,Acoustic - Bright Bronze,BB
+BB24,0.0001136,0.024,Acoustic - Bright Bronze,BB
+BB26,0.0001338,0.026,Acoustic - Bright Bronze,BB
+BB28,0.0001588,0.028,Acoustic - Bright Bronze,BB
+BB30,0.0001757,0.03,Acoustic - Bright Bronze,BB
+BB32,0.0002084,0.032,Acoustic - Bright Bronze,BB
+BB34,0.0002542,0.034,Acoustic - Bright Bronze,BB
+BB36,0.0002584,0.036,Acoustic - Bright Bronze,BB
+BB38,0.0002792,0.038,Acoustic - Bright Bronze,BB
+BB40,0.0003181,0.04,Acoustic - Bright Bronze,BB
+BB42,0.0003528,0.042,Acoustic - Bright Bronze,BB
+BB44,0.0003931,0.044,Acoustic - Bright Bronze,BB
+BB46,0.0004257,0.046,Acoustic - Bright Bronze,BB
+BB48,0.0004494,0.048,Acoustic - Bright Bronze,BB
+BB50,0.0004949,0.05,Acoustic - Bright Bronze,BB
+BB52,0.0005161,0.052,Acoustic - Bright Bronze,BB
+BB54,0.0005561,0.054,Acoustic - Bright Bronze,BB
+BB56,0.0006078,0.056,Acoustic - Bright Bronze,BB
+BB58,0.0006439,0.058,Acoustic - Bright Bronze,BB
+BB60,0.0007876,0.06,Acoustic - Bright Bronze,BB
+B18,7.394e-05,0.018,Acoustic - Phosphor Bronze,B
+B20,8.506e-05,0.02,Acoustic - Phosphor Bronze,B
+B22,9.971e-05,0.022,Acoustic - Phosphor Bronze,B
+B24,0.0001247,0.024,Acoustic - Phosphor Bronze,B
+B26,0.0001556,0.026,Acoustic - Phosphor Bronze,B
+B28,0.0001644,0.028,Acoustic - Phosphor Bronze,B
+B30,0.0002062,0.03,Acoustic - Phosphor Bronze,B
+B32,0.0002139,0.032,Acoustic - Phosphor Bronze,B
+B34,0.0002431,0.034,Acoustic - Phosphor Bronze,B
+B36,0.0002611,0.036,Acoustic - Phosphor Bronze,B
+B38,0.0002931,0.038,Acoustic - Phosphor Bronze,B
+B40,0.0003146,0.04,Acoustic - Phosphor Bronze,B
+B42,0.000359,0.042,Acoustic - Phosphor Bronze,B
+B44,0.0003987,0.044,Acoustic - Phosphor Bronze,B
+B46,0.0003868,0.046,Acoustic - Phosphor Bronze,B
+B48,0.0004716,0.048,Acoustic - Phosphor Bronze,B
+B50,0.0005005,0.05,Acoustic - Phosphor Bronze,B
+B52,0.0005105,0.052,Acoustic - Phosphor Bronze,B
+B54,0.0006116,0.054,Acoustic - Phosphor Bronze,B
+B56,0.0006283,0.056,Acoustic - Phosphor Bronze,B
+B58,0.000648,0.058,Acoustic - Phosphor Bronze,B
+B60,0.0007154,0.06,Acoustic - Phosphor Bronze,B
+TCB21,0.00010625,0.021,Acoustic - Thin Core Phosphor Bronze,TCB
+TCB24,0.00012324,0.024,Acoustic - Thin Core Phosphor Bronze,TCB
+TCB27,0.00014561,0.027,Acoustic - Thin Core Phosphor Bronze,TCB
+TCB32,0.0002011,0.032,Acoustic - Thin Core Phosphor Bronze,TCB
+TCB35,0.00024643,0.035,Acoustic - Thin Core Phosphor Bronze,TCB
+TCB38,0.00028902,0.038,Acoustic - Thin Core Phosphor Bronze,TCB
+TCB41,0.00036742,0.041,Acoustic - Thin Core Phosphor Bronze,TCB
+TCB46,0.00041673,0.046,Acoustic - Thin Core Phosphor Bronze,TCB
+TCB52,0.00050411,0.052,Acoustic - Thin Core Phosphor Bronze,TCB
+TCB56,0.00059374,0.056,Acoustic - Thin Core Phosphor Bronze,TCB
+WB20,7.687e-05,0.02,Acoustic - White Bronze,WB
+WB22,0.000107,0.022,Acoustic - White Bronze,WB
+WB24,0.0001097,0.024,Acoustic - White Bronze,WB
+WB26,0.0001344,0.026,Acoustic - White Bronze,WB
+WB30,0.000166,0.03,Acoustic - White Bronze,WB
+WB32,0.0002002,0.032,Acoustic - White Bronze,WB
+WB36,0.0002265,0.036,Acoustic - White Bronze,WB
+WB38,0.0002786,0.038,Acoustic - White Bronze,WB
+WB42,0.0003239,0.042,Acoustic - White Bronze,WB
+WB46,0.0004011,0.046,Acoustic - White Bronze,WB
+WB48,0.0004734,0.048,Acoustic - White Bronze,WB
+WB50,0.0004964,0.05,Acoustic - White Bronze,WB
+WB52,0.0005772,0.052,Acoustic - White Bronze,WB
+WB54,0.0005956,0.054,Acoustic - White Bronze,WB
+WB56,0.0006209,0.056,Acoustic - White Bronze,WB
+VN18,7.394e-05,0.018,Acoustic - Vintage Bronze,VN
+VN20,9.061e-05,0.02,Acoustic - Vintage Bronze,VN
+VN22,9.971e-05,0.022,Acoustic - Vintage Bronze,VN
+VN24,0.0001136,0.024,Acoustic - Vintage Bronze,VN
+VN26,0.0001334,0.026,Acoustic - Vintage Bronze,VN
+VN28,0.0001671,0.028,Acoustic - Vintage Bronze,VN
+VN30,0.0001896,0.03,Acoustic - Vintage Bronze,VN
+VN32,0.0002229,0.032,Acoustic - Vintage Bronze,VN
+VN34,0.0002542,0.034,Acoustic - Vintage Bronze,VN
+VN36,0.000259,0.036,Acoustic - Vintage Bronze,VN
+VN38,0.0002931,0.038,Acoustic - Vintage Bronze,VN
+VN40,0.0003078,0.04,Acoustic - Vintage Bronze,VN
+VN42,0.0003681,0.042,Acoustic - Vintage Bronze,VN
+VN44,0.000382,0.044,Acoustic - Vintage Bronze,VN
+VN46,0.0004116,0.046,Acoustic - Vintage Bronze,VN
+VN48,0.0004661,0.048,Acoustic - Vintage Bronze,VN
+VN50,0.0004977,0.05,Acoustic - Vintage Bronze,VN
+VN52,0.0005633,0.052,Acoustic - Vintage Bronze,VN
+VN54,0.0006005,0.054,Acoustic - Vintage Bronze,VN
+VN56,0.0006328,0.056,Acoustic - Vintage Bronze,VN
+VN58,0.0006515,0.058,Acoustic - Vintage Bronze,VN
+VN60,0.0007972,0.06,Acoustic - Vintage Bronze,VN
+S20,8.228e-05,0.02,Acoustic - Silk & Steel,S
+S22,9.971e-05,0.022,Acoustic - Silk & Steel,S
+S24,0.0001136,0.024,Acoustic - Silk & Steel,S
+S26,0.0001386,0.026,Acoustic - Silk & Steel,S
+S28,0.0001608,0.028,Acoustic - Silk & Steel,S
+S30,0.0001917,0.03,Acoustic - Silk & Steel,S
+S34,0.0002505,0.034,Acoustic - Silk & Steel,S
+S38,0.0003227,0.038,Acoustic - Silk & Steel,S
+S40,0.0003584,0.04,Acoustic - Silk & Steel,S
+S42,0.000384,0.042,Acoustic - Silk & Steel,S
+S48,0.0005368,0.048,Acoustic - Silk & Steel,S
+SB23,0.0001306,0.023,Acoustic - Silk & Bronze,SB
+SB24,0.0001358,0.024,Acoustic - Silk & Bronze,SB
+SB29,0.000183,0.029,Acoustic - Silk & Bronze,SB
+SB32,0.0002227,0.032,Acoustic - Silk & Bronze,SB
+SB39,0.0003472,0.039,Acoustic - Silk & Bronze,SB
+SB42,0.0003979,0.042,Acoustic - Silk & Bronze,SB
+SB49,0.0005368,0.049,Acoustic - Silk & Bronze,SB
+SB54,0.0005883,0.054,Acoustic - Silk & Bronze,SB
+PL009,1.81e-05,0.009,Electric - Plain,PL
+PL0095,2.159e-05,0.0095,Electric - Plain,PL
+PL010,2.27e-05,0.01,Electric - Plain,PL
+PL0105,2.5e-05,0.0105,Electric - Plain,PL
+PL011,2.95e-05,0.011,Electric - Plain,PL
+PL0115,3.08e-05,0.0115,Electric - Plain,PL
+PL012,3.4e-05,0.012,Electric - Plain,PL
+PL0125,3.54e-05,0.0125,Electric - Plain,PL
+PL013,3.86e-05,0.013,Electric - Plain,PL
+PL014,4.77e-05,0.014,Electric - Plain,PL
+PL015,5.28e-05,0.015,Electric - Plain,PL
+PL016,5.9e-05,0.016,Electric - Plain,PL
+PL017,6.81e-05,0.017,Electric - Plain,PL
+PL018,7.27e-05,0.018,Electric - Plain,PL
+PL019,7.72e-05,0.019,Electric - Plain,PL
+PL020,8.41e-05,0.02,Electric - Plain,PL
+PL021,9.32e-05,0.021,Electric - Plain,PL
+PL022,0.0001159,0.022,Electric - Plain,PL
+PL023,0.0001365,0.023,Electric - Plain,PL
+PL024,0.0001432,0.024,Electric - Plain,PL
+PL026,0.0001568,0.026,Electric - Plain,PL
+PL028,0.0001706,0.028,Electric - Plain,PL
+DY16,7.82e-05,0.016,Electric - Boomers,DY
+DY18,6.89e-05,0.018,Electric - Boomers,DY
+DY20,8.93e-05,0.02,Electric - Boomers,DY
+DY22,9.91e-05,0.022,Electric - Boomers,DY
+DY24,0.0001018,0.024,Electric - Boomers,DY
+DY26,0.000124,0.026,Electric - Boomers,DY
+DY28,0.0001283,0.028,Electric - Boomers,DY
+DY30,0.0001634,0.03,Electric - Boomers,DY
+DY32,0.0001896,0.032,Electric - Boomers,DY
+DY34,0.0002339,0.034,Electric - Boomers,DY
+DY36,0.0002365,0.036,Electric - Boomers,DY
+DY38,0.0002655,0.038,Electric - Boomers,DY
+DY40,0.0003076,0.04,Electric - Boomers,DY
+DY42,0.0003122,0.042,Electric - Boomers,DY
+DY44,0.0003215,0.044,Electric - Boomers,DY
+DY46,0.0003806,0.046,Electric - Boomers,DY
+DY48,0.0004052,0.048,Electric - Boomers,DY
+DY50,0.0004709,0.05,Electric - Boomers,DY
+DY52,0.0004788,0.052,Electric - Boomers,DY
+DY54,0.000492,0.054,Electric - Boomers,DY
+DY56,0.000659,0.056,Electric - Boomers,DY
+DY58,0.0006736,0.058,Electric - Boomers,DY
+DY60,0.0008791,0.06,Electric - Boomers,DY
+DY70,0.0008867,0.07,Electric - Boomers,DY
+DY80,0.001211,0.08,Electric - Boomers,DY
+N18B,7.424e-05,0.018,Electric - Nickel Rockers,NB
+N20B,9.326e-05,0.02,Electric - Nickel Rockers,NB
+N22B,0.0001024,0.022,Electric - Nickel Rockers,NB
+N24B,0.0001202,0.024,Electric - Nickel Rockers,NB
+N26B,0.0001528,0.026,Electric - Nickel Rockers,NB
+N28B,0.0001695,0.028,Electric - Nickel Rockers,NB
+N30B,0.0001829,0.03,Electric - Nickel Rockers,NB
+N32B,0.0002186,0.032,Electric - Nickel Rockers,NB
+N34B,0.0002485,0.034,Electric - Nickel Rockers,NB
+N36B,0.0002786,0.036,Electric - Nickel Rockers,NB
+N38B,0.0003128,0.038,Electric - Nickel Rockers,NB
+N40B,0.0003234,0.04,Electric - Nickel Rockers,NB
+N42B,0.0003701,0.042,Electric - Nickel Rockers,NB
+N44B,0.0004174,0.044,Electric - Nickel Rockers,NB
+N46B,0.0004404,0.046,Electric - Nickel Rockers,NB
+N48B,0.0004999,0.048,Electric - Nickel Rockers,NB
+N50B,0.0005332,0.05,Electric - Nickel Rockers,NB
+N52B,0.000564,0.052,Electric - Nickel Rockers,NB
+N54B,0.0006025,0.054,Electric - Nickel Rockers,NB
+N56B,0.0006762,0.056,Electric - Nickel Rockers,NB
+N58B,0.000759,0.058,Electric - Nickel Rockers,NB
+N60B,0.0007527,0.06,Electric - Nickel Rockers,NB
+ST18,0.0001028,0.018,Electric - Super Steels,ST
+ST20,0.0001081,0.02,Electric - Super Steels,ST
+ST22,0.0001018,0.022,Electric - Super Steels,ST
+ST24,0.0001149,0.024,Electric - Super Steels,ST
+ST26,0.0001396,0.026,Electric - Super Steels,ST
+ST28,0.0001423,0.028,Electric - Super Steels,ST
+ST30,0.0001923,0.03,Electric - Super Steels,ST
+ST32,0.0002081,0.032,Electric - Super Steels,ST
+ST34,0.0002239,0.034,Electric - Super Steels,ST
+ST36,0.0002523,0.036,Electric - Super Steels,ST
+ST38,0.0002997,0.038,Electric - Super Steels,ST
+ST40,0.0003286,0.04,Electric - Super Steels,ST
+ST42,0.0003701,0.042,Electric - Super Steels,ST
+ST44,0.0003851,0.044,Electric - Super Steels,ST
+ST46,0.0003885,0.046,Electric - Super Steels,ST
+ST48,0.0004341,0.048,Electric - Super Steels,ST
+ST50,0.0004762,0.05,Electric - Super Steels,ST
+ST52,0.0005052,0.052,Electric - Super Steels,ST
+ST54,0.0005315,0.054,Electric - Super Steels,ST
+ST56,0.0006554,0.056,Electric - Super Steels,ST
+ST58,0.00068,0.058,Electric - Super Steels,ST
+ST70,0.000992,0.07,Electric - Super Steels,ST
+F20,8.05e-05,0.02,Electric - Precision Flats,F
+F22,9.44e-05,0.022,Electric - Precision Flats,F
+F24,0.0001168,0.024,Electric - Precision Flats,F
+F26,0.0001317,0.026,Electric - Precision Flats,F
+F28,0.0001484,0.028,Electric - Precision Flats,F
+F30,0.0001975,0.03,Electric - Precision Flats,F
+F32,0.0002156,0.032,Electric - Precision Flats,F
+F34,0.0002769,0.034,Electric - Precision Flats,F
+F36,0.0002415,0.036,Electric - Precision Flats,F
+F38,0.0002691,0.038,Electric - Precision Flats,F
+F40,0.0003189,0.04,Electric - Precision Flats,F
+F42,0.0003407,0.042,Electric - Precision Flats,F
+F44,0.000359,0.044,Electric - Precision Flats,F
+F46,0.0004127,0.046,Electric - Precision Flats,F
+F48,0.0004437,0.048,Electric - Precision Flats,F
+F50,0.0004149,0.05,Electric - Precision Flats,F
+F52,0.000494,0.052,Electric - Precision Flats,F
+F54,0.0005709,0.054,Electric - Precision Flats,F
+F56,0.0006681,0.056,Electric - Precision Flats,F
+F60,0.0009855,0.06,Electric - Precision Flats,F
+BNR24,0.0001254,0.024,Electric - Burnished Nickel Rockers,BNR
+BNR26,0.0001661,0.026,Electric - Burnished Nickel Rockers,BNR
+BNR28,0.0001793,0.028,Electric - Burnished Nickel Rockers,BNR
+BNR32,0.0002054,0.032,Electric - Burnished Nickel Rockers,BNR
+BNR36,0.0002817,0.036,Electric - Burnished Nickel Rockers,BNR
+BNR38,0.0003002,0.038,Electric - Burnished Nickel Rockers,BNR
+BNR42,0.0003265,0.042,Electric - Burnished Nickel Rockers,BNR
+BNR46,0.0004234,0.046,Electric - Burnished Nickel Rockers,BNR
+BNR50,0.0004877,0.05,Electric - Burnished Nickel Rockers,BNR
+C30,0.0002029,0.03,Electric - Compound Nickel Rockers,C
+C42,0.0003813,0.042,Electric - Compound Nickel Rockers,C
+C44,0.0004076,0.044,Electric - Compound Nickel Rockers,C
+C46,0.0004418,0.046,Electric - Compound Nickel Rockers,C
+C48,0.000492,0.048,Electric - Compound Nickel Rockers,C
+C50,0.0005288,0.05,Electric - Compound Nickel Rockers,C
+C52,0.0005762,0.052,Electric - Compound Nickel Rockers,C
+C54,0.0006052,0.054,Electric - Compound Nickel Rockers,C
+C56,0.00061175,0.056,Electric - Compound Nickel Rockers,C
+C58,0.0006183,0.058,Electric - Compound Nickel Rockers,C
+C60,0.0007458,0.06,Electric - Compound Nickel Rockers,C
+C62,0.0007879,0.062,Electric - Compound Nickel Rockers,C
+C64,0.0008659,0.064,Electric - Compound Nickel Rockers,C
+C66,0.000937,0.066,Electric - Compound Nickel Rockers,C
+C68,0.000987,0.068,Electric - Compound Nickel Rockers,C
+C70,0.00103,0.07,Electric - Compound Nickel Rockers,C
+C74,0.001162,0.074,Electric - Compound Nickel Rockers,C
+C76,0.001235,0.076,Electric - Compound Nickel Rockers,C
+C80,0.001364,0.08,Electric - Compound Nickel Rockers,C
+PR22,0.0001018,0.022,Electric - Progressives,PR
+PR24,0.0001149,0.024,Electric - Progressives,PR
+PR26,0.0001502,0.026,Electric - Progressives,PR
+PR28,0.0001661,0.028,Electric - Progressives,PR
+PR30,0.0001896,0.03,Electric - Progressives,PR
+PR32,0.000208,0.032,Electric - Progressives,PR
+PR34,0.0002265,0.034,Electric - Progressives,PR
+PR36,0.0002528,0.036,Electric - Progressives,PR
+PR38,0.000297,0.038,Electric - Progressives,PR
+PR40,0.0003143,0.04,Electric - Progressives,PR
+PR42,0.0003396,0.042,Electric - Progressives,PR
+PR44,0.0003801,0.044,Electric - Progressives,PR
+PR46,0.0004116,0.046,Electric - Progressives,PR
+PR48,0.0004602,0.048,Electric - Progressives,PR
+PR50,0.0004946,0.05,Electric - Progressives,PR
+PR52,0.000542,0.052,Electric - Progressives,PR
+PR54,0.0005798,0.054,Electric - Progressives,PR
+PR64,0.00066708,0.064,Electric - Progressives,PR
+PR85,0.00091265,0.085,Electric - Progressives,PR
+BR22,9.33e-05,0.022,Electric - Brite Flats,BR
+BR24,0.0001143,0.024,Electric - Brite Flats,BR
+BR26,0.0001511,0.026,Electric - Brite Flats,BR
+BR28,0.00021,0.028,Electric - Brite Flats,BR
+BR32,0.0002403,0.032,Electric - Brite Flats,BR
+BR36,0.0002667,0.036,Electric - Brite Flats,BR
+BR38,0.0003272,0.038,Electric - Brite Flats,BR
+BR42,0.0003475,0.042,Electric - Brite Flats,BR
+BR46,0.0004446,0.046,Electric - Brite Flats,BR
+BR50,0.0005125,0.05,Electric - Brite Flats,BR
+BR54,0.0009173,0.054,Electric - Brite Flats,BR
+NB40,0.00037864,0.04,Bass - Balanced Nickel,NB
+NB44,0.00041457,0.044,Bass - Balanced Nickel,NB
+NB56,0.00066571,0.056,Bass - Balanced Nickel,NB
+NB60,0.00071326,0.06,Bass - Balanced Nickel,NB
+NB76,0.0012013,0.076,Bass - Balanced Nickel,NB
+NB80,0.0012644,0.08,Bass - Balanced Nickel,NB
+NB101,0.0021006,0.101,Bass - Balanced Nickel,NB
+NB106,0.0022046,0.106,Bass - Balanced Nickel,NB
+NB126,0.0026206,0.126,Bass - Balanced Nickel,NB
+NB130,0.0027038,0.13,Bass - Balanced Nickel,NB
+NB4701,0.00042437,,Bass - Balanced Nickel,NB
+NB4702,0.00077032,,Bass - Balanced Nickel,NB
+NB4703,0.001315,,Bass - Balanced Nickel,NB
+NB4704,0.0022856,,Bass - Balanced Nickel,NB
+RBB43,0.00030281,0.043,Bass - Pressurewound Bronze,RBB
+RBB56,0.0006268,0.056,Bass - Pressurewound Bronze,RBB
+RBB74,0.0010952,0.074,Bass - Pressurewound Bronze,RBB
+RBB92,0.0017004,0.092,Bass - Pressurewound Bronze,RBB
+RBB120,0.0026477,0.12,Bass - Pressurewound Bronze,RBB
+RBB38,0.00035097,0.038,Bass - Pressurewound Bronze,RBB
+RBB50,0.00051671,0.05,Bass - Pressurewound Bronze,RBB
+RBB96,0.0018085,0.096,Bass - Pressurewound Bronze,RBB
+BAS27,0.00019746,0.027,Bass - Bassics,BAS
+BAS40,0.00029254,0.04,Bass - Bassics,BAS
+BAS44,0.00034672,0.044,Bass - Bassics,BAS
+BAS58,0.00061412,0.058,Bass - Bassics,BAS
+BAS63,0.00074073,0.063,Bass - Bassics,BAS
+BAS80,0.0011609,0.08,Bass - Bassics,BAS
+BAS84,0.0013067,0.084,Bass - Bassics,BAS
+BAS102,0.0018753,0.102,Bass - Bassics,BAS
+BAS106,0.0020252,0.106,Bass - Bassics,BAS
+BAS130,0.0032421,0.13,Bass - Bassics,BAS
+CLF45,0.00041337,0.045,Bass - Bassics,CLF
+CLF65,0.00074253,0.065,Bass - Bassics,CLF
+CLF80,0.0011253,0.08,Bass - Bassics,CLF
+CLF100,0.0018219,0.1,Bass - Bassics,CLF
+BAS100,0.0018385,0.1,Bass - Bassics,BAS
+BAS128,0.0031922,0.128,Bass - Bassics,BAS
+DYB30X,0.00017947,0.03,Bass - Boomers,DYBX
+DYB40X,0.00031887,0.04,Bass - Boomers,DYBX
+DYB45X,0.00041633,0.045,Bass - Boomers,DYBX
+DYB50X,0.00047323,0.05,Bass - Boomers,DYBX
+DYB55X,0.00057105,0.055,Bass - Boomers,DYBX
+DYB65X,0.00080788,0.065,Bass - Boomers,DYBX
+DYB70X,0.00091866,0.07,Bass - Boomers,DYBX
+DYB75X,0.0010453,0.075,Bass - Boomers,DYBX
+DYB80X,0.0013166,0.08,Bass - Boomers,DYBX
+DYB85X,0.0014109,0.085,Bass - Boomers,DYBX
+DYB90X,0.0015549,0.09,Bass - Boomers,DYBX
+DYB95X,0.0017814,0.095,Bass - Boomers,DYBX
+DYB100X,0.0019346,0.1,Bass - Boomers,DYBX
+DYB105X,0.0021449,0.105,Bass - Boomers,DYBX
+PB18,7.27e-05,0.018,Bass - Boomers,PB
+PB20,8.41e-05,0.02,Bass - Boomers,PB
+DYB20,9.73e-05,0.02,Bass - Boomers,DYB
+DYB25,0.00014277,0.025,Bass - Boomers,DYB
+DYB30,0.00018173,0.03,Bass - Boomers,DYB
+DYB35,0.00022576,0.035,Bass - Boomers,DYB
+DYB40,0.00029254,0.04,Bass - Boomers,DYB
+DYB45,0.00039025,0.045,Bass - Boomers,DYB
+DYB50,0.00044866,0.05,Bass - Boomers,DYB
+DYB55,0.00054649,0.055,Bass - Boomers,DYB
+DYB60,0.00065431,0.06,Bass - Boomers,DYB
+DYB65,0.00077758,0.065,Bass - Boomers,DYB
+DYB70,0.00087143,0.07,Bass - Boomers,DYB
+DYB75,0.00099196,0.075,Bass - Boomers,DYB
+DYB80,0.001243,0.08,Bass - Boomers,DYB
+DYB85,0.0013644,0.085,Bass - Boomers,DYB
+DYB90,0.0015705,0.09,Bass - Boomers,DYB
+DYB95,0.0017766,0.095,Bass - Boomers,DYB
+DYB100,0.0018626,0.1,Bass - Boomers,DYB
+DYB105,0.0020788,0.105,Bass - Boomers,DYB
+DYB110,0.0024639,0.11,Bass - Boomers,DYB
+DYB115,0.0024181,0.115,Bass - Boomers,DYB
+DYB120,0.0027428,0.12,Bass - Boomers,DYB
+DYB125,0.0030317,0.125,Bass - Boomers,DYB
+DYB126,0.0029162,0.126,Bass - Boomers,DYB
+DYB130,0.0032421,0.13,Bass - Boomers,DYB
+DYB3041,0.00041107,,Bass - Boomers,DYB
+DYB3042,0.0006463,,Bass - Boomers,DYB
+DYB3143,0.0011099,,Bass - Boomers,DYB
+DYB3043,0.0012438,,Bass - Boomers,DYB
+DYB3144,0.0016983,,Bass - Boomers,DYB
+DYB3044,0.001817,,Bass - Boomers,DYB
+DYB3136,0.00041435,,Bass - Boomers,DYB
+DYB3036,0.00047666,,Bass - Boomers,DYB
+DYB3137,0.00066895,,Bass - Boomers,DYB
+DYB3037,0.00088008,,Bass - Boomers,DYB
+DYB3138,0.00099367,,Bass - Boomers,DYB
+DYB3038,0.001479,,Bass - Boomers,DYB
+DYB3139,0.0016231,,Bass - Boomers,DYB
+DYB3039,0.0020811,,Bass - Boomers,DYB
+RC-DYB30,0.00016211,0.03,Bass - Roundcore Boomers,DYB
+RC-DYB40,0.00031495,0.04,Bass - Roundcore Boomers,DYB
+RC-DYB45,0.00037101,0.045,Bass - Roundcore Boomers,DYB
+RC-DYB50,0.00047242,0.05,Bass - Roundcore Boomers,DYB
+RC-DYB55,0.00051411,0.055,Bass - Roundcore Boomers,DYB
+RC-DYB60,0.00058724,0.06,Bass - Roundcore Boomers,DYB
+RC-DYB65,0.00071326,0.065,Bass - Roundcore Boomers,DYB
+RC-DYB70,0.00081914,0.07,Bass - Roundcore Boomers,DYB
+RC-DYB75,0.0010062,0.075,Bass - Roundcore Boomers,DYB
+RC-DYB80,0.0011932,0.08,Bass - Roundcore Boomers,DYB
+RC-DYB85,0.0013617,0.085,Bass - Roundcore Boomers,DYB
+RC-DYB95,0.0017344,0.095,Bass - Roundcore Boomers,DYB
+RC-DYB100,0.0018828,0.1,Bass - Roundcore Boomers,DYB
+RC-DYB105,0.0020087,0.105,Bass - Roundcore Boomers,DYB
+RC-DYB115,0.0022401,0.115,Bass - Roundcore Boomers,DYB
+RC-DYB126,0.0028068,0.126,Bass - Roundcore Boomers,DYB
+RC-DYB130,0.0031124,0.13,Bass - Roundcore Boomers,DYB
+BF027,0.00016294,0.027,Bass - Brite Flats,BF
+BF045,0.00033286,0.045,Bass - Brite Flats,BF
+BF049,0.00037284,0.049,Bass - Brite Flats,BF
+BF052,0.00045956,0.052,Bass - Brite Flats,BF
+BF056,0.00055712,0.056,Bass - Brite Flats,BF
+BF062,0.00068278,0.062,Bass - Brite Flats,BF
+BF065,0.00074284,0.065,Bass - Brite Flats,BF
+BF077,0.0010872,0.077,Bass - Brite Flats,BF
+BF084,0.0013665,0.084,Bass - Brite Flats,BF
+BF098,0.0019115,0.098,Bass - Brite Flats,BF
+BF103,0.0020668,0.103,Bass - Brite Flats,BF
+BF108,0.0022074,0.108,Bass - Brite Flats,BF
+BF129,0.0031939,0.129,Bass - Brite Flats,BF
+BF130,0.003125,0.13,Bass - Brite Flats,BF
+BF3066,0.00045345,,Bass - Brite Flats,BF
+BF3067,0.00069298,,Bass - Brite Flats,BF
+BF3068,0.0012091,,Bass - Brite Flats,BF
+BF3069,0.0016972,,Bass - Brite Flats,BF
+BF3071,0.00047964,,Bass - Brite Flats,BF
+BF3072,0.00072449,,Bass - Brite Flats,BF
+BF3073,0.0012572,,Bass - Brite Flats,BF
+BF3074,0.0022487,,Bass - Brite Flats,BF
+CC60,0.00064841,0.06,Bass - Contact Core,CC
+CC65,0.00072849,0.065,Bass - Contact Core,CC
+CC80,0.001103,0.08,Bass - Contact Core,CC
+CC85,0.0012266,0.085,Bass - Contact Core,CC
+CC100,0.0016826,0.1,Bass - Contact Core,CC
+CC105,0.0018755,0.105,Bass - Contact Core,CC
+CC125,0.002729,0.125,Bass - Contact Core,CC
+CC129,0.0030475,0.129,Bass - Contact Core,CC
+NS37,0.00032422,0.037,Bass - Crossovers,NS
+NS47,0.00039368,0.047,Bass - Crossovers,NS
+NS53,0.00062989,0.053,Bass - Crossovers,NS
+NS74,0.0011023,0.074,Bass - Crossovers,NS
+NS104,0.0020472,0.104,Bass - Crossovers,NS
+NS127,0.0031494,0.127,Bass - Crossovers,NS
+PHB40,0.00027654,0.04,Bass - Phosphor Bronze,PHB
+PHB56,0.00053857,0.056,Bass - Phosphor Bronze,PHB
+PHB76,0.00095707,0.076,Bass - Phosphor Bronze,PHB
+PHB96,0.0014675,0.096,Bass - Phosphor Bronze,PHB
+PHB123,0.0029078,0.123,Bass - Phosphor Bronze,PHB
+PHB9201,0.00033299,,Bass - Phosphor Bronze,PHB
+PHB9202,0.00044341,,Bass - Phosphor Bronze,PHB
+PHB9203,0.00098392,,Bass - Phosphor Bronze,PHB
+PHB9204,0.0014768,,Bass - Phosphor Bronze,PHB
+FB28,0.00016859,0.028,Bass - Precision Flats,FB
+FB45,0.000361,0.045,Bass - Precision Flats,FB
+FB55,0.00059573,0.055,Bass - Precision Flats,FB
+FB60,0.00072062,0.06,Bass - Precision Flats,FB
+FB65,0.00078579,0.065,Bass - Precision Flats,FB
+FB70,0.00096566,0.07,Bass - Precision Flats,FB
+FB75,0.0010634,0.075,Bass - Precision Flats,FB
+FB80,0.0012393,0.08,Bass - Precision Flats,FB
+FB85,0.0014153,0.085,Bass - Precision Flats,FB
+FB90,0.0015708,0.09,Bass - Precision Flats,FB
+FB95,0.0018071,0.095,Bass - Precision Flats,FB
+FB105,0.0020317,0.105,Bass - Precision Flats,FB
+FB126,0.0030177,0.126,Bass - Precision Flats,FB
+FB3112,0.0003447,,Bass - Precision Flats,FB
+FB3122,0.00068894,,Bass - Precision Flats,FB
+FB3123,0.0010334,,Bass - Precision Flats,FB
+FB3124,0.0017224,,Bass - Precision Flats,FB
+FB3012,0.00041594,,Bass - Precision Flats,FB
+FB3022,0.00068894,,Bass - Precision Flats,FB
+FB3023,0.0012393,,Bass - Precision Flats,FB
+FB3024,0.0017224,,Bass - Precision Flats,FB
+FWB35,0.00018642,0.035,Bass - Precision Flats,FWB
+FWB40,0.00026131,0.04,Bass - Precision Flats,FWB
+FWB45,0.00035744,0.045,Bass - Precision Flats,FWB
+FWB55,0.00044992,0.055,Bass - Precision Flats,FWB
+FWB60,0.00067046,0.06,Bass - Precision Flats,FWB
+FWB63,0.00063741,0.063,Bass - Precision Flats,FWB
+FWB75,0.00083987,0.075,Bass - Precision Flats,FWB
+FWB80,0.0011672,0.08,Bass - Precision Flats,FWB
+FWB85,0.0011112,0.085,Bass - Precision Flats,FWB
+FWB95,0.0012673,0.095,Bass - Precision Flats,FWB
+FWB100,0.0018804,0.1,Bass - Precision Flats,FWB
+FWB120,0.0020246,0.12,Bass - Precision Flats,FWB
+FWB128,0.0029309,0.128,Bass - Precision Flats,FWB
+PB18,7.27e-05,0.018,Bass - Pressurewounds,PB
+PB20,8.41e-05,0.02,Bass - Pressurewounds,PB
+PWB28,0.00016178,0.028,Bass - Pressurewounds,PWB
+PWB40,0.00032349,0.04,Bass - Pressurewounds,PWB
+PWB44,0.00037715,0.044,Bass - Pressurewounds,PWB
+PWB54,0.00056615,0.054,Bass - Pressurewounds,PWB
+PWB58,0.00064945,0.058,Bass - Pressurewounds,PWB
+PWB62,0.0007536,0.062,Bass - Pressurewounds,PWB
+PWB76,0.0010849,0.076,Bass - Pressurewounds,PWB
+PWB80,0.0012309,0.08,Bass - Pressurewounds,PWB
+PWB84,0.0013026,0.084,Bass - Pressurewounds,PWB
+PWB96,0.0016859,0.096,Bass - Pressurewounds,PWB
+PWB102,0.0019457,0.102,Bass - Pressurewounds,PWB
+PWB106,0.002365,0.106,Bass - Pressurewounds,PWB
+PWB128,0.00298,0.128,Bass - Pressurewounds,PWB
+PWB7701,0.00033069,,Bass - Pressurewounds,PWB
+PWB7702,0.00060118,,Bass - Pressurewounds,PWB
+PWB7703,0.001286,,Bass - Pressurewounds,PWB
+PWB7704,0.0018372,,Bass - Pressurewounds,PWB
+PRB030,0.00014882,0.03,Bass - Progressives,PRB
+PRB035,0.00022588,0.035,Bass - Progressives,PRB
+PRB040,0.00028882,0.04,Bass - Progressives,PRB
+PRB045,0.00039303,0.045,Bass - Progressives,PRB
+PRB055,0.00048831,0.055,Bass - Progressives,PRB
+PRB060,0.00064823,0.06,Bass - Progressives,PRB
+PRB065,0.00073558,0.065,Bass - Progressives,PRB
+PRB080,0.0011324,0.08,Bass - Progressives,PRB
+PRB085,0.0013574,0.085,Bass - Progressives,PRB
+PRB095,0.0016953,0.095,Bass - Progressives,PRB
+PRB096,0.0017943,0.096,Bass - Progressives,PRB
+PRB100,0.0018372,0.1,Bass - Progressives,PRB
+PRB105,0.001872,0.105,Bass - Progressives,PRB
+PRB126,0.0024021,0.126,Bass - Progressives,PRB
+PRB131,0.002766,0.131,Bass - Progressives,PRB
+PRB8201,0.00039303,,Bass - Progressives,PRB
+PRB8202,0.00073558,,Bass - Progressives,PRB
+PRB8203,0.0011324,,Bass - Progressives,PRB
+PRB8204,0.0018372,,Bass - Progressives,PRB
+PRB8205,0.002767,,Bass - Progressives,PRB
+PB18,7.27e-05,0.018,Bass - Super Steels,PB
+PB20,8.41e-05,0.02,Bass - Super Steels,PB
+STB27,0.00016212,0.027,Bass - Super Steels,STB
+STB30,0.00017301,0.03,Bass - Super Steels,STB
+STB35,0.00023236,0.035,Bass - Super Steels,STB
+STB40,0.00029172,0.04,Bass - Super Steels,STB
+STB44,0.00038523,0.044,Bass - Super Steels,STB
+STB46,0.00040243,0.046,Bass - Super Steels,STB
+STB50,0.00048386,0.05,Bass - Super Steels,STB
+STB58,0.00059786,0.058,Bass - Super Steels,STB
+STB63,0.0007719,0.063,Bass - Super Steels,STB
+STB67,0.00082542,0.067,Bass - Super Steels,STB
+STB70,0.00095418,0.07,Bass - Super Steels,STB
+STB75,0.0010453,0.075,Bass - Super Steels,STB
+STB80,0.0011365,0.08,Bass - Super Steels,STB
+STB84,0.0012926,0.084,Bass - Super Steels,STB
+STB90,0.0013639,0.09,Bass - Super Steels,STB
+STB98,0.0018184,0.098,Bass - Super Steels,STB
+STB102,0.0020094,0.102,Bass - Super Steels,STB
+STB106,0.0021456,0.106,Bass - Super Steels,STB
+STB121,0.0027925,0.121,Bass - Super Steels,STB
+STB126,0.0029182,0.126,Bass - Super Steels,STB
+STB5501,0.00034447,,Bass - Super Steels,STB
+STB5502,0.00075784,,Bass - Super Steels,STB
+STB5503,0.0010972,,Bass - Super Steels,STB
+STB5504,0.0019979,,Bass - Super Steels,STB
+TW3061,0.00035663,,Bass - Tapewound,TW
+TW3062,0.00074452,,Bass - Tapewound,TW
+TW3063,0.001232,,Bass - Tapewound,TW
+TW3064,0.0016859,,Bass - Tapewound,TW
+TW3065,0.0022694,,Bass - Tapewound,TW
