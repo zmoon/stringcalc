@@ -130,11 +130,37 @@ def load_stringjoy_data() -> pd.DataFrame:
     return df
 
 
+@lru_cache(1)
+def load_ghs_data() -> pd.DataFrame:
+    """Load GHS data.
+
+    https://www.ghsstrings.com/pages/tension-calc
+    """
+
+    df = pd.read_csv(DATA.joinpath("ghs.csv"), header=0).convert_dtypes()
+
+    # Drop ID dupes (e.g. PL which is included for both acoustic and electric)
+    df = df.drop_duplicates(subset=["id"])
+
+    # Drop where we don't have gauge (bass strings for different scale lengths)
+    df = df.dropna(subset=["gauge"])
+
+    # Differentiate from D'Addario
+    df["id"] = "GHS" + df["id"]
+    df["group"] = "GHS - " + df["group"]
+    df["group_id"] = "GHS" + df["group_id"]
+    for name in ["group", "group_id"]:
+        df[name] = df[name].astype("category")
+
+    return df.reset_index(drop=True)
+
+
 _DATA_LOADERS: list[Callable[[], pd.DataFrame]] = [
     load_daddario_data,
     load_aquila_data,
     lambda: load_worth_data().drop(columns="rho"),
     load_stringjoy_data,
+    load_ghs_data,
 ]
 
 
