@@ -87,7 +87,8 @@ def load_aquila_data(*, nng_density: float = 1300, drop_gauge_eqvs: bool = True)
 
     # Set group ID (used to select string type)
     df["group"] = "Aquila New Nylgut"
-    df["group_id"] = "NNG"
+    df["group_id"] = "A:NNG"
+    df["id"] = "A:" + df["id"]
     for name in ["group", "group_id"]:
         df[name] = df[name].astype("category")
 
@@ -110,6 +111,7 @@ def load_worth_data() -> pd.DataFrame:
     # Set group ID (used to select string type)
     df["group"] = "Worth Fluorocarbon"
     df["group_id"] = "WFC"
+    df["id"] = "WFC:" + df["id"]
     for name in ["group", "group_id"]:
         df[name] = df[name].astype("category")
 
