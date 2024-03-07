@@ -7,6 +7,7 @@ from stringcalc.tension import (
     _STRING_TYPE_ALIASES,
     String,
     gauge,
+    load_daddario_data,
     load_data,
     load_stringjoy_data,
     suggest_gauge,
@@ -153,9 +154,12 @@ def test_load_data_group_ids_unique():
 
 
 def test_load_data_cat_dtypes():
-    df = load_data()
-
+    df = load_daddario_data(for_combined=False)
     for name in ["category", "group", "id_pref", "id_suff", "group_id"]:
+        assert df[name].dtype == "category"
+
+    df = load_data()
+    for name in ["group", "group_id"]:
         assert df[name].dtype == "category"
 
 
@@ -167,7 +171,7 @@ def test_load_data_ids_unique():
 
 
 def test_stringjoy_data_ids():
-    df = load_stringjoy_data(pref=True)
+    df = load_stringjoy_data(for_combined=True)
     assert df.group_id.str.len().isin((4, 5)).all()
     assert df.group_id.str.startswith("SJ").all()
     assert df.id.str.startswith("SJ").all()
