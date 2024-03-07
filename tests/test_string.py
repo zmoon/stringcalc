@@ -57,10 +57,10 @@ def test_suggest_gauge():
     pitch = "E4"  # top string in standard guitar tuning
 
     ret = suggest_gauge(T, L, pitch)
-    assert ret.id.tolist() == ["PL011", "PL0115", "PL012"]
+    assert ret.id.tolist() == ["DA:PL011", "DA:PL0115", "DA:PL012"]
 
-    ret = suggest_gauge(T, L, pitch, types={"NYL"})
-    assert ret.id.tolist() == ["NYL031", "NYL032", "NYL033"]
+    ret = suggest_gauge(T, L, pitch, types={"DA:NYL"})
+    assert ret.id.tolist() == ["DA:NYL031", "DA:NYL032", "DA:NYL033"]
 
 
 def test_suggest_gauge_pb056():
@@ -69,8 +69,8 @@ def test_suggest_gauge_pb056():
     L = 25.5
     pitch = "D2"  # dropped D
 
-    ret = suggest_gauge(T, L, pitch, types={"PB"})
-    assert ret.id.tolist() == ["PB053", "PB056D", "PB059"]
+    ret = suggest_gauge(T, L, pitch, types={"DA:PB"})
+    assert ret.id.tolist() == ["DA:PB053", "DA:PB056D", "DA:PB059"]
 
 
 @pytest.mark.parametrize(
@@ -84,7 +84,7 @@ def test_suggest_gauge_bounds_warning(pitch):
 
     with pytest.warns(
         UserWarning,
-        match=r"You are outside the range of what string type group\(s\) \{'PB'\} can provide\.",
+        match=r"You are outside the range of what string type group\(s\) \{'DA:PB'\} can provide\.",
     ):
         suggest_gauge(T=T, L=L, pitch=pitch, types=types)
 
@@ -93,7 +93,7 @@ def test_suggest_gauge_bounds_warning(pitch):
     "types",
     [
         {"asdf"},
-        {"PB", "asdf"},
+        {"DA:PB", "asdf"},
     ],
     ids=[
         "all invalid",
@@ -167,8 +167,8 @@ def test_load_data_ids_unique():
 
 
 def test_stringjoy_data_ids():
-    df = load_stringjoy_data()
-    assert df.group_id.str.len().isin((3, 4)).all()
+    df = load_stringjoy_data(pref=True)
+    assert df.group_id.str.len().isin((4, 5)).all()
     assert df.group_id.str.startswith("SJ").all()
     assert df.id.str.startswith("SJ").all()
     assert (
@@ -180,6 +180,13 @@ def test_string_suggest_t_consistency():
     s = String.from_spec('25.5" PB .042')
     P = "A2"
     T = tension(s, pitch=P)
-    df = suggest_gauge(T, s.L, P, types={"PB"}, n=1)
+    df = suggest_gauge(T, s.L, P, types={"DA:PB"}, n=1)
     assert df["T"].tolist() == [T]
     assert df.dT.tolist() == [0]
+
+
+def test_string_suggest_da_conv_warning():
+    with pytest.warns(
+        UserWarning, match=r"string type groups \['PB', 'PL'\] assumed to be D'Addario"
+    ):
+        suggest_gauge(20, 25.5, "G3", types={"PB", "PL"})

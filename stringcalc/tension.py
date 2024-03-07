@@ -44,8 +44,8 @@ def load_data() -> pd.DataFrame:
     return df
 
 
-@lru_cache(2)
-def load_daddario_data(*, drop_sample_tensions: bool = True) -> pd.DataFrame:
+@lru_cache(4)
+def load_daddario_data(*, drop_sample_tensions: bool = True, pref: bool = True) -> pd.DataFrame:
     """Load the data (currently only D'Addario) needed for the calculations."""
 
     df = pd.read_csv(DATA.joinpath("daddario-tension.csv"), header=0).convert_dtypes()
@@ -53,16 +53,22 @@ def load_daddario_data(*, drop_sample_tensions: bool = True) -> pd.DataFrame:
     if drop_sample_tensions:
         df = df.drop(columns=["notes", "tens"])
 
-    # Differentiate
-    df["group"] = "D'Addario - " + df["group"]
-    df["group_id"] = "DA:" + df["group_id"]
-    df["id"] = "DA:" + df["id"]
+    if pref:
+        # Differentiate
+        df["group"] = "D'Addario - " + df["group"]
+        df["group_id"] = "DA:" + df["group_id"]
+        df["id"] = "DA:" + df["id"]
 
     # Set categorical columns
     for name in ["category", "group", "id_pref", "id_suff", "group_id"]:
         df[name] = df[name].astype("category")
 
     return df
+
+
+@lru_cache(1)
+def _get_daddario_group_ids() -> set[str]:
+    return set(load_daddario_data(pref=False).group_id.cat.categories)
 
 
 @lru_cache
@@ -118,8 +124,8 @@ def load_worth_data() -> pd.DataFrame:
     return df
 
 
-@lru_cache(1)
-def load_stringjoy_data() -> pd.DataFrame:
+@lru_cache(2)
+def load_stringjoy_data(*, pref: bool = True) -> pd.DataFrame:
     """Load Stringjoy data.
 
     https://tension.stringjoy.com/
@@ -127,18 +133,20 @@ def load_stringjoy_data() -> pd.DataFrame:
 
     df = pd.read_csv(DATA.joinpath("stringjoy.csv"), header=0).convert_dtypes()
 
-    # Differentiate from D'Addario
-    df["id"] = "SJ:" + df["id"]
-    df["group"] = "Stringjoy " + df["group"]
-    df["group_id"] = "SJ:" + df["group_id"]
+    if pref:
+        # Differentiate
+        df["id"] = "SJ:" + df["id"]
+        df["group"] = "Stringjoy " + df["group"]
+        df["group_id"] = "SJ:" + df["group_id"]
+
     for name in ["group", "group_id"]:
         df[name] = df[name].astype("category")
 
     return df
 
 
-@lru_cache(1)
-def load_ghs_data() -> pd.DataFrame:
+@lru_cache(2)
+def load_ghs_data(*, pref: bool = True) -> pd.DataFrame:
     """Load GHS data.
 
     https://www.ghsstrings.com/pages/tension-calc
@@ -152,10 +160,12 @@ def load_ghs_data() -> pd.DataFrame:
     # Drop where we don't have gauge (bass strings for different scale lengths)
     df = df.dropna(subset=["gauge"])
 
-    # Differentiate from D'Addario
-    df["id"] = "GHS:" + df["id"]
-    df["group"] = "GHS - " + df["group"]
-    df["group_id"] = "GHS:" + df["group_id"]
+    if pref:
+        # Differentiate
+        df["id"] = "GHS:" + df["id"]
+        df["group"] = "GHS - " + df["group"]
+        df["group_id"] = "GHS:" + df["group_id"]
+
     for name in ["group", "group_id"]:
         df[name] = df[name].astype("category")
 
@@ -265,13 +275,13 @@ def tension(s: String, pitch: str = "A4") -> float:
     L = s.L
 
     if t in {"PL", "S", "PS"}:  # plain steel
-        tda = "PL"
+        tda = "DA:PL"
     elif t in {"PB"}:  # phosphor bronze
-        tda = "PB"
+        tda = "DA:PB"
     elif t in {"NYL", "N"}:  # plain "rectified" nylon
-        tda = "NYL"
+        tda = "DA:NYL"
     elif t in {"NYLW", "NW"}:  # standard silver-wrapped nylon
-        tda = "NYLW"
+        tda = "DA:NYLW"
     else:
         raise ValueError(f"string type {t!r} invalid or not supported")
 
@@ -369,7 +379,19 @@ def suggest_gauge(
     from pyabc2 import Pitch
 
     if types is None:
-        types = {"PB", "PL"}
+        types = {"DA:PB", "DA:PL"}
+
+    # Assume D'Addario if no colon pref or special group
+    daddario_group_ids = _get_daddario_group_ids()
+    types_in = types
+    types = {t if t not in daddario_group_ids else f"DA:{t}" for t in types}
+    types_changed = types_in - types
+    if types_changed:
+        warnings.warn(
+            f"string type groups {sorted(types_changed)} assumed to be D'Addario. "
+            f"Use group ID prefix 'DA:' to be explicit and avoid this warning.",
+            stacklevel=2,
+        )
 
     data_all = load_data()
     data = data_all.query("group_id in @types")
