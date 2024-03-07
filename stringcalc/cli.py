@@ -345,7 +345,7 @@ def gauge_(
             g_df.attrs["col_desc"]["dT"] += f" ({T_} lbf)"
             table = _rich_table(
                 g_df,
-                title=f"Closest D'Addario gauges\nfor {L_}\" @ {P_}",
+                title=f'Closest gauges\nfor {L_}" @ {P_}',
                 float_format=float_format,
                 panel=n_cases > 1,
                 column_info=column_info,
