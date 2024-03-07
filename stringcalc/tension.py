@@ -54,7 +54,6 @@ def load_daddario_data(*, drop_sample_tensions: bool = True, pref: bool = True) 
         df = df.drop(columns=["notes", "tens"])
 
     if pref:
-        # Differentiate
         df["group"] = "D'Addario - " + df["group"]
         df["group_id"] = "DA:" + df["group_id"]
         df["id"] = "DA:" + df["id"]
@@ -72,7 +71,9 @@ def _get_daddario_group_ids() -> set[str]:
 
 
 @lru_cache
-def load_aquila_data(*, nng_density: float = 1300, drop_gauge_eqvs: bool = True) -> pd.DataFrame:
+def load_aquila_data(
+    *, nng_density: float = 1300, drop_gauge_eqvs: bool = True, pref: bool = True
+) -> pd.DataFrame:
     """Load Aquila NNG (New Nylgut) data.
 
     Parameters
@@ -92,9 +93,14 @@ def load_aquila_data(*, nng_density: float = 1300, drop_gauge_eqvs: bool = True)
     df["uw"] = nng_density * 2.205 / 1e6 * (2.54**3) * (np.pi * df.gauge**2 / 4)
 
     # Set group ID (used to select string type)
-    df["group"] = "Aquila New Nylgut"
-    df["group_id"] = "A:NNG"
-    df["id"] = "A:" + df["id"]
+    df["group"] = "New Nylgut"
+    df["group_id"] = "NNG"
+
+    if pref:
+        df["group"] = "Aquila " + df["group"]
+        df["group_id"] = "A:" + df["group_id"]
+        df["id"] = "A:" + df["id"]
+
     for name in ["group", "group_id"]:
         df[name] = df[name].astype("category")
 
@@ -108,16 +114,21 @@ def load_aquila_data(*, nng_density: float = 1300, drop_gauge_eqvs: bool = True)
     return df
 
 
-@lru_cache(1)
-def load_worth_data() -> pd.DataFrame:
+@lru_cache(2)
+def load_worth_data(*, pref: bool = True) -> pd.DataFrame:
     """Load Worth fluorocarbon data."""
 
     df = pd.read_csv(DATA.joinpath("worth.csv"), header=0).convert_dtypes()
 
     # Set group ID (used to select string type)
-    df["group"] = "Worth Fluorocarbon"
-    df["group_id"] = "WFC"
-    df["id"] = "WFC:" + df["id"]
+    df["group"] = "Fluorocarbon"
+    df["group_id"] = "FC"
+
+    if pref:
+        df["group"] = "Worth " + df["group"]
+        df["group_id"] = "W" + df["group_id"]
+        df["id"] = "WFC:" + df["id"]
+
     for name in ["group", "group_id"]:
         df[name] = df[name].astype("category")
 
@@ -134,7 +145,6 @@ def load_stringjoy_data(*, pref: bool = True) -> pd.DataFrame:
     df = pd.read_csv(DATA.joinpath("stringjoy.csv"), header=0).convert_dtypes()
 
     if pref:
-        # Differentiate
         df["id"] = "SJ:" + df["id"]
         df["group"] = "Stringjoy " + df["group"]
         df["group_id"] = "SJ:" + df["group_id"]
@@ -155,13 +165,12 @@ def load_ghs_data(*, pref: bool = True) -> pd.DataFrame:
     df = pd.read_csv(DATA.joinpath("ghs.csv"), header=0).convert_dtypes()
 
     # Drop ID dupes (e.g. PL which is included for both acoustic and electric)
-    df = df.drop_duplicates(subset=["id"])
+    df = df.drop_duplicates(subset=["id"], keep="first")
 
     # Drop where we don't have gauge (bass strings for different scale lengths)
     df = df.dropna(subset=["gauge"])
 
     if pref:
-        # Differentiate
         df["id"] = "GHS:" + df["id"]
         df["group"] = "GHS - " + df["group"]
         df["group_id"] = "GHS:" + df["group_id"]
