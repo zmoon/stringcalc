@@ -53,6 +53,11 @@ def load_daddario_data(*, drop_sample_tensions: bool = True) -> pd.DataFrame:
     if drop_sample_tensions:
         df = df.drop(columns=["notes", "tens"])
 
+    # Differentiate
+    df["group"] = "D'Addario - " + df["group"]
+    df["group_id"] = "DA:" + df["group_id"]
+    df["id"] = "DA:" + df["id"]
+
     # Set categorical columns
     for name in ["category", "group", "id_pref", "id_suff", "group_id"]:
         df[name] = df[name].astype("category")
@@ -121,9 +126,9 @@ def load_stringjoy_data() -> pd.DataFrame:
     df = pd.read_csv(DATA.joinpath("stringjoy.csv"), header=0).convert_dtypes()
 
     # Differentiate from D'Addario
-    df["id"] = "SJ" + df["id"]
+    df["id"] = "SJ:" + df["id"]
     df["group"] = "Stringjoy " + df["group"]
-    df["group_id"] = "SJ" + df["group_id"]
+    df["group_id"] = "SJ:" + df["group_id"]
     for name in ["group", "group_id"]:
         df[name] = df[name].astype("category")
 
@@ -146,9 +151,9 @@ def load_ghs_data() -> pd.DataFrame:
     df = df.dropna(subset=["gauge"])
 
     # Differentiate from D'Addario
-    df["id"] = "GHS" + df["id"]
+    df["id"] = "GHS:" + df["id"]
     df["group"] = "GHS - " + df["group"]
-    df["group_id"] = "GHS" + df["group_id"]
+    df["group_id"] = "GHS:" + df["group_id"]
     for name in ["group", "group_id"]:
         df[name] = df[name].astype("category")
 

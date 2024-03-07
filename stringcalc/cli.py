@@ -316,10 +316,12 @@ def gauge_(
         types_set: set[str]
         if not types:
             if verbose:
-                info("No string types specified, defaulting to PB + PL.")
+                info("No string types specified, defaulting to D'Addario PB + PL.")
             types_set = {"PB", "PL"}
         else:
             types_set = set(types)
+
+        types_set = {t if ":" or t in {"NNG", "WFC"} in t else f"DA:{t}" for t in types_set}
 
         if verbose:
             info(f"Searching string types: {types_set}")
