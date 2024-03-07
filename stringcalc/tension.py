@@ -114,9 +114,15 @@ def load_aquila_data(
     return df
 
 
-@lru_cache(2)
-def load_worth_data(*, pref: bool = True) -> pd.DataFrame:
-    """Load Worth fluorocarbon data."""
+@lru_cache(4)
+def load_worth_data(*, drop_rho: bool = True, pref: bool = True) -> pd.DataFrame:
+    """Load Worth fluorocarbon data.
+
+    Parameters
+    ----------
+    drop_rho
+        Drop the density column, which is not relevant for the combined dataset.
+    """
 
     df = pd.read_csv(DATA.joinpath("worth.csv"), header=0).convert_dtypes()
 
@@ -131,6 +137,9 @@ def load_worth_data(*, pref: bool = True) -> pd.DataFrame:
 
     for name in ["group", "group_id"]:
         df[name] = df[name].astype("category")
+
+    if drop_rho:
+        df = df.drop(columns="rho")
 
     return df
 
@@ -184,7 +193,7 @@ def load_ghs_data(*, pref: bool = True) -> pd.DataFrame:
 _DATA_LOADERS: list[Callable[[], pd.DataFrame]] = [
     load_daddario_data,
     load_aquila_data,
-    lambda: load_worth_data().drop(columns="rho"),
+    load_worth_data,
     load_stringjoy_data,
     load_ghs_data,
 ]
