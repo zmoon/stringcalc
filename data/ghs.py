@@ -147,6 +147,14 @@ df = df.assign(
     group_id=group_id,
 ).drop(columns=["meta_group"])
 
+# Adjust IDs for nickel-wound electric strings ("Nickel Rockers")
+# https://www.ghsstrings.com/products?categories=nickel-rockerstm (no suffix B)
+loc = df["group"] == "Electric - Nickel Rockers"
+assert df.loc[loc, "id"].str.endswith("B").all()
+df.loc[loc, "id"] = df.loc[loc, "id"].str.slice(stop=-1)
+assert df.loc[loc, "group_id"].eq("NB").all()
+df.loc[loc, "group_id"] = "N"
+
 # Note that group ID and group names are stil not 1:1
 # Mostly bass-related
 # But also note PL is duplicated for electric
