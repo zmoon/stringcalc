@@ -81,11 +81,14 @@ def test_suggest_gauge_pb056():
 def test_suggest_gauge_bounds_warning(pitch):
     T = 15
     L = 21
-    types = {"PB"}
+    types = {"DA:PB"}
 
     with pytest.warns(
         UserWarning,
-        match=r"You are outside the range of what string type group\(s\) \{'DA:PB'\} can provide\.",
+        match=(
+            rf"\(T=15, L=21, P={pitch}\) "
+            r"is outside the range of what string type group\(s\) \{'DA:PB'\} can provide\."
+        ),
     ):
         suggest_gauge(T=T, L=L, pitch=pitch, types=types)
 
