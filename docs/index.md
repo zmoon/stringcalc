@@ -9,7 +9,7 @@ Calculations for instrument strings.
 
 ## Installation
 
-stringcalc is available on PyPI:
+stringcalc is available [on PyPI](https://pypi.org/project/stringcalc/):
 
 ```
 pip install stringcalc
