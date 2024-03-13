@@ -20,7 +20,8 @@ extensions = [
     # "sphinx_jinja",
     "sphinx_click",
     "sphinx_copybutton",
-    "myst_parser",
+    # "myst_parser",
+    "myst_nb",
 ]
 
 intersphinx_mapping = {

@@ -28,6 +28,13 @@ panel.rst
 ```
 
 ```{toctree}
+:caption: Examples
+:hidden:
+
+examples/compare-data.md
+```
+
+```{toctree}
 :caption: Reference
 :hidden:
 

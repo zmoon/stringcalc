@@ -36,6 +36,7 @@ cli = [
 ]
 doc = [
     "matplotlib",
+    "myst-nb",
     "myst-parser",
     "sphinx",
     "sphinx-book-theme",
