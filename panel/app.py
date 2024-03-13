@@ -9,7 +9,7 @@ from stringcalc.tension import DENSITY_LB_IN, gauge, load_data, suggest_gauge
 WIDTH = 450
 
 DATA_ALL = load_data()
-TYPE_OPTIONS = ["PB", "PL", "LE", "LEW", "NYL", "NYLW", "NNG", "WFC"]
+TYPE_OPTIONS = ["PB", "PL", "LE", "LEW", "NYL", "NYLW", "A:NNG", "WFC"]
 TYPE_DEFAULTS = ["PB", "PL"]
 
 
