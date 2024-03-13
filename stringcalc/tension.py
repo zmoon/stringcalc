@@ -11,7 +11,7 @@ import math
 import re
 import warnings
 from functools import lru_cache
-from typing import Callable, NamedTuple
+from typing import NamedTuple, Protocol
 
 import pandas as pd
 
@@ -31,10 +31,10 @@ DATA = _get_data()
 def load_data() -> pd.DataFrame:
     """Load all string data.
 
-    Use the individual `load_*_data` functions for more control.
+    Combines results from the individual ``load_*_data`` functions with ``for_combined=True``.
     """
     df = pd.concat(
-        [fn() for fn in _DATA_LOADERS],
+        [fn(for_combined=True) for fn in _DATA_LOADERS],
         ignore_index=True,
     )
 
@@ -45,23 +45,42 @@ def load_data() -> pd.DataFrame:
 
 
 @lru_cache(2)
-def load_daddario_data(*, drop_sample_tensions: bool = True) -> pd.DataFrame:
-    """Load the data (currently only D'Addario) needed for the calculations."""
+def load_daddario_data(*, for_combined: bool = False) -> pd.DataFrame:
+    """Load the data (currently only D'Addario) needed for the calculations.
+
+    Parameters
+    ----------
+    for_combined
+        Return the frame intended for use in the combined dataset (:func:`load_data`),
+        adding appropriate prefixes and dropping extraneous columns.
+    """
 
     df = pd.read_csv(DATA.joinpath("daddario-tension.csv"), header=0).convert_dtypes()
 
-    if drop_sample_tensions:
+    if for_combined:
         df = df.drop(columns=["notes", "tens"])
+
+        df["group"] = "D'Addario - " + df["category"] + " - " + df["group"]
+        df["group_id"] = "DA:" + df["group_id"]
+        df["id"] = "DA:" + df["id"]
+
+        df = df.drop(columns=["category", "id_pref", "id_suff"])
 
     # Set categorical columns
     for name in ["category", "group", "id_pref", "id_suff", "group_id"]:
-        df[name] = df[name].astype("category")
+        if name in df.columns:
+            df[name] = df[name].astype("category")
 
     return df
 
 
+@lru_cache(1)
+def _get_daddario_group_ids() -> set[str]:
+    return set(load_daddario_data(for_combined=False).group_id.cat.categories)
+
+
 @lru_cache
-def load_aquila_data(*, nng_density: float = 1300, drop_gauge_eqvs: bool = True) -> pd.DataFrame:
+def load_aquila_data(*, nng_density: float = 1300, for_combined: bool = False) -> pd.DataFrame:
     """Load Aquila NNG (New Nylgut) data.
 
     Parameters
@@ -71,6 +90,9 @@ def load_aquila_data(*, nng_density: float = 1300, drop_gauge_eqvs: bool = True)
         They are supposed to be the same density as gut.
         https://www.cs.helsinki.fi/u/wikla/mus/Calcs/wwwscalc.html says gut is 1276 kg/m3;
         I have seen 1300 elsewhere.
+    for_combined
+        Return the frame intended for use in the combined dataset (:func:`load_data`),
+        adding appropriate prefixes and dropping extraneous columns.
     """
     import numpy as np
 
@@ -81,84 +103,122 @@ def load_aquila_data(*, nng_density: float = 1300, drop_gauge_eqvs: bool = True)
     df["uw"] = nng_density * 2.205 / 1e6 * (2.54**3) * (np.pi * df.gauge**2 / 4)
 
     # Set group ID (used to select string type)
-    df["group"] = "Aquila New Nylgut"
+    df["group"] = "New Nylgut"
     df["group_id"] = "NNG"
-    for name in ["group", "group_id"]:
-        df[name] = df[name].astype("category")
 
-    # Include gauge equivalents?
     gauge_eqv_cols = [col for col in df.columns if col.startswith("gauge_")]
-    if drop_gauge_eqvs:
+    if for_combined:
+        df["group"] = "Aquila " + df["group"]
+        df["group_id"] = "A:" + df["group_id"]
+        df["id"] = "A:" + df["id"]
+
         df = df.drop(columns=gauge_eqv_cols)
     else:
         df = df.rename(columns={col: col.replace("gauge_", "gauge_eqv_") for col in gauge_eqv_cols})
 
+    for name in ["group", "group_id"]:
+        df[name] = df[name].astype("category")
+
     return df
 
 
-@lru_cache(1)
-def load_worth_data() -> pd.DataFrame:
-    """Load Worth fluorocarbon data."""
+@lru_cache(2)
+def load_worth_data(*, for_combined: bool = False) -> pd.DataFrame:
+    """Load Worth fluorocarbon data.
+
+    Parameters
+    ----------
+    for_combined
+        Return the frame intended for use in the combined dataset (:func:`load_data`),
+        adding appropriate prefixes and dropping extraneous columns.
+    """
 
     df = pd.read_csv(DATA.joinpath("worth.csv"), header=0).convert_dtypes()
 
     # Set group ID (used to select string type)
-    df["group"] = "Worth Fluorocarbon"
-    df["group_id"] = "WFC"
+    df["group"] = "Fluorocarbon"
+    df["group_id"] = "FC"
+
+    if for_combined:
+        df["group"] = "Worth " + df["group"]
+        df["group_id"] = "W" + df["group_id"]
+        df["id"] = "WFC:" + df["id"]
+
+        df = df.drop(columns="rho")
+
     for name in ["group", "group_id"]:
         df[name] = df[name].astype("category")
 
     return df
 
 
-@lru_cache(1)
-def load_stringjoy_data() -> pd.DataFrame:
+@lru_cache(2)
+def load_stringjoy_data(*, for_combined: bool = False) -> pd.DataFrame:
     """Load Stringjoy data.
 
     https://tension.stringjoy.com/
+
+    Parameters
+    ----------
+    for_combined
+        Return the frame intended for use in the combined dataset (:func:`load_data`),
+        adding appropriate prefixes and dropping extraneous columns.
     """
 
     df = pd.read_csv(DATA.joinpath("stringjoy.csv"), header=0).convert_dtypes()
 
-    # Differentiate from D'Addario
-    df["id"] = "SJ" + df["id"]
-    df["group"] = "Stringjoy " + df["group"]
-    df["group_id"] = "SJ" + df["group_id"]
+    if for_combined:
+        df["id"] = "SJ:" + df["id"]
+        df["group"] = "Stringjoy " + df["group"]
+        df["group_id"] = "SJ:" + df["group_id"]
+
     for name in ["group", "group_id"]:
         df[name] = df[name].astype("category")
 
     return df
 
 
-@lru_cache(1)
-def load_ghs_data() -> pd.DataFrame:
+@lru_cache(2)
+def load_ghs_data(*, for_combined: bool = False) -> pd.DataFrame:
     """Load GHS data.
 
     https://www.ghsstrings.com/pages/tension-calc
+
+    Parameters
+    ----------
+    for_combined
+        Return the frame intended for use in the combined dataset (:func:`load_data`),
+        adding appropriate prefixes and dropping extraneous columns.
     """
 
     df = pd.read_csv(DATA.joinpath("ghs.csv"), header=0).convert_dtypes()
 
     # Drop ID dupes (e.g. PL which is included for both acoustic and electric)
-    df = df.drop_duplicates(subset=["id"])
+    df = df.drop_duplicates(subset=["id"], keep="first")
 
     # Drop where we don't have gauge (bass strings for different scale lengths)
     df = df.dropna(subset=["gauge"])
 
-    # Differentiate from D'Addario
-    df["id"] = "GHS" + df["id"]
-    df["group"] = "GHS - " + df["group"]
-    df["group_id"] = "GHS" + df["group_id"]
+    if for_combined:
+        df["id"] = "GHS:" + df["id"]
+        df["group"] = "GHS - " + df["group"]
+        df["group_id"] = "GHS:" + df["group_id"]
+
     for name in ["group", "group_id"]:
         df[name] = df[name].astype("category")
 
     return df.reset_index(drop=True)
 
 
-_DATA_LOADERS: list[Callable[[], pd.DataFrame]] = [
+class _DataLoader(Protocol):
+    def __call__(self, *, for_combined: bool = False) -> pd.DataFrame:
+        ...
+
+
+_DATA_LOADERS: list[_DataLoader] = [
     load_daddario_data,
     load_aquila_data,
-    lambda: load_worth_data().drop(columns="rho"),
+    load_worth_data,
     load_stringjoy_data,
     load_ghs_data,
 ]
@@ -258,13 +318,13 @@ def tension(s: String, pitch: str = "A4") -> float:
     L = s.L
 
     if t in {"PL", "S", "PS"}:  # plain steel
-        tda = "PL"
+        tda = "DA:PL"
     elif t in {"PB"}:  # phosphor bronze
-        tda = "PB"
+        tda = "DA:PB"
     elif t in {"NYL", "N"}:  # plain "rectified" nylon
-        tda = "NYL"
+        tda = "DA:NYL"
     elif t in {"NYLW", "NW"}:  # standard silver-wrapped nylon
-        tda = "NYLW"
+        tda = "DA:NYLW"
     else:
         raise ValueError(f"string type {t!r} invalid or not supported")
 
@@ -362,7 +422,19 @@ def suggest_gauge(
     from pyabc2 import Pitch
 
     if types is None:
-        types = {"PB", "PL"}
+        types = {"DA:PB", "DA:PL"}
+
+    # Assume D'Addario if match to an original D'Addario group ID (with no `DA:` prefix)
+    daddario_group_ids = _get_daddario_group_ids()
+    types_in = types
+    types = {t if t not in daddario_group_ids else f"DA:{t}" for t in types}
+    types_changed = types_in - types
+    if types_changed:
+        warnings.warn(
+            f"string type groups {sorted(types_changed)} assumed to be D'Addario. "
+            f"Use group ID prefix 'DA:' to be explicit and avoid this warning.",
+            stacklevel=2,
+        )
 
     data_all = load_data()
     data = data_all.query("group_id in @types")
@@ -388,7 +460,8 @@ def suggest_gauge(
     b = 1.7  # TODO: allow to set this?
     if (data_sort["dT"] > b).all() or (data_sort["dT"] < -b).all():
         warnings.warn(
-            f"You are outside the range of what string type group(s) {types} can provide. "
+            f"(T={T}, L={L}, P={pitch}) "
+            f"is outside the range of what string type group(s) {types} can provide. "
             "Maybe a different string type can give the tension/pitch/length you desire.",
             stacklevel=2,
         )

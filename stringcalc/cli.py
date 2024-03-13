@@ -287,7 +287,13 @@ def gauge_(
         help=("If true, suggest D'Addario gauges. If false, compute exact gauge."),
     ),
     types: list[str] = typer.Option(
-        None, "--type", help="String type. Can specify multiple times if using --suggest."
+        None,
+        "--type",
+        help=(
+            "String type. Can specify multiple times if using --suggest. "
+            "For --suggest, defaults to D'Addario phosphor bronze and plain steel ('DA:PB', 'DA:PL'). "
+            "If not using --suggest, must specify exactly one type (no default). "
+        ),
     ),
     nsuggest: int = typer.Option(
         3, "-N", "--nsuggest", help="Number of suggestions. Only relevant if using --suggest."
@@ -316,8 +322,8 @@ def gauge_(
         types_set: set[str]
         if not types:
             if verbose:
-                info("No string types specified, defaulting to PB + PL.")
-            types_set = {"PB", "PL"}
+                info("No string types specified, defaulting to D'Addario PB + PL.")
+            types_set = {"DA:PB", "DA:PL"}
         else:
             types_set = set(types)
 
@@ -345,7 +351,7 @@ def gauge_(
             g_df.attrs["col_desc"]["dT"] += f" ({T_} lbf)"
             table = _rich_table(
                 g_df,
-                title=f"Closest D'Addario gauges\nfor {L_}\" @ {P_}",
+                title=f'Closest gauges\nfor {L_}" @ {P_}',
                 float_format=float_format,
                 panel=n_cases > 1,
                 column_info=column_info,
@@ -357,7 +363,10 @@ def gauge_(
 
     else:
         if not types:
-            error("Must supply type to use exact gauge calculation.", rc=2)
+            error(
+                "Must supply type to use exact gauge calculation, e.g. 'plain nylon', 'plain steel'.",
+                rc=2,
+            )
 
         if len(types) > 1:
             error(f"Only specify one type for exact gauge calculation. Got {types}.", rc=2)

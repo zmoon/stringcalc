@@ -65,7 +65,7 @@ df = df.dropna(subset=["id"])
 )
 
 # Estimate density of D'Addario NYL strings
-df2 = load_data().query("group_id == 'NYL'").copy()
+df2 = load_data().query("group_id == 'DA:NYL'").copy()
 df2["rho"] = df2.uw / (np.pi * df2.gauge**2 / 4) * 1 / (2.54**3) * 1e6 / 2.205
 # The data suggest rho ~ 995.8 kg/m3, unless there is something wrong with my calculation...
 
