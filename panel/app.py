@@ -12,6 +12,8 @@ DATA_ALL = load_data()
 TYPE_OPTIONS = ["PB", "PL", "LE", "LEW", "NYL", "NYLW", "A:NNG", "WFC"]
 TYPE_DEFAULTS = ["PB", "PL"]
 
+_PITCH_UNICODE_TO_ASCII = str.maketrans("₀₁₂₃₄₅₆₇₈₉♭♯", "0123456789b#")
+
 
 def suggest_gauge_pane():
     info = pn.pane.Markdown(
@@ -42,8 +44,8 @@ def suggest_gauge_pane():
 
     pitch_input = pn.widgets.DiscreteSlider(
         name="Pitch",
-        options=[Pitch(pkn + 8).name for pkn in range(1, 101)],
-        value="D3",
+        options=[Pitch(pkn + 8).unicode() for pkn in range(1, 101)],
+        value="D₃",
         width=int(WIDTH * 2 / 3),
     )
 
@@ -64,7 +66,8 @@ def suggest_gauge_pane():
 
     @pn.depends(tension_input, length_input, pitch_input, types_input, n_input)
     def res(T, L, pitch, types, n):
-        df = suggest_gauge(T=T, L=L, pitch=pitch, types=set(types), n=n)
+        pitch_ascii = pitch.translate(_PITCH_UNICODE_TO_ASCII)
+        df = suggest_gauge(T=T, L=L, pitch=pitch_ascii, types=set(types), n=n)
         df = df.rename(columns=df.attrs["fancy_col"])
 
         # TODO: highlight best option
