@@ -145,7 +145,7 @@ def test_aliases_unique():
 
 
 def test_load_data_group_ids_unique():
-    dfs = [fn() for fn in _DATA_LOADERS]
+    dfs = [fn(for_combined=True) for fn in _DATA_LOADERS]
     for a, b in itertools.product(
         [set(df.group_id.cat.categories) for df in dfs],
         repeat=2,

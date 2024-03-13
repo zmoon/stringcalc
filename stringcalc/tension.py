@@ -31,10 +31,10 @@ DATA = _get_data()
 def load_data() -> pd.DataFrame:
     """Load all string data.
 
-    Use the individual `load_*_data` functions for more control.
+    Combines results from the individual ``load_*_data`` functions with ``for_combined=True``.
     """
     df = pd.concat(
-        [fn() for fn in _DATA_LOADERS],
+        [fn(for_combined=True) for fn in _DATA_LOADERS],
         ignore_index=True,
     )
 
@@ -45,7 +45,7 @@ def load_data() -> pd.DataFrame:
 
 
 @lru_cache(2)
-def load_daddario_data(*, for_combined: bool = True) -> pd.DataFrame:
+def load_daddario_data(*, for_combined: bool = False) -> pd.DataFrame:
     """Load the data (currently only D'Addario) needed for the calculations.
 
     Parameters
@@ -80,7 +80,7 @@ def _get_daddario_group_ids() -> set[str]:
 
 
 @lru_cache
-def load_aquila_data(*, nng_density: float = 1300, for_combined: bool = True) -> pd.DataFrame:
+def load_aquila_data(*, nng_density: float = 1300, for_combined: bool = False) -> pd.DataFrame:
     """Load Aquila NNG (New Nylgut) data.
 
     Parameters
@@ -123,7 +123,7 @@ def load_aquila_data(*, nng_density: float = 1300, for_combined: bool = True) ->
 
 
 @lru_cache(2)
-def load_worth_data(*, for_combined: bool = True) -> pd.DataFrame:
+def load_worth_data(*, for_combined: bool = False) -> pd.DataFrame:
     """Load Worth fluorocarbon data.
 
     Parameters
@@ -153,7 +153,7 @@ def load_worth_data(*, for_combined: bool = True) -> pd.DataFrame:
 
 
 @lru_cache(2)
-def load_stringjoy_data(*, for_combined: bool = True) -> pd.DataFrame:
+def load_stringjoy_data(*, for_combined: bool = False) -> pd.DataFrame:
     """Load Stringjoy data.
 
     https://tension.stringjoy.com/
@@ -179,7 +179,7 @@ def load_stringjoy_data(*, for_combined: bool = True) -> pd.DataFrame:
 
 
 @lru_cache(2)
-def load_ghs_data(*, for_combined: bool = True) -> pd.DataFrame:
+def load_ghs_data(*, for_combined: bool = False) -> pd.DataFrame:
     """Load GHS data.
 
     https://www.ghsstrings.com/pages/tension-calc
