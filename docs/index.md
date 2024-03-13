@@ -21,6 +21,12 @@ For the CLI, include the `cli` extra:
 pip install stringcalc[cli]
 ```
 
+## Examples
+
+```{nb-exec-table}
+
+```
+
 ```{toctree}
 :hidden:
 
