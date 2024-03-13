@@ -64,7 +64,7 @@ def suggest_gauge_pane():
 
     @pn.depends(tension_input, length_input, pitch_input, types_input, n_input)
     def res(T, L, pitch, types, n):
-        df = suggest_gauge(T=T, L=L, pitch=pitch, types=types, n=n)
+        df = suggest_gauge(T=T, L=L, pitch=pitch, types=set(types), n=n)
         df = df.rename(columns=df.attrs["fancy_col"])
 
         # TODO: highlight best option

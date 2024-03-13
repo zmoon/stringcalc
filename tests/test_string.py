@@ -7,6 +7,7 @@ from stringcalc.tension import (
     _STRING_TYPE_ALIASES,
     String,
     gauge,
+    load_daddario_data,
     load_data,
     load_stringjoy_data,
     suggest_gauge,
@@ -57,10 +58,10 @@ def test_suggest_gauge():
     pitch = "E4"  # top string in standard guitar tuning
 
     ret = suggest_gauge(T, L, pitch)
-    assert ret.id.tolist() == ["PL011", "PL0115", "PL012"]
+    assert ret.id.tolist() == ["DA:PL011", "DA:PL0115", "DA:PL012"]
 
-    ret = suggest_gauge(T, L, pitch, types={"NYL"})
-    assert ret.id.tolist() == ["NYL031", "NYL032", "NYL033"]
+    ret = suggest_gauge(T, L, pitch, types={"DA:NYL"})
+    assert ret.id.tolist() == ["DA:NYL031", "DA:NYL032", "DA:NYL033"]
 
 
 def test_suggest_gauge_pb056():
@@ -69,8 +70,8 @@ def test_suggest_gauge_pb056():
     L = 25.5
     pitch = "D2"  # dropped D
 
-    ret = suggest_gauge(T, L, pitch, types={"PB"})
-    assert ret.id.tolist() == ["PB053", "PB056D", "PB059"]
+    ret = suggest_gauge(T, L, pitch, types={"DA:PB"})
+    assert ret.id.tolist() == ["DA:PB053", "DA:PB056D", "DA:PB059"]
 
 
 @pytest.mark.parametrize(
@@ -80,13 +81,35 @@ def test_suggest_gauge_pb056():
 def test_suggest_gauge_bounds_warning(pitch):
     T = 15
     L = 21
-    types = {"PB"}
+    types = {"DA:PB"}
 
     with pytest.warns(
         UserWarning,
-        match=r"You are outside the range of what string type group\(s\) \{'PB'\} can provide\.",
+        match=(
+            rf"\(T=15, L=21, P={pitch}\) "
+            r"is outside the range of what string type group\(s\) \{'DA:PB'\} can provide\."
+        ),
     ):
         suggest_gauge(T=T, L=L, pitch=pitch, types=types)
+
+
+@pytest.mark.parametrize(
+    "types",
+    [
+        {"asdf"},
+        {"DA:PB", "asdf"},
+    ],
+    ids=[
+        "all invalid",
+        "one invalid",
+    ],
+)
+def test_suggest_gauge_invalid_types(types):
+    T = 15
+    L = 21
+    P = "D3"
+    with pytest.raises(ValueError, match=r"string type IDs \['asdf'\] not found in dataset."):
+        suggest_gauge(T=T, L=L, pitch=P, types=types)
 
 
 @pytest.mark.parametrize(
@@ -122,7 +145,7 @@ def test_aliases_unique():
 
 
 def test_load_data_group_ids_unique():
-    dfs = [fn() for fn in _DATA_LOADERS]
+    dfs = [fn(for_combined=True) for fn in _DATA_LOADERS]
     for a, b in itertools.product(
         [set(df.group_id.cat.categories) for df in dfs],
         repeat=2,
@@ -134,9 +157,12 @@ def test_load_data_group_ids_unique():
 
 
 def test_load_data_cat_dtypes():
-    df = load_data()
-
+    df = load_daddario_data(for_combined=False)
     for name in ["category", "group", "id_pref", "id_suff", "group_id"]:
+        assert df[name].dtype == "category"
+
+    df = load_data()
+    for name in ["group", "group_id"]:
         assert df[name].dtype == "category"
 
 
@@ -148,8 +174,8 @@ def test_load_data_ids_unique():
 
 
 def test_stringjoy_data_ids():
-    df = load_stringjoy_data()
-    assert df.group_id.str.len().isin((3, 4)).all()
+    df = load_stringjoy_data(for_combined=True)
+    assert df.group_id.str.len().isin((4, 5)).all()
     assert df.group_id.str.startswith("SJ").all()
     assert df.id.str.startswith("SJ").all()
     assert (
@@ -161,6 +187,13 @@ def test_string_suggest_t_consistency():
     s = String.from_spec('25.5" PB .042')
     P = "A2"
     T = tension(s, pitch=P)
-    df = suggest_gauge(T, s.L, P, types={"PB"}, n=1)
+    df = suggest_gauge(T, s.L, P, types={"DA:PB"}, n=1)
     assert df["T"].tolist() == [T]
     assert df.dT.tolist() == [0]
+
+
+def test_string_suggest_da_conv_warning():
+    with pytest.warns(
+        UserWarning, match=r"string type groups \['PB', 'PL'\] assumed to be D'Addario"
+    ):
+        suggest_gauge(20, 25.5, "G3", types={"PB", "PL"})
