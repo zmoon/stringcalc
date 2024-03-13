@@ -6,6 +6,16 @@ import panel as pn
 from stringcalc.frets import distances, length_from_distance
 from stringcalc.tension import DENSITY_LB_IN, gauge, load_data, suggest_gauge
 
+try:
+    from stringcalc.util import get_version
+except ImportError:
+
+    def get_version():
+        import stringcalc
+
+        return getattr(stringcalc, "__version__", "?")
+
+
 WIDTH = 450
 
 DATA_ALL = load_data()
@@ -221,10 +231,11 @@ def scale_length_pane():
     )
 
 
-foot_html = """\
+foot_html = f"""\
 <div style="font-size: 0.7rem; color: #888">
 These calculations use the Python package
 <a href="https://github.com/zmoon/stringcalc">stringcalc</a>.
+Version: <strong>{get_version()}</strong>.
 </div>
 """
 
