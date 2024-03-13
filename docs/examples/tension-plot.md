@@ -8,7 +8,8 @@ kernelspec:
 
 In this example, we plot the tension of
 D'Addario plain steel and phosphor bronze guitar strings
-as a function of pitch.
+as a function of pitch
+for a scale length of 25.4" (e.g. Martin Dreadnought, OM).
 
 ```{code-cell} ipython3
 :tags: [hide-output]
@@ -56,7 +57,7 @@ for i, p in enumerate(pitches):
         xticks.append(i)
         xticklabels.append(p.unicode())
 
-L = 25.5
+L = 25.4
 
 fig, ax = plt.subplots(figsize=(10, 5.5))
 
@@ -82,7 +83,7 @@ ax.autoscale(axis="x", tight=True)
 ax.grid()
 ax.set_ylabel("Tension [lbf]")
 ax.set_ylim((0, 30))
-# ax.set_ylim((0.1, 30)); ax.set_yscale("log")
+# ax.set_ylim((0.3, 40)); ax.set_yscale("log")
 
 ax.legend(ncol=2, fontsize=9, bbox_to_anchor=(1.01, 0.5), loc="center left")
 
