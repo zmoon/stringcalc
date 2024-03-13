@@ -480,10 +480,11 @@ def gauge(density: float, T: float, L: float, pitch: str) -> float:
 def suggest_gauge(
     T: float, L: float, pitch: str, *, types: set[str] | None = None, n: int = 3
 ) -> pd.DataFrame:
-    """For target tension and given scale length, return suggested gauge(s).
+    """For target tension, given scale length, and pitch, return suggested gauge(s).
 
-    Results may include two types commonly used to make string sets, e.g.
-    plain steel + phosphor bronze or plain nylon + silver-wrapped nylon.
+    Two types are commonly used to make string sets, e.g.
+    plain steel + phosphor bronze for steel-string acoustic guitar
+    or plain nylon + silver-wrapped nylon for classical guitar.
 
     Parameters
     ----------
@@ -492,12 +493,15 @@ def suggest_gauge(
     L
         Scale length [in].
     pitch
-        Pitch name in SPN, e.g. "A4".
+        Pitch name in ASCII `SPN <https://en.wikipedia.org/wiki/Scientific_pitch_notation>`__,
+        e.g. "A4" (A440), which is a fourth above the guitar's high E string.
+        Guitar standard tuning: E2 A2 D3 G3 B3 E4.
     types
         String type IDs
         (column ``group_id`` in the :func:`data table <load_data>`)
         to consider.
-        If unset, defaults to ``{'PB', 'PL'}``, phosphor bronze and plain steel.
+        If unset, defaults to D'Addario phosphor bronze and plain steel
+        (``{'DA:PB', 'DA:PL'}``).
     n
         Number of suggestions to include in the returned frame.
     """
