@@ -1,5 +1,10 @@
 """
-Fret distances
+Fret distance calculations.
+
+For example:
+
+- compute equal-temperament fret locations for a given scale length
+- compute the scale length implied by a given fret-to-fret distance
 """
 from __future__ import annotations
 

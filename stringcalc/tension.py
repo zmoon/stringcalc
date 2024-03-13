@@ -51,7 +51,8 @@ def load_data() -> pd.DataFrame:
 
     Notes
     -----
-    Combines results from the individual ``load_*_data`` functions with ``for_combined=True``.
+    Combines results from the individual ``load_*_data`` functions
+    with ``for_combined=True`` applied.
 
     See Also
     --------
