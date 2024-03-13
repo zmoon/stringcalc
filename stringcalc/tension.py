@@ -11,7 +11,7 @@ import math
 import re
 import warnings
 from functools import lru_cache
-from typing import Callable, NamedTuple
+from typing import NamedTuple, Protocol
 
 import pandas as pd
 
@@ -210,7 +210,12 @@ def load_ghs_data(*, for_combined: bool = False) -> pd.DataFrame:
     return df.reset_index(drop=True)
 
 
-_DATA_LOADERS: list[Callable[[], pd.DataFrame]] = [
+class _DataLoader(Protocol):
+    def __call__(self, *, for_combined: bool = False) -> pd.DataFrame:
+        ...
+
+
+_DATA_LOADERS: list[_DataLoader] = [
     load_daddario_data,
     load_aquila_data,
     load_worth_data,
