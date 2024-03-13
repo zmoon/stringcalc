@@ -287,7 +287,13 @@ def gauge_(
         help=("If true, suggest D'Addario gauges. If false, compute exact gauge."),
     ),
     types: list[str] = typer.Option(
-        None, "--type", help="String type. Can specify multiple times if using --suggest."
+        None,
+        "--type",
+        help=(
+            "String type. Can specify multiple times if using --suggest. "
+            "For --suggest, defaults to D'Addario phosphor bronze and plain steel ('DA:PB', 'DA:PL'). "
+            "If not using --suggest, must specify exactly one type (no default). "
+        ),
     ),
     nsuggest: int = typer.Option(
         3, "-N", "--nsuggest", help="Number of suggestions. Only relevant if using --suggest."
@@ -357,7 +363,10 @@ def gauge_(
 
     else:
         if not types:
-            error("Must supply type to use exact gauge calculation.", rc=2)
+            error(
+                "Must supply type to use exact gauge calculation, e.g. 'plain nylon', 'plain steel'.",
+                rc=2,
+            )
 
         if len(types) > 1:
             error(f"Only specify one type for exact gauge calculation. Got {types}.", rc=2)

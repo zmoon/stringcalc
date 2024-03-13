@@ -419,7 +419,7 @@ def suggest_gauge(
     if types is None:
         types = {"DA:PB", "DA:PL"}
 
-    # Assume D'Addario if no colon pref or special group
+    # Assume D'Addario if match to an original D'Addario group ID (with no `DA:` prefix)
     daddario_group_ids = _get_daddario_group_ids()
     types_in = types
     types = {t if t not in daddario_group_ids else f"DA:{t}" for t in types}
