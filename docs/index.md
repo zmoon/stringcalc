@@ -32,6 +32,7 @@ panel.rst
 :hidden:
 
 examples/compare-data.md
+examples/tension-plot.md
 ```
 
 ```{toctree}
