@@ -63,6 +63,15 @@ def distances(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
         Method to use for computing fret distances.
 
         - ``'et'``: equal temperament (:func:`distance_et`)
+
+
+    .. note::
+       Columns:
+
+       - ``n``: fret number (index)
+       - ``d``: distance from nut to fret
+       - ``dd``: distance from previous fret to current
+       - ``d_inv``: distance from fret to saddle
     """
     assert N >= 1  # guarantees `d` is array with at least one value
     n = np.arange(1, N + 1)

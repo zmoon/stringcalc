@@ -39,6 +39,7 @@ panel.rst
 
 examples/compare-data.md
 examples/tension-plot.md
+examples/pythagoras-ratios.md
 ```
 
 ```{toctree}
