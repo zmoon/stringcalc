@@ -10,7 +10,7 @@ try:
     from stringcalc.util import get_version
 except ImportError:
 
-    def get_version():
+    def get_version(*, git: bool = True) -> str:
         import stringcalc
 
         return getattr(stringcalc, "__version__", "?")
