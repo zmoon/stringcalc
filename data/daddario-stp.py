@@ -6,6 +6,7 @@ It's back---got the beta email notice on 2024-06-12.
 import re
 from urllib.parse import urlsplit
 
+import pandas as pd
 import requests
 
 url_app = "https://www.daddario.com/string-tension-pro"
@@ -55,3 +56,90 @@ raw_data = r.json()
 #   'EndType': 'Small Ball End'},
 #
 # Individual string data is duplicated, for the sake of sets.
+
+df = (
+    pd.DataFrame(raw_data)
+    .drop(
+        columns=[
+            "SequenceNumber",
+            "ItemClassPosition1",
+            "ItemClassPosition2",
+            "ItemClassPosition3",
+            "ItemClassPosition4",
+        ]
+    )
+    .rename(
+        columns={
+            "SetItemNumber": "set",
+            "ComponentItemNumber": "id",
+            "SubComponent": "sub_comp",  # like a long ID?
+            "SizeInInches(gauge)": "gauge",
+            "SizeInMillimeters(gauge)": "gauge_mm",
+            "StringConstruction": "construction",
+            "MassPerUnitLength": "uw",
+            "Instrument": "instrument",
+            "Material": "material",
+            "EndType": "end_type",
+        }
+    )
+)
+
+assert all(c == c.lower() for c in df.columns)
+
+df0 = df.copy()
+
+# Use sub-component for IDs for MISC??
+df["id"] = df["sub_comp"].where(df["id"] == "MISC", df["id"])
+
+# Move to one row per ID
+assert not df["id"].is_unique
+rows = []
+for id_, g in df.groupby("id"):
+    if g.duplicated().any():
+        # print(f"ID {id_} has duplicate rows")
+        g = g.drop_duplicates(keep="first")
+
+    nu = g.nunique()
+
+    if nu["uw"] != 1:
+        print(f"ID {id_} has {nu['uw']} unique values of unit weight")
+        continue
+
+    if nu["material"] != 1:
+        print(f"ID {id_} has {nu['material']} unique values of string material")
+        continue
+
+    if nu["gauge"] != 1:
+        print(f"ID {id_} has {nu['gauge']} unique values of string gauge")
+        continue
+
+    uniques = [
+        "id",
+        "gauge",
+        "gauge_mm",
+        "construction",
+        "uw",
+        "material",
+        "end_type",
+    ]
+    assert all(nu[col] == 1 for col in uniques)
+
+    non_uniques = [
+        "instrument",
+        "set",
+        "sub_comp",
+    ]
+    assert nu["set"] > 1 or len(g) == 1
+
+    row = g[uniques].iloc[0]
+    for col in non_uniques:
+        row[col] = sorted(g[col].unique())
+
+    rows.append(row)
+
+df = pd.DataFrame(rows).sort_values(by="id").reset_index(drop=True)
+
+# Fix gauge
+assert df.gauge.min() > 1
+df["gauge"] = df["gauge"] / 1000
+df["gauge_mm"] = df["gauge_mm"] / 1000
