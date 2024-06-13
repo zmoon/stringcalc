@@ -4,10 +4,13 @@ D'Addario String Tension Pro
 It's back---got the beta email notice on 2024-06-12.
 """
 import re
+from pathlib import Path
 from urllib.parse import urlsplit
 
 import pandas as pd
 import requests
+
+HERE = Path(__file__).parent
 
 url_app = "https://www.daddario.com/string-tension-pro"
 url_rec_js = (
@@ -143,3 +146,45 @@ df = pd.DataFrame(rows).sort_values(by="id").reset_index(drop=True)
 assert df.gauge.min() > 1
 df["gauge"] = df["gauge"] / 1000
 df["gauge_mm"] = df["gauge_mm"] / 1000
+
+# Group IDs like original
+s_re = r"(?P<id_pref>[A-Z]+)(?P<id_gauge>[0-9]+)(?P<id_suff>[A-Z]*)"
+is_simple_id = df["id"].str.fullmatch(s_re)
+n = is_simple_id.value_counts()[False]
+if n > 0:
+    print(f"{n}/{len(df)} IDs do not match the group ID pattern")
+df_ = df.loc[is_simple_id, "id"].str.extract(s_re)
+df_["group_id"] = df_["id_pref"] + df_["id_suff"]
+
+df = df.join(df_.drop(columns=["id_pref", "id_suff"]), how="left")
+
+# Material is mostly unique for a group ID, though different group IDs may have the same material
+nmat = df.groupby("group_id").material.nunique()
+nmat_is_not_unique = nmat.gt(1)
+set(nmat[nmat_is_not_unique].index) == {"J", "JC", "NYL"}
+assert set(df.query("group_id == 'NYL'").material.unique()) == {
+    "Rectified Clear Nylon",
+    "Clear Nylon",
+}
+
+df.loc[df["group_id"] == "NYL", "material"] = "(Rectified) Clear Nylon"
+df.loc[df["group_id"] == "J", "material"] = "Various"
+df.loc[df["group_id"] == "JC", "material"] = "Various"
+
+# Use material for group name
+group = df.groupby("group_id").material.first().rename("group")
+df = df.join(group, on="group_id", how="left")
+
+# Write
+fn = "daddario-stp.csv"
+fp = HERE / "../stringcalc/data" / fn
+assert fp.parent.is_dir()
+(
+    df[["id", "uw", "gauge", "group_id", "group"]]
+    .dropna(subset="group_id")
+    .sort_values(by=["group_id", "gauge"])
+    .to_csv(fp, index=False, float_format="%.5g")
+)
+
+# Reload
+dfr = pd.read_csv(fp, header=0)
