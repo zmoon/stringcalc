@@ -61,6 +61,7 @@ def load_data() -> pd.DataFrame:
     load_ghs_data
     load_stringjoy_data
     load_worth_data
+    load_daddario_stp_data
     """
     df = pd.concat(
         [fn(for_combined=True) for fn in _DATA_LOADERS],
@@ -241,6 +242,34 @@ def load_ghs_data(*, for_combined: bool = False) -> pd.DataFrame:
     return df.reset_index(drop=True)
 
 
+@lru_cache(2)
+def load_daddario_stp_data(*, for_combined: bool = False) -> pd.DataFrame:
+    """Load D'Addario data derived from the new String Tension Pro (STP).
+
+    https://www.daddario.com/string-tension-pro
+
+    STP is in beta as of June 2024.
+
+    Parameters
+    ----------
+    for_combined
+        Return the frame intended for use in the combined dataset (:func:`load_data`),
+        adding appropriate prefixes and dropping extraneous columns.
+    """
+
+    df = pd.read_csv(DATA.joinpath("daddario-stp.csv"), header=0).convert_dtypes()
+
+    if for_combined:
+        df["id"] = "STP:" + df["id"]
+        df["group"] = "D'Addario (STP) - " + df["group"]
+        df["group_id"] = "STP:" + df["group_id"]
+
+    for name in ["group", "group_id"]:
+        df[name] = df[name].astype("category")
+
+    return df
+
+
 class _DataLoader(Protocol):
     def __call__(self, *, for_combined: bool = False) -> pd.DataFrame:
         ...
@@ -252,6 +281,7 @@ _DATA_LOADERS: list[_DataLoader] = [
     load_worth_data,
     load_stringjoy_data,
     load_ghs_data,
+    load_daddario_stp_data,
 ]
 
 
