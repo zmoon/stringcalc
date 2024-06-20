@@ -80,6 +80,7 @@ J4404C,0.00010988,0.03,JC,Various
 J4505C,0.00018034,0.035,JC,Various
 J4603C,5.0105e-05,0.037,JC,Various
 J4403C,5.2822e-05,0.038,JC,Various
+J4506C,0.00033341,0.044,JC,Various
 J4606C,0.00035754,0.046,JC,Various
 J4406C,0.00036803,0.047,JC,Various
 LE009,1.7953e-05,0.009,LE,Tin Coated Steel
@@ -165,16 +166,13 @@ NW062,0.00068032,0.062,NW,Nickel Plated Steel
 NW064,0.00072042,0.064,NW,Nickel Plated Steel
 NW068,0.00081724,0.068,NW,Nickel Plated Steel
 NW074,0.00094948,0.074,NW,Nickel Plated Steel
-NYL022,1.3685e-05,0.022,NYL,(Rectified) Clear Nylon
-NYL024,1.6286e-05,0.024,NYL,(Rectified) Clear Nylon
-NYL027,2.0612e-05,0.027,NYL,(Rectified) Clear Nylon
-NYL028,2.2167e-05,0.028,NYL,(Rectified) Clear Nylon
-NYL030,2.5447e-05,0.03,NYL,(Rectified) Clear Nylon
-NYL031,2.7172e-05,0.031,NYL,(Rectified) Clear Nylon
-NYL033,3.0791e-05,0.033,NYL,(Rectified) Clear Nylon
-NYL034,3.2685e-05,0.034,NYL,(Rectified) Clear Nylon
-NYL039,4.3005e-05,0.039,NYL,(Rectified) Clear Nylon
-NYL041,4.7529e-05,0.041,NYL,(Rectified) Clear Nylon
+NYL022,1.3685e-05,0.022,NYL,Clear Nylon
+NYL024,1.6286e-05,0.024,NYL,Clear Nylon
+NYL028,2.2167e-05,0.028,NYL,Clear Nylon
+NYL029,2.3779e-05,0.029,NYL,Clear Nylon
+NYL030,2.5447e-05,0.03,NYL,Clear Nylon
+NYL034,3.2685e-05,0.034,NYL,Clear Nylon
+NYL041,4.7529e-05,0.041,NYL,Clear Nylon
 NYL024W,6.7841e-05,0.024,NYLW,Silver Plated Copper
 NYL025W,6.7841e-05,0.025,NYLW,Silver Plated Copper
 NYL026W,8.4715e-05,0.026,NYLW,Silver Plated Copper

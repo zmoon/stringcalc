@@ -162,12 +162,8 @@ df = df.join(df_.drop(columns=["id_pref", "id_suff"]), how="left")
 nmat = df.groupby("group_id").material.nunique()
 nmat_is_not_unique = nmat.gt(1)
 set(nmat[nmat_is_not_unique].index) == {"J", "JC", "NYL"}
-assert set(df.query("group_id == 'NYL'").material.unique()) == {
-    "Rectified Clear Nylon",
-    "Clear Nylon",
-}
+assert set(df.query("group_id == 'NYL'").material.unique()) == {"Clear Nylon"}
 
-df.loc[df["group_id"] == "NYL", "material"] = "(Rectified) Clear Nylon"
 df.loc[df["group_id"] == "J", "material"] = "Various"
 df.loc[df["group_id"] == "JC", "material"] = "Various"
 
