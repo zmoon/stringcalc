@@ -18,7 +18,7 @@ QLike = Union[Quantity, str]
 # Note also `pint._typing.UnitLike`
 
 
-def distance_et(n: int | npt.ArrayLike, *, L: float) -> np.float_ | npt.NDArray[np.float_]:
+def distance_et(n: int | npt.ArrayLike, *, L: float) -> np.float64 | npt.NDArray[np.float64]:
     """Exact equal-temperament distance from nut for fret(s) `n` for scale length `L`.
 
     Using the 12th-root-of-2 method.
