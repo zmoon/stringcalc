@@ -298,6 +298,23 @@ def gauge_(
     nsuggest: int = typer.Option(
         3, "-N", "--nsuggest", help="Number of suggestions. Only relevant if using --suggest."
     ),
+    is_fan: bool = typer.Option(
+        None,
+        "--fanned",
+        help=(
+            "Fanned calculations. Must provide two scale lengths. "
+            "Assumed if two scale lengths are provided."
+        ),
+    ),
+    nut_width: float = typer.Option(
+        None,
+        "-w",
+        "--nut-width",
+        help=(
+            "Neck width at (center of?) nut (for fanned calculations). "
+            "Required if using --fanned."
+        ),
+    ),
     float_format: str = typer.Option(
         r"%.3f", help="Format for float-to-string conversion. Only relevant if using --suggest."
     ),
@@ -326,6 +343,25 @@ def gauge_(
             types_set = {"DA:PB", "DA:PL"}
         else:
             types_set = set(types)
+
+        if is_fan is None:
+            is_fan = len(L) == 2
+        if is_fan:
+            if len(L) != 2:
+                error(
+                    "Must supply two scale lengths (bass and treble sides) for fanned calculation.",
+                    rc=2,
+                )
+            n_str = max(len(T), len(P))
+            if n_str < 2:
+                error("Need at least two strings for fanned calculation.", rc=2)
+            if not nut_width:
+                error("Must supply nut width for fanned calculation.", rc=2)
+            e_b, e_t = 5 / 32, 1 / 8  # edge space
+            L_b, L_t = L
+            dLdx = (L_t - L_b) / nut_width
+            d = (nut_width - e_b - e_t) / (n_str - 1)  # string spacing
+            L = [L_b + dLdx * (e_b + i * d) for i in range(n_str)]
 
         if verbose:
             info(f"Searching string types: {types_set}")
