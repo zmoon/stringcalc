@@ -34,12 +34,12 @@ def distance_et(n: int | npt.ArrayLike, *, L: float) -> np.float64 | npt.NDArray
     s
         Scale length.
     """
-    n = np.floor(n, dtype=float)
+    n = np.floor(n, dtype=np.float64)
 
     if not np.all(n > 0):
         raise ValueError("input fret numbers should be positive")
 
-    return L * (1 - 1 / (2 ** (n / 12)))
+    return (L * (1 - 1 / (2 ** (n / 12)))).astype(np.float64)
 
 
 def distances(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
