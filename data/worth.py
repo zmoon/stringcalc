@@ -2,6 +2,7 @@
 Examine and save the Worth data.
 This is a subset of the data from Brauchli.
 """
+
 import sys
 from pathlib import Path
 

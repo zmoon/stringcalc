@@ -2,6 +2,7 @@
 Get Stringjoy data
 used in https://tension.stringjoy.com/
 """
+
 import sys
 from pathlib import Path
 
