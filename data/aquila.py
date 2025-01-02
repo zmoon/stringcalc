@@ -4,6 +4,7 @@ Examine the NNG (New Nylgut) equivalence data from Aquila
 Table retrieved from https://aquilacorde.com/en/string-gauge-converter/ on 25-Apr-2022
 with additional data from https://aquilacorde.com/wp-content/uploads/2019/09/conversion.pdf added
 """
+
 import sys
 from pathlib import Path
 

@@ -2,6 +2,7 @@
 Parsing the D'Addario extracted string tension data
 converting to a DataFrame
 """
+
 import re
 from pathlib import Path
 
