@@ -91,6 +91,15 @@ assert all(c == c.lower() for c in df.columns)
 
 df0 = df.copy()
 
+# Fix NYS008 for U2AGFPL008-NP (factor of 10 too high)
+sub_comp = "U2AGFPL008-NP"
+row = df[df.sub_comp == sub_comp]
+assert len(row) == 1
+assert (row.gauge == 80).all()
+assert (row.gauge_mm == 2032.0).all()
+df.loc[df.sub_comp == sub_comp, "gauge"] /= 10
+df.loc[df.sub_comp == sub_comp, "gauge_mm"] /= 10
+
 # Use sub-component for IDs for MISC??
 df["id"] = df["sub_comp"].where(df["id"] == "MISC", df["id"])
 
