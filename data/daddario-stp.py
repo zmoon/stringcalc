@@ -167,10 +167,26 @@ df_["group_id"] = df_["id_pref"] + df_["id_suff"]
 
 df = df.join(df_.drop(columns=["id_pref", "id_suff"]), how="left")
 
+# Special group ID cases
+
+# https://www.daddario.com/products/guitar/ukulele/pro-arte-titanium-ukulele/ej87c-titanium-ukulele-concert/
+df.loc[df["id"] == "ATN0.630MU", "group_id"] = "T"
+
+# https://www.daddario.com/products/guitar/classical-guitar/classics/ej27h-student-nylon-hard-tension/
+df.loc[df["id"].str.startswith("J27H"), "group_id"] = "J"
+
+# https://www.daddario.com/products/guitar/classical-guitar/classics/ej27n-12-student-nylon-fractional-normal-tension/
+df.loc[df["id"] == "MFCZ159-1.143-A", "group_id"] = "NYL"
+
+# The remaining strings are long more-complex IDs that start with U{1,2,3} or X1
+# TODO: try to assign group ID based on set(s)
+s_re_ux = r"(U[1-3][A-Z])|(X1[A-Z])"
+assert df[df.group_id.isnull()].id.str.slice(0, 3).str.fullmatch(s_re_ux).all()
+
 # Material is mostly unique for a group ID, though different group IDs may have the same material
 nmat = df.groupby("group_id").material.nunique()
 nmat_is_not_unique = nmat.gt(1)
-set(nmat[nmat_is_not_unique].index) == {"J", "JC", "NYL"}
+assert set(nmat[nmat_is_not_unique].index) == {"J", "JC"}
 assert set(df.query("group_id == 'NYL'").material.unique()) == {"Clear Nylon"}
 
 df.loc[df["group_id"] == "J", "material"] = "Various"
@@ -181,6 +197,9 @@ group = df.groupby("group_id").material.first().rename("group")
 df = df.join(group, on="group_id", how="left")
 
 # Write
+n = df.group_id.isnull().sum()
+if n > 0:
+    print(f"{n}/{len(df)} strings have no group ID and will be dropped")
 fn = "daddario-stp.csv"
 fp = HERE / "../stringcalc/data" / fn
 assert fp.parent.is_dir()
