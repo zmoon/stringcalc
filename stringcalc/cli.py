@@ -315,6 +315,17 @@ def gauge_(
             "Required if using --fanned."
         ),
     ),
+    edge_space: list[float] = typer.Option(
+        None,
+        "-e",
+        "--edge-space",
+        help=(
+            "Edge space, between the edge of the neck and the center of the first string. "
+            "You can specify one (used for both left and right) or two (left, right). "
+            'The default is 5/32" on the left and 1/8" on the right. '
+            "Only used for fanned calculations."
+        ),
+    ),
     float_format: str = typer.Option(
         r"%.3f", help="Format for float-to-string conversion. Only relevant if using --suggest."
     ),
@@ -349,7 +360,8 @@ def gauge_(
         if is_fan:
             if len(L) != 2:
                 error(
-                    "Must supply two scale lengths (bass and treble sides) for fanned calculation.",
+                    "Must supply two scale lengths (bass and treble sides) for fanned calculation. "
+                    f"Got {len(L)}.",
                     rc=2,
                 )
             n_str = max(len(T), len(P))
@@ -357,7 +369,14 @@ def gauge_(
                 error("Need at least two strings for fanned calculation.", rc=2)
             if not nut_width:
                 error("Must supply nut width for fanned calculation.", rc=2)
-            e_b, e_t = 5 / 32, 1 / 8  # edge space
+            if edge_space is None:
+                edge_space = [5 / 32, 1 / 8]
+            else:
+                if len(edge_space) == 1:
+                    edge_space *= 2
+                elif len(edge_space) > 2:
+                    error(f"Specify one or two edge space values. Got {len(edge_space)}.", rc=2)
+            e_b, e_t = edge_space
             L_b, L_t = L
             dLdx = (L_t - L_b) / nut_width
             d = (nut_width - e_b - e_t) / (n_str - 1)  # string spacing
