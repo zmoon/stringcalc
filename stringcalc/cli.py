@@ -380,7 +380,14 @@ def gauge_(
             L_b, L_t = L
             dLdx = (L_t - L_b) / nut_width
             d = (nut_width - e_b - e_t) / (n_str - 1)  # string spacing
-            L = [round(L_b + dLdx * (e_b + i * d), 4) for i in range(n_str)]
+            xs = [e_b + i * d for i in range(n_str)]
+            L = [round(L_b + dLdx * x, 4) for x in xs]
+            if verbose:
+                info(f"Nut width:               {nut_width}")
+                info(f"Left/bass edge space:    {e_b}")
+                info(f"Right/treble edge space: {e_t}")
+                info(f"Computed string spacing: {round(d, 4)}")
+                info(f"Computed string nut positions: {[round(x, 4) for x in xs]}")
 
         if verbose:
             info(f"Searching string types: {types_set}")
