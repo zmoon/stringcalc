@@ -1,6 +1,7 @@
 """
 CLI
 """
+
 from __future__ import annotations
 
 import functools
@@ -85,7 +86,7 @@ def _version_callback(show: bool):
 
 
 @app.callback()
-def main(
+def main(  # noqa: E704
     version: bool = typer.Option(
         False,
         "--version/",
@@ -93,8 +94,7 @@ def main(
         callback=_version_callback,
         is_eager=True,
     )
-):
-    ...
+): ...
 
 
 def _with_float_nonext_dtypes(df):
