@@ -157,7 +157,7 @@ df["gauge"] = df["gauge"] / 1000
 df["gauge_mm"] = df["gauge_mm"] / 1000
 
 # Group IDs like original
-s_re = r"(?P<id_pref>[A-Z]+)(?P<id_gauge>[0-9]+)(?P<id_suff>[A-Z]*)"
+s_re = r"(?P<id_pref>[A-Z]+)(?P<id_gauge>[0-9]+\.?[0-9]+)(?P<id_suff>[A-Z\-]*)"
 is_simple_id = df["id"].str.fullmatch(s_re)
 n = is_simple_id.value_counts()[False]
 if n > 0:
