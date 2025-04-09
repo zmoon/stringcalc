@@ -179,9 +179,35 @@ df.loc[df["id"].str.startswith("J27H"), "group_id"] = "J"
 df.loc[df["id"] == "MFCZ159-1.143-A", "group_id"] = "NYL"
 
 # The remaining strings are long more-complex IDs that start with U{1,2,3} or X1
-# TODO: try to assign group ID based on set(s)
+# Note: info about potential group to assign to can be gleaned by looking at the set(s)
 s_re_ux = r"(U[1-3][A-Z])|(X1[A-Z])"
 assert df[df.group_id.isnull()].id.str.slice(0, 3).str.fullmatch(s_re_ux).all()
+
+# https://www.daddario.com/products/guitar/acoustic-guitar/flat-tops-phosphor-bronze/eft13-phosphor-bronze-flat-tops-medium-16-56/
+pref = "X1AGFPP"
+assert df[df["id"].str.startswith(pref)].group_id.isnull().all()
+df.loc[df["id"].str.startswith(pref), "group_id"] = "FT"
+
+# https://www.daddario.com/products/guitar/classical-guitar/pro-arte-nylon/ej47-8020-bronze-pro-arte-nylon-normal-tension/
+pref = "U1AQFBW"
+assert df[df["id"].str.startswith(pref)].group_id.isnull().all()
+df.loc[df["id"].str.startswith(pref), "group_id"] = "NYLBW"  # 80/20 bronze wound nylon
+
+# https://www.daddario.com/products/guitar/classical-guitar/pro-arte-nylon/ej49-pro-arte-black-nylon-normal-tension/
+pref = "U2AMFN"
+assert df[df["id"].str.startswith(pref)].group_id.isnull().all()
+df.loc[df["id"].str.startswith(pref), "group_id"] = "NYLB"  # black plain nylon
+
+# https://www.daddario.com/products/guitar/classical-guitar/pro-arte-nylon/ej51-pro-arte-with-polished-basses-hard-tension/
+pref = "U1AQFS"
+assert df[df["id"].str.startswith(pref)].group_id.isnull().all()
+df.loc[df["id"].str.startswith(pref), "group_id"] = "NYLWP"  # polished silver plated nylon
+
+# https://www.daddario.com/products/guitar/classical-guitar/pro-arte-nylon/ej52-pro-arte-alto-guitar-normal-tension/
+# high B for alto guitar
+df.loc[df["id"] == "U1AMFN0250", "group_id"] = "J"
+
+# TODO: other EJs (e.g. EJ TT), XT, XS, ...
 
 # Material is mostly unique for a group ID, though different group IDs may have the same material
 nmat = df.groupby("group_id").material.nunique()
