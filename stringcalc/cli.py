@@ -380,7 +380,7 @@ def gauge_(
             L_b, L_t = L
             dLdx = (L_t - L_b) / nut_width
             d = (nut_width - e_b - e_t) / (n_str - 1)  # string spacing
-            L = [L_b + dLdx * (e_b + i * d) for i in range(n_str)]
+            L = [round(L_b + dLdx * (e_b + i * d), 4) for i in range(n_str)]
 
         if verbose:
             info(f"Searching string types: {types_set}")
