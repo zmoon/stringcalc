@@ -1,6 +1,6 @@
 Conda env setup for development:
 
-    mamba env create -f environment.yml
+    conda env create -f environment.yml
     conda activate stringcalc-panel
     pip install -e ../ --no-deps
 
