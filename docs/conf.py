@@ -1,8 +1,8 @@
 import stringcalc
 
 project = "stringcalc"
-copyright = "2022\u20132024 zmoon"
-# author = "zmoon"
+copyright = "2022\u20132025"
+author = "zmoon"
 
 version = stringcalc.__version__.split("+")[0]
 release = stringcalc.__version__
@@ -33,6 +33,10 @@ intersphinx_mapping = {
 
 exclude_patterns = ["_build"]
 
+suppress_warnings = [
+    "autosummary.import_cycle",
+]
+
 html_title = "stringcalc"
 html_theme = "sphinx_book_theme"
 
@@ -58,3 +62,5 @@ napoleon_use_rtype = False
 
 autodoc_typehints = "description"
 autosummary_generate = True
+
+nb_execution_raise_on_error = True

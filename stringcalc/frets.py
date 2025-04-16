@@ -6,6 +6,7 @@ For example:
 - compute equal-temperament fret locations for a given scale length
 - compute the scale length implied by a given fret-to-fret distance
 """
+
 from __future__ import annotations
 
 from typing import Union
@@ -23,7 +24,7 @@ QLike = Union[Quantity, str]
 # Note also `pint._typing.UnitLike`
 
 
-def distance_et(n: int | npt.ArrayLike, *, L: float) -> np.float_ | npt.NDArray[np.float_]:
+def distance_et(n: int | npt.ArrayLike, *, L: float) -> np.float64 | npt.NDArray[np.float64]:
     r"""Exact equal-temperament distance from nut for fret(s) `n` for scale length `L`.
 
     Using the 12th-root-of-2 method.
@@ -42,12 +43,12 @@ def distance_et(n: int | npt.ArrayLike, *, L: float) -> np.float_ | npt.NDArray[
     L
         Scale length.
     """
-    n = np.floor(n, dtype=float)
+    n = np.floor(n, dtype=np.float64)
 
     if not np.all(n > 0):
         raise ValueError("input fret numbers should be positive")
 
-    return L * (1 - 2 ** (-n / 12))
+    return (L * (1 - 2 ** (-n / 12))).astype(np.float64)
 
 
 def distances(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
