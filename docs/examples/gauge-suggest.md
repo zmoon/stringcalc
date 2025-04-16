@@ -57,10 +57,22 @@ stringcalc gauge --suggest -T 17 -L 23 \
   --no-column-info
 ```
 
-```{figure} ../cli_gauge-suggest_tb23nw.svg
+```{image} ../cli_gauge-suggest_tb23nw.svg
 :alt: CLI gauge suggestion output for 23" TB for D'Addario loop-end nickel-wound strings
 :width: 550
 
+```
+
 `--no-column-info` suppresses the descriptions of the columns,
 which currently are repeated for each boxed result.
+For a single string query, it looks like this:
+
+```sh
+stringcalc gauge --suggest -T 17 -L 23 -P D3 --type DA:LEW
+```
+
+```{image} ../cli_gauge-suggest_tb23nw_d.svg
+:alt: CLI gauge suggestion output for 23" TB D string using D'Addario loop-end nickel-wound strings
+:width: 450
+
 ```
