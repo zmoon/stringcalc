@@ -19,8 +19,8 @@ except ImportError:
 WIDTH = 450
 
 DATA_ALL = load_data()
-TYPE_OPTIONS = ["PB", "PL", "LE", "LEW", "NYL", "NYLW", "A:NNG", "WFC"]
-TYPE_DEFAULTS = ["PB", "PL"]
+TYPE_OPTIONS = ["DA:PB", "DA:PL", "DA:LE", "DA:LEW", "DA:NYL", "DA:NYLW", "A:NNG", "WFC"]
+TYPE_DEFAULTS = ["DA:PB", "DA:PL"]
 
 _PITCH_UNICODE_TO_ASCII = str.maketrans("₀₁₂₃₄₅₆₇₈₉♭♯", "0123456789b#")
 
