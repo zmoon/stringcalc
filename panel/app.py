@@ -6,11 +6,23 @@ import panel as pn
 from stringcalc.frets import distances, length_from_distance
 from stringcalc.tension import DENSITY_LB_IN, gauge, load_data, suggest_gauge
 
+try:
+    from stringcalc.util import get_version
+except ImportError:
+
+    def get_version(*, git: bool = True) -> str:
+        import stringcalc
+
+        return getattr(stringcalc, "__version__", "?")
+
+
 WIDTH = 450
 
 DATA_ALL = load_data()
-TYPE_OPTIONS = ["PB", "PL", "LE", "LEW", "NYL", "NYLW", "NNG", "WFC"]
-TYPE_DEFAULTS = ["PB", "PL"]
+TYPE_OPTIONS = ["DA:PB", "DA:PL", "DA:LE", "DA:LEW", "DA:NYL", "DA:NYLW", "A:NNG", "WFC"]
+TYPE_DEFAULTS = ["DA:PB", "DA:PL"]
+
+_PITCH_UNICODE_TO_ASCII = str.maketrans("₀₁₂₃₄₅₆₇₈₉♭♯", "0123456789b#")
 
 
 def suggest_gauge_pane():
@@ -42,8 +54,8 @@ def suggest_gauge_pane():
 
     pitch_input = pn.widgets.DiscreteSlider(
         name="Pitch",
-        options=[Pitch(pkn + 8).name for pkn in range(1, 101)],
-        value="D3",
+        options=[Pitch(pkn + 8).unicode() for pkn in range(1, 101)],
+        value="D₃",
         width=int(WIDTH * 2 / 3),
     )
 
@@ -64,7 +76,8 @@ def suggest_gauge_pane():
 
     @pn.depends(tension_input, length_input, pitch_input, types_input, n_input)
     def res(T, L, pitch, types, n):
-        df = suggest_gauge(T=T, L=L, pitch=pitch, types=set(types), n=n)
+        pitch_ascii = pitch.translate(_PITCH_UNICODE_TO_ASCII)
+        df = suggest_gauge(T=T, L=L, pitch=pitch_ascii, types=set(types), n=n)
         df = df.rename(columns=df.attrs["fancy_col"])
 
         # TODO: highlight best option
@@ -110,8 +123,8 @@ def exact_gauge_pane():
 
     pitch_input = pn.widgets.DiscreteSlider(
         name="Pitch",
-        options=[Pitch(pkn + 8).name for pkn in range(1, 101)],
-        value="D3",
+        options=[Pitch(pkn + 8).unicode() for pkn in range(1, 101)],
+        value="D₃",
         width=int(WIDTH * 2 / 3),
     )
 
@@ -119,7 +132,8 @@ def exact_gauge_pane():
 
     @pn.depends(tension_input, length_input, pitch_input, type_input)
     def res(T, L, pitch, dens):
-        g = gauge(dens, T=T, L=L, pitch=pitch)
+        pitch_ascii = pitch.translate(_PITCH_UNICODE_TO_ASCII)
+        g = gauge(dens, T=T, L=L, pitch=pitch_ascii)
         return pn.pane.Markdown(f'**Gauge:** {g:.4g}" = {g*25.4:.4g} mm')
 
     return pn.Column(
@@ -218,10 +232,11 @@ def scale_length_pane():
     )
 
 
-foot_html = """\
+foot_html = f"""\
 <div style="font-size: 0.7rem; color: #888">
 These calculations use the Python package
 <a href="https://github.com/zmoon/stringcalc">stringcalc</a>.
+Version: <strong>{get_version()}</strong>.
 </div>
 """
 

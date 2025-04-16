@@ -20,12 +20,14 @@ dependencies = [
 [project.urls]
 Home = "https://github.com/zmoon/stringcalc"
 Source = "https://github.com/zmoon/stringcalc"
+Documentation = "https://stringcalc.readthedocs.io"
 
 [project.optional-dependencies]
 test = [
     "mypy",
     "pandas-stubs",
     "pytest",
+    "pytest-codeblocks",
 ]
 dev = [
     "ipython",
@@ -36,6 +38,12 @@ cli = [
 ]
 doc = [
     "matplotlib",
+    "myst-nb",
+    "myst-parser",
+    "sphinx",
+    "sphinx-book-theme",
+    "sphinx-click",
+    "sphinx-copybutton",
 ]
 
 [project.scripts]
@@ -61,6 +69,9 @@ ignore = [
 [tool.isort]
 profile = "black"
 line_length = 100
+
+[tool.pytest.ini_options]
+addopts = ["--ignore=docs/_build"]
 
 [tool.mypy]
 exclude = [
