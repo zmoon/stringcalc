@@ -51,10 +51,7 @@ On the command-line, we can do the same thing
 with `stringcalc gauge --suggest`:
 
 ```sh
-stringcalc gauge --suggest -T 17 -L 23 \
-  -P G2 -P D3 -P A3 -P E4 -N 6 \
-  --type DA:LEW --type DA:LE \
-  --no-column-info
+stringcalc gauge --suggest -T 17 -L 23 -P G2 -P D3 -P A3 -P E4 -N 6 --type DA:LEW --type DA:LE --no-column-info
 ```
 
 ```{image} ../cli_gauge-suggest_tb23nw.svg

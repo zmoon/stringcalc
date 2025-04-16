@@ -36,6 +36,9 @@ jobs:
       - name: Docstring doctest
         run: pytest --doctest-modules stringcalc -v
 
+      - name: Test code blocks
+        run: pytest --codeblocks README.md docs -v
+
       - name: Check type annotations
         run: |
           mypy --non-interactive .
