@@ -31,7 +31,7 @@ data
 Plain steel ball-end strings.
 
 ```{code-cell} ipython3
-group_ids = ["DA:PL", "GHS:PL", "SJ:PL"]
+group_ids = ["DA:PL", "STP:PL", "GHS:PL", "SJ:PL"]
 (
     data.query("group_id in @group_ids")
     .pivot_table(
@@ -54,7 +54,7 @@ by 1000 to facilitate easier comparison.
 Phosphor bronze ball-end strings.
 
 ```{code-cell} ipython3
-group_ids = ["DA:PB", "GHS:B", "SJ:PB"]
+group_ids = ["DA:PB", "STP:PB", "GHS:B", "SJ:PB"]
 (
     data.query("group_id in @group_ids")
     .pivot_table(
@@ -78,7 +78,7 @@ Nickel-wound ball-end strings.
 - `SJ:PN`: Stringjoy pure nickel ("Broadways")
 
 ```{code-cell} ipython3
-group_ids = ["DA:NW", "GHS:N", "GHS:DY", "SJ:N", "SJ:PN"]
+group_ids = ["DA:NW", "STP:NW", "GHS:N", "GHS:DY", "SJ:N", "SJ:PN"]
 (
     data.query("group_id in @group_ids")
     .pivot_table(
