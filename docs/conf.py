@@ -33,6 +33,10 @@ intersphinx_mapping = {
 
 exclude_patterns = ["_build"]
 
+suppress_warnings = [
+    "autosummary.import_cycle",
+]
+
 html_title = "stringcalc"
 html_theme = "sphinx_book_theme"
 

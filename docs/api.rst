@@ -2,6 +2,8 @@
 API
 ===
 
+.. currentmodule:: stringcalc
+
 Tension
 =======
 
