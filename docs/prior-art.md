@@ -5,6 +5,7 @@
 - D'Addario String Tension Pro -- <https://www.daddario.com/string-tension-pro/>
   - has been down for some time, partially inspiring this work
   - but I remember it being pretty nice
+  - (back in a beta "2.0" version in June 2024)
 - <https://stringtensioncalculator.com/>
   - specifically for [Kalium strings](https://kaliummusic.com/strings/)
   - somewhat similar to D'Addario String Tension Pro (from what I remember)
