@@ -123,8 +123,8 @@ def exact_gauge_pane():
 
     pitch_input = pn.widgets.DiscreteSlider(
         name="Pitch",
-        options=[Pitch(pkn + 8).name for pkn in range(1, 101)],
-        value="D3",
+        options=[Pitch(pkn + 8).unicode() for pkn in range(1, 101)],
+        value="D₃",
         width=int(WIDTH * 2 / 3),
     )
 
@@ -132,7 +132,8 @@ def exact_gauge_pane():
 
     @pn.depends(tension_input, length_input, pitch_input, type_input)
     def res(T, L, pitch, dens):
-        g = gauge(dens, T=T, L=L, pitch=pitch)
+        pitch_ascii = pitch.translate(_PITCH_UNICODE_TO_ASCII)
+        g = gauge(dens, T=T, L=L, pitch=pitch_ascii)
         return pn.pane.Markdown(f'**Gauge:** {g:.4g}" = {g*25.4:.4g} mm')
 
     return pn.Column(
