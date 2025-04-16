@@ -62,3 +62,5 @@ napoleon_use_rtype = False
 
 autodoc_typehints = "description"
 autosummary_generate = True
+
+nb_execution_raise_on_error = True

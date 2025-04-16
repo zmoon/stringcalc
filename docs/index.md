@@ -38,6 +38,7 @@ panel.rst
 :hidden:
 
 examples/compare-data.md
+examples/gauge-suggest.md
 examples/tension-plot.md
 examples/pythagoras-ratios.md
 ```
