@@ -2,6 +2,7 @@
 Get GHS data
 from the calculator https://www.ghsstrings.com/pages/tension-calc
 """
+
 import re
 import string
 import sys

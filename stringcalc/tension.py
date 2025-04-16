@@ -6,6 +6,7 @@ For example:
 - For specified strings, calculate tensions.
 - For specified total or per-string tension, suggest strings.
 """
+
 from __future__ import annotations
 
 import math
@@ -242,8 +243,7 @@ def load_ghs_data(*, for_combined: bool = False) -> pd.DataFrame:
 
 
 class _DataLoader(Protocol):
-    def __call__(self, *, for_combined: bool = False) -> pd.DataFrame:
-        ...
+    def __call__(self, *, for_combined: bool = False) -> pd.DataFrame: ...  # noqa: E704
 
 
 _DATA_LOADERS: list[_DataLoader] = [
