@@ -7,7 +7,11 @@ kernelspec:
 # Compare data
 
 In this example, we compare data from different manufacturers
-for two common string types: plain steel and phosphor bronze ball-end strings.
+for common ball-end string types:
+
+- plain steel
+- phosphor bronze
+- nickel-wound
 
 ```{code-cell} ipython3
 import pandas as pd
