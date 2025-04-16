@@ -1,7 +1,7 @@
 import stringcalc
 
 project = "stringcalc"
-copyright = "2022\u20132024 zmoon"
+copyright = "2022\u20132025 zmoon"
 # author = "zmoon"
 
 version = stringcalc.__version__.split("+")[0]
