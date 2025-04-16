@@ -34,6 +34,7 @@ group_ids = ["DA:PL", "GHS:PL", "SJ:PL"]
         index="gauge",
         columns="group_id",
         values=["uw"],
+        observed=True,
     )
     .mul(1000)
 )
@@ -56,6 +57,7 @@ group_ids = ["DA:PB", "GHS:B", "SJ:PB"]
         index="gauge",
         columns="group_id",
         values=["uw"],
+        observed=True,
     )
     .mul(1000)
 )
@@ -79,6 +81,7 @@ group_ids = ["DA:NW", "GHS:N", "GHS:DY", "SJ:N", "SJ:PN"]
         index="gauge",
         columns="group_id",
         values=["uw"],
+        observed=True,
     )
     .mul(1000)
 )
