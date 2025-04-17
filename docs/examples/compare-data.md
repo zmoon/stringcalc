@@ -84,7 +84,7 @@ group_ids = ["DA:PB", "STP:PB", "GHS:B", "SJ:PB"]
 
 Nickel-wound ball-end strings.
 
-- `DA:NW`: D'Addario nickel-plated steel
+- `DA:NW` and `STP:NW`: D'Addario nickel-plated steel
 - `GHS:N`: GHS Nickel Rockers (pure nickel, semi-flattened)
 - `GHS:DY`: GHS Boomers (nickel-plated steel)
 - `SJ:N`: Stringjoy nickel ("Signatures"; nickel-plated steel?)

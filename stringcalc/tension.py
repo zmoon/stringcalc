@@ -37,18 +37,21 @@ def load_data() -> pd.DataFrame:
        Important columns:
 
        - ``id``: String (product) ID
-         (e.g. "PB053" for the string used for the low E in
+         (e.g. "DA:PB053" for the string used for the low E in
          D'Addario phosphor bronze acoustic guitar light set
          `EJ16 <https://www.daddario.com/products/guitar/acoustic-guitar/phosphor-bronze/ej16-phosphor-bronze-acoustic-guitar-strings-light-12-53/>`__).
 
-       - ``group_id``: String group ID (e.g. "PB" for D'Addario phosphor bronze)
+       - ``group_id``: String group ID (e.g. "DA:PB" for D'Addario phosphor bronze)
          used to identify a group of strings with the same manufacturer, material, etc.
 
        - ``uw``: String unit weight (mass per unit length) [lbm/in].
-         For PB053 this value is 0.000570.
+         For DA:PB053 this value is 0.000570.
 
        - ``gauge``: String gauge (diameter) [in].
-         For PB053 this value is 0.053.
+         For DA:PB053 this value is 0.053.
+
+       The "DA:" prefix in ``id`` and ``group_id``
+       indicates the data is from :func:`load_daddario_data`.
 
     Notes
     -----
@@ -59,10 +62,10 @@ def load_data() -> pd.DataFrame:
     --------
     load_aquila_data
     load_daddario_data
+    load_daddario_stp_data
     load_ghs_data
     load_stringjoy_data
     load_worth_data
-    load_daddario_stp_data
     """
     df = pd.concat(
         [fn(for_combined=True) for fn in _DATA_LOADERS],
