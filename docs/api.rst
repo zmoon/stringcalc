@@ -29,6 +29,7 @@ https://github.com/zmoon/stringcalc/tree/main/data.
    stringcalc.tension.load_data
    stringcalc.tension.load_aquila_data
    stringcalc.tension.load_daddario_data
+   stringcalc.tension.load_daddario_stp_data
    stringcalc.tension.load_ghs_data
    stringcalc.tension.load_stringjoy_data
    stringcalc.tension.load_worth_data
