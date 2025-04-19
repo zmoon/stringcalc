@@ -3,6 +3,7 @@ D'Addario String Tension Pro
 
 It's back---got the beta email notice on 2024-06-12.
 """
+
 import re
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -202,6 +203,19 @@ df.loc[df["id"].str.startswith(pref), "group_id"] = "NYLB"  # black plain nylon
 pref = "U1AQFS"
 assert df[df["id"].str.startswith(pref)].group_id.isnull().all()
 df.loc[df["id"].str.startswith(pref), "group_id"] = "NYLWP"  # polished silver plated nylon
+
+# https://www.daddario.com/products/guitar/mandolin/xs-mandolin-set/10-38-light-xs-phosphor-bronze-mandolin-strings/
+pref = "U3BLWP"
+assert df[df["id"].str.startswith(pref)].group_id.isnull().all()
+df.loc[df["id"].str.startswith(pref), "group_id"] = "XSPBM"
+pref = "U3BLDPS"
+assert df[df["id"].str.startswith(pref)].group_id.isnull().all()
+df.loc[df["id"].str.startswith(pref), "group_id"] = "XSPLM"
+
+# https://www.daddario.com/products/guitar/electric-guitar/xs-electric-guitar-strings/95-44-super-light-plus-xs-nickel-electric-guitar-strings/
+pref = "U3AGWNP"
+assert df[df["id"].str.startswith(pref)].group_id.isnull().all()
+df.loc[df["id"].str.startswith(pref), "group_id"] = "XSNW"
 
 # https://www.daddario.com/products/guitar/classical-guitar/pro-arte-nylon/ej52-pro-arte-alto-guitar-normal-tension/
 # high B for alto guitar
