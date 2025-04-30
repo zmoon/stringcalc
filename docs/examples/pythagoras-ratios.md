@@ -21,7 +21,7 @@ The same diagram can be found [here](https://passyworldofmathematics.com/guitar-
 # This maps the fret number to the relative distance to the saddle.
 ratios = {
   2: "8/9",
-  3: "64/81",
+  4: "64/81",
   5: "3/4",
   7: "2/3",
   9: "16/27",
