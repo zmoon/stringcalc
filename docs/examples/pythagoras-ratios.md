@@ -21,7 +21,6 @@ I used [this table](https://en.wikipedia.org/wiki/Pythagorean_tuning#Method) to 
 ```{code-cell} ipython3
 # This maps the fret number to the relative distance to the saddle.
 ratios = {
-  0: "1/1",
   1: "243/256",
   2: "8/9",
   3: "27/32",
