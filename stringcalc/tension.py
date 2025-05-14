@@ -264,12 +264,15 @@ def load_daddario_stp_data(*, for_combined: bool = False) -> pd.DataFrame:
     df = pd.read_csv(DATA.joinpath("daddario-stp.csv"), header=0).convert_dtypes()
 
     if for_combined:
+        df = df.drop(columns=["instruments"])
+
         df["id"] = "STP:" + df["id"]
         df["group"] = "D'Addario (STP) - " + df["group"]
         df["group_id"] = "STP:" + df["group_id"]
 
-    for name in ["group", "group_id"]:
-        df[name] = df[name].astype("category")
+    for name in ["instruments", "group", "group_id"]:
+        if name in df.columns:
+            df[name] = df[name].astype("category")
 
     return df
 

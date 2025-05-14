@@ -1,636 +1,636 @@
-id,uw,gauge,group_id,group
-BEB028,2.2167e-05,0.0285,BEB,Black Nylon
-BEB032,2.8953e-05,0.0327,BEB,Black Nylon
-BEB040,4.5239e-05,0.04,BEB,Black Nylon
-BEB031W,0.00012253,0.031,BEBW,80/20 Bronze
-BEB037W,0.00020248,0.037,BEBW,80/20 Bronze
-BEB045W,0.00033228,0.045,BEBW,80/20 Bronze
-BEC028,2.2167e-05,0.028,BEC,Clear Nylon
-BEC032,2.8953e-05,0.032,BEC,Clear Nylon
-BEC040,4.5239e-05,0.04,BEC,Clear Nylon
-BES031W,0.00010422,0.031,BESW,Silver Plated Copper
-BES037W,0.00019877,0.037,BESW,Silver Plated Copper
-BES045W,0.00034353,0.045,BESW,Silver Plated Copper
-BW022,9.5354e-05,0.022,BW,80/20 Bronze
-BW023,0.00010502,0.023,BW,80/20 Bronze
-BW024,0.00011299,0.024,BW,80/20 Bronze
-BW025,0.00012348,0.025,BW,80/20 Bronze
-BW026,0.00013212,0.026,BW,80/20 Bronze
-BW027,0.00014292,0.027,BW,80/20 Bronze
-BW030,0.00017847,0.03,BW,80/20 Bronze
-BW032,0.00019974,0.032,BW,80/20 Bronze
-BW035,0.00023409,0.035,BW,80/20 Bronze
-BW039,0.00029245,0.039,BW,80/20 Bronze
-BW042,0.00033693,0.042,BW,80/20 Bronze
-BW045,0.00038782,0.045,BW,80/20 Bronze
-BW047,0.00041951,0.047,BW,80/20 Bronze
-BW052,0.00051068,0.052,BW,80/20 Bronze
-BW053,0.00052545,0.053,BW,80/20 Bronze
-BW056,0.00058458,0.056,BW,80/20 Bronze
-CB040,0.00032889,0.04,CB,Stainless Steel
-CB045,0.00040863,0.045,CB,Stainless Steel
-CB050,0.00050512,0.05,CB,Stainless Steel
-CB060,0.00074559,0.06,CB,Stainless Steel
-CB065,0.0008356,0.065,CB,Stainless Steel
-CB070,0.00097902,0.07,CB,Stainless Steel
-CB075,0.0011131,0.075,CB,Stainless Steel
-CB080,0.0012615,0.08,CB,Stainless Steel
-CB085,0.0014261,0.085,CB,Stainless Steel
-CB100,0.0019816,0.1,CB,Stainless Steel
-CB105,0.002122,0.105,CB,Stainless Steel
-CG020,9.2071e-05,0.02,CG,Stainless Steel
-CG022,0.00011093,0.022,CG,Stainless Steel
-CG024,0.00013154,0.024,CG,Stainless Steel
-CG026,0.0001539,0.026,CG,Stainless Steel
-CG028,0.00017332,0.028,CG,Stainless Steel
-CG030,0.00018412,0.03,CG,Stainless Steel
-CG032,0.00020793,0.032,CG,Stainless Steel
-CG035,0.00024687,0.035,CG,Stainless Steel
-CG038,0.00029025,0.038,CG,Stainless Steel
-CG040,0.0003301,0.04,CG,Stainless Steel
-CG042,0.00034959,0.042,CG,Stainless Steel
-CG045,0.00040856,0.045,CG,Stainless Steel
-CG048,0.00046825,0.048,CG,Stainless Steel
-CG050,0.0004849,0.05,CG,Stainless Steel
-CG052,0.00051856,0.052,CG,Stainless Steel
-CG056,0.00060431,0.056,CG,Stainless Steel
-CG065,0.00085843,0.065,CG,Stainless Steel
-FT023,0.00014048,0.023,FT,Phosphor Bronze
-FT024,0.00015222,0.024,FT,Phosphor Bronze
-FT026,0.00017857,0.026,FT,Phosphor Bronze
-X1AGFPP028-GR,0.00016456,0.028,FT,Phosphor Bronze
-X1AGFPP030-K,0.00020002,0.03,FT,Phosphor Bronze
-X1AGFPP032-K,0.00023925,0.032,FT,Phosphor Bronze
-X1AGFPP035-K,0.00027697,0.035,FT,Phosphor Bronze
-X1AGFPP036-K,0.0002929,0.036,FT,Phosphor Bronze
-X1AGFPP039-R,0.00032611,0.039,FT,Phosphor Bronze
-X1AGFPP042-R,0.00036091,0.042,FT,Phosphor Bronze
-X1AGFPP044-R,0.00040712,0.044,FT,Phosphor Bronze
-X1AGFPP045-R,0.0004202,0.045,FT,Phosphor Bronze
-X1AGFPP047,0.00045626,0.047,FT,Phosphor Bronze
-X1AGFPP053,0.00056994,0.053,FT,Phosphor Bronze
-X1AGFPP056,0.00063151,0.056,FT,Phosphor Bronze
-J6203,0.00011299,0.024,J,Various
-U1AMFN0250,1.7671e-05,0.025,J,Various
-J4301,2.1383e-05,0.0275,J,Various
-J2701,2.2167e-05,0.028,J,Various
-J4304,9.7088e-05,0.028,J,Various
-J4501,2.2167e-05,0.028,J,Various
-J27H01,2.2966e-05,0.0285,J,Various
-J4601,2.2966e-05,0.0285,J,Various
-J2704,0.00010754,0.029,J,Various
-J4401,2.3779e-05,0.029,J,Various
-J4504,0.00010754,0.029,J,Various
-J27H04,0.0001118,0.03,J,Various
-J4604,0.0001118,0.03,J,Various
-J4302,2.8413e-05,0.0317,J,Various
-J2702,2.9316e-05,0.0322,J,Various
-J4502,2.9316e-05,0.0322,J,Various
-J27H02,3.0234e-05,0.0327,J,Various
-J4602,3.0234e-05,0.0327,J,Various
-J4305,0.0001695,0.033,J,Various
-J3102,3.1165e-05,0.0332,J,Various
-J4402,3.1165e-05,0.0332,J,Various
-J6204,0.00022232,0.034,J,Various
-J2705,0.0001949,0.035,J,Various
-J3005,3.4636e-05,0.035,J,Various
-J4505,0.0001949,0.035,J,Various
-J27H05,0.00020804,0.036,J,Various
-J4605,0.00020804,0.036,J,Various
-J4303,4.4563e-05,0.0397,J,Various
-J2703,4.592e-05,0.0403,J,Various
-J4503,4.592e-05,0.0403,J,Various
-J27H03,4.7529e-05,0.0409,J,Various
-J4603,4.7529e-05,0.041,J,Various
-J3103,4.8696e-05,0.0415,J,Various
-J4403,4.8696e-05,0.0415,J,Various
-J4306,0.00028498,0.042,J,Various
-J4506,0.0003101,0.043,J,Various
-J4606,0.00033248,0.044,J,Various
-J4406,0.00034232,0.045,J,Various
-J4604C,0.00010521,0.029,JC,Various
-J4404C,0.00010988,0.03,JC,Various
-J4505C,0.00018034,0.035,JC,Various
-J4405C,0.0002082,0.036,JC,Various
-J4503C,4.738e-05,0.036,JC,Various
-J4603C,5.0105e-05,0.037,JC,Various
-J4403C,5.2822e-05,0.038,JC,Various
-J4606C,0.00035754,0.046,JC,Various
-J4406C,0.00036803,0.047,JC,Various
-J4504LP,9.156e-05,0.027,JLP,Polished Silver Plated Copper
-J4604LP,0.00010265,0.028,JLP,Polished Silver Plated Copper
-J4505LP,0.00017618,0.033,JLP,Polished Silver Plated Copper
-J4605LP,0.00020338,0.035,JLP,Polished Silver Plated Copper
-J4506LP,0.00032599,0.043,JLP,Polished Silver Plated Copper
-J4606LP,0.00034966,0.044,JLP,Polished Silver Plated Copper
-LE009,1.7953e-05,0.009,LE,Tin Coated Steel
-LE0095,2.0003e-05,0.0095,LE,Tin Coated Steel
-LE010,2.2164e-05,0.01,LE,Tin Coated Steel
-LE011,2.6818e-05,0.011,LE,Tin Coated Steel
-LE0115,2.9312e-05,0.0115,LE,Tin Coated Steel
-LE012,3.1916e-05,0.012,LE,Tin Coated Steel
-LE013,3.7457e-05,0.013,LE,Tin Coated Steel
-LE014,4.3441e-05,0.014,LE,Tin Coated Steel
-LE015,4.9869e-05,0.015,LE,Tin Coated Steel
-LE016,5.674e-05,0.016,LE,Tin Coated Steel
-LE020PB,7.9816e-05,0.02,LEPB,Phosphor Bronze
-LE022PB,9.7982e-05,0.022,LEPB,Phosphor Bronze
-LE023PB,0.0001078,0.023,LEPB,Phosphor Bronze
-LE026PB,0.0001358,0.026,LEPB,Phosphor Bronze
-LE028PB,0.00015684,0.028,LEPB,Phosphor Bronze
-LE030PB,0.00018386,0.03,LEPB,Phosphor Bronze
-LE032PB,0.00020607,0.032,LEPB,Phosphor Bronze
-LE034PB,0.00023221,0.034,LEPB,Phosphor Bronze
-LE036PB,0.00026213,0.036,LEPB,Phosphor Bronze
-LE038PB,0.00028622,0.038,LEPB,Phosphor Bronze
-LE040PB,0.00031949,0.04,LEPB,Phosphor Bronze
-LE046PB,0.00042114,0.046,LEPB,Phosphor Bronze
-LE049PB,0.00047233,0.049,LEPB,Phosphor Bronze
-LE052PB,0.00052954,0.052,LEPB,Phosphor Bronze
-LE062PB,0.00074623,0.062,LEPB,Phosphor Bronze
-LE078PB,0.0011435,0.078,LEPB,Phosphor Bronze
-LE092PB,0.0015849,0.092,LEPB,Phosphor Bronze
-LE020W,7.4003e-05,0.02,LEW,Nickel Plated Steel
-LE022W,9.1392e-05,0.022,LEW,Nickel Plated Steel
-LE023W,0.00010082,0.023,LEW,Nickel Plated Steel
-LE024W,0.00010827,0.024,LEW,Nickel Plated Steel
-LE028W,0.0001454,0.028,LEW,Nickel Plated Steel
-LE030W,0.00017034,0.03,LEW,Nickel Plated Steel
-LE036W,0.00023359,0.036,LEW,Nickel Plated Steel
-NB022,9.759e-05,0.022,NB,Nickel Plated Bronze
-NB023,0.00010738,0.023,NB,Nickel Plated Bronze
-NB024,0.00011566,0.024,NB,Nickel Plated Bronze
-NB025,0.00012629,0.025,NB,Nickel Plated Bronze
-NB026,0.00013525,0.026,NB,Nickel Plated Bronze
-NB027,0.00014645,0.027,NB,Nickel Plated Bronze
-NB030,0.00018306,0.03,NB,Nickel Plated Bronze
-NB032,0.00020512,0.032,NB,Nickel Plated Bronze
-NB035,0.00024572,0.035,NB,Nickel Plated Bronze
-NB039,0.000301,0.039,NB,Nickel Plated Bronze
-NB042,0.00035313,0.042,NB,Nickel Plated Bronze
-NB045,0.00039991,0.045,NB,Nickel Plated Bronze
-NB047,0.00043278,0.047,NB,Nickel Plated Bronze
-NB052,0.00052672,0.052,NB,Nickel Plated Bronze
-NB053,0.00054236,0.053,NB,Nickel Plated Bronze
-NB056,0.00060337,0.056,NB,Nickel Plated Bronze
-NHR030,0.00019791,0.03,NHR,Pure Nickel
-NHR040,0.00033047,0.04,NHR,Pure Nickel
-NHR045,0.00039373,0.045,NHR,Pure Nickel
-NHR050,0.00049463,0.05,NHR,Pure Nickel
-NHR060,0.000601,0.06,NHR,Pure Nickel
-NHR065,0.00066125,0.065,NHR,Pure Nickel
-NHR070,0.00076035,0.07,NHR,Pure Nickel
-NHR075,0.00087782,0.075,NHR,Pure Nickel
-NHR080,0.00099156,0.08,NHR,Pure Nickel
-NHR085,0.0010876,0.085,NHR,Pure Nickel
-NHR095,0.0016343,0.095,NHR,Pure Nickel
-NHR100,0.0017945,0.1,NHR,Pure Nickel
-NHR105,0.0020131,0.105,NHR,Pure Nickel
-NHR130,0.0030002,0.13,NHR,Pure Nickel
-NTA2.40,0.00029419,0.0945,NTA,Nyltech
-NTA3.00,0.00045977,0.118,NTA,Nyltech
-NTA4.20,0.00090061,0.165,NTA,Nyltech
-NTA5.00,0.0012776,0.197,NTA,Nyltech
-NW018,6.1926e-05,0.018,NW,Nickel Plated Steel
-NW020,7.4003e-05,0.02,NW,Nickel Plated Steel
-NW021,8.2453e-05,0.021,NW,Nickel Plated Steel
-NW022,9.1392e-05,0.022,NW,Nickel Plated Steel
-NW024,0.00010827,0.024,NW,Nickel Plated Steel
-NW025,0.0001185,0.025,NW,Nickel Plated Steel
-NW026,0.00012658,0.026,NW,Nickel Plated Steel
-NW028,0.0001454,0.028,NW,Nickel Plated Steel
-NW030,0.00017034,0.03,NW,Nickel Plated Steel
-NW032,0.00019021,0.032,NW,Nickel Plated Steel
-NW034,0.00021129,0.034,NW,Nickel Plated Steel
-NW036,0.00023359,0.036,NW,Nickel Plated Steel
-NW037,0.00024819,0.037,NW,Nickel Plated Steel
-NW038,0.0002571,0.038,NW,Nickel Plated Steel
-NW039,0.00027233,0.039,NW,Nickel Plated Steel
-NW040,0.00028806,0.04,NW,Nickel Plated Steel
-NW042,0.00031405,0.042,NW,Nickel Plated Steel
-NW044,0.00034126,0.044,NW,Nickel Plated Steel
-NW046,0.00036969,0.046,NW,Nickel Plated Steel
-NW048,0.00039932,0.048,NW,Nickel Plated Steel
-NW049,0.00041459,0.049,NW,Nickel Plated Steel
-NW050,0.00043017,0.05,NW,Nickel Plated Steel
-NW052,0.00046223,0.052,NW,Nickel Plated Steel
-NW054,0.00051617,0.054,NW,Nickel Plated Steel
-NW056,0.00055129,0.056,NW,Nickel Plated Steel
-NW059,0.00061817,0.059,NW,Nickel Plated Steel
-NW060,0.00064143,0.06,NW,Nickel Plated Steel
-NW062,0.00068032,0.062,NW,Nickel Plated Steel
-NW064,0.00072042,0.064,NW,Nickel Plated Steel
-NW065,0.00074901,0.065,NW,Nickel Plated Steel
-NW068,0.00081724,0.068,NW,Nickel Plated Steel
-NW074,0.00094948,0.074,NW,Nickel Plated Steel
-NYL022,1.3685e-05,0.022,NYL,Clear Nylon
-NYL024,1.6286e-05,0.024,NYL,Clear Nylon
-NYL029,2.3779e-05,0.029,NYL,Clear Nylon
-NYL030,2.5447e-05,0.03,NYL,Clear Nylon
-NYL034,3.2685e-05,0.034,NYL,Clear Nylon
-MFCZ159-1.143-A,5.7256e-05,0.045,NYL,Clear Nylon
-U2AMFN0220,1.3685e-05,0.022,NYLB,Black Nylon
-U2AMFN0260,1.9113e-05,0.026,NYLB,Black Nylon
-U2AMFN0280,2.2167e-05,0.028,NYLB,Black Nylon
-U2AMFN0285,2.2966e-05,0.0285,NYLB,Black Nylon
-U2AMFN0290,2.3779e-05,0.029,NYLB,Black Nylon
-U2AMFN0322,2.9316e-05,0.0322,NYLB,Black Nylon
-U2AMFN0327,3.0234e-05,0.0327,NYLB,Black Nylon
-U2AMFN0332,3.1165e-05,0.0332,NYLB,Black Nylon
-U2AMFN0360,3.6644e-05,0.036,NYLB,Black Nylon
-U2AMFN0403,4.592e-05,0.0403,NYLB,Black Nylon
-U2AMFN0410,4.7529e-05,0.041,NYLB,Black Nylon
-U1AQFBW029,0.00010112,0.029,NYLBW,80/20 Bronze
-U1AQFBW030,0.00010513,0.03,NYLBW,80/20 Bronze
-U1AQFBW035,0.00017061,0.035,NYLBW,80/20 Bronze
-U1AQFBW036,0.00019498,0.036,NYLBW,80/20 Bronze
-U1AQFBW043,0.00028997,0.043,NYLBW,80/20 Bronze
-U1AQFBW044,0.00030792,0.044,NYLBW,80/20 Bronze
-NYL024W,6.7841e-05,0.024,NYLW,Silver Plated Copper
-NYL025W,6.7841e-05,0.025,NYLW,Silver Plated Copper
-NYL026W,8.4715e-05,0.026,NYLW,Silver Plated Copper
-NYL028W,8.4715e-05,0.028,NYLW,Silver Plated Copper
-NYL031W,0.00011042,0.031,NYLW,Silver Plated Copper
-NYL034W,0.00018203,0.034,NYLW,Silver Plated Copper
-NYL041W,0.00024721,0.041,NYLW,Silver Plated Copper
-NYL056W,0.0005456,0.056,NYLW,Silver Plated Copper
-U1AQFS3028,0.00012129,0.028,NYLWP,Silver Plated Copper
-U1AQFS1032,0.00013604,0.032,NYLWP,Silver Plated Copper
-U1AQFS3034,0.00019163,0.034,NYLWP,Silver Plated Copper
-U1AQFS3042,0.0003319,0.042,NYLWP,Silver Plated Copper
-NYNW021,8.2121e-05,0.021,NYNW,NYXL
-NYNW022,9.1038e-05,0.022,NYNW,NYXL
-NYNW024,0.00010785,0.024,NYNW,NYXL
-NYNW025,0.00011806,0.025,NYNW,NYXL
-NYNW026,0.00012608,0.026,NYNW,NYXL
-NYNW028,0.00014479,0.028,NYNW,NYXL
-NYNW030,0.00016961,0.03,NYNW,NYXL
-NYNW032,0.00018936,0.032,NYNW,NYXL
-NYNW034,0.00021031,0.034,NYNW,NYXL
-NYNW036,0.00023247,0.036,NYNW,NYXL
-NYNW037,0.00024702,0.037,NYNW,NYXL
-NYNW038,0.00025583,0.038,NYNW,NYXL
-NYNW040,0.00028669,0.04,NYNW,NYXL
-NYNW042,0.00031252,0.042,NYNW,NYXL
-NYNW044,0.00033956,0.044,NYNW,NYXL
-NYNW046,0.00036781,0.046,NYNW,NYXL
-NYNW049,0.00041243,0.049,NYNW,NYXL
-NYNW050,0.00042791,0.05,NYNW,NYXL
-NYNW052,0.00045977,0.052,NYNW,NYXL
-NYNW054,0.00051343,0.054,NYNW,NYXL
-NYNW056,0.00054833,0.056,NYNW,NYXL
-NYNW059,0.00061496,0.059,NYNW,NYXL
-NYNW060,0.00063815,0.06,NYNW,NYXL
-NYNW064,0.00071663,0.064,NYNW,NYXL
-NYNW070,0.00085672,0.07,NYNW,NYXL
-NYNW074,0.00094406,0.074,NYNW,NYXL
-NYNW080,0.0010993,0.08,NYNW,NYXL
-NYNW084T,0.001203,0.084,NYNWT,NYXL
-NYS008,1.4185e-05,0.008,NYS,Tin Coated NY Steel
-NYS009,1.7953e-05,0.009,NYS,Tin Coated NY Steel
-NYS0095,2.0003e-05,0.0095,NYS,Tin Coated NY Steel
-NYS010,2.2164e-05,0.01,NYS,Tin Coated NY Steel
-NYS011,2.6818e-05,0.011,NYS,Tin Coated NY Steel
-NYS0115,2.9312e-05,0.0115,NYS,Tin Coated NY Steel
-NYS012,3.1916e-05,0.012,NYS,Tin Coated NY Steel
-NYS013,3.7457e-05,0.013,NYS,Tin Coated NY Steel
-NYS0135,4.0394e-05,0.0135,NYS,Tin Coated NY Steel
-NYS014,4.3441e-05,0.014,NYS,Tin Coated NY Steel
-NYS015,4.9869e-05,0.015,NYS,Tin Coated NY Steel
-NYS016,5.674e-05,0.016,NYS,Tin Coated NY Steel
-NYS017,6.4054e-05,0.017,NYS,Tin Coated NY Steel
-NYS018,7.1811e-05,0.018,NYS,Tin Coated NY Steel
-NYS019,8.0012e-05,0.019,NYS,Tin Coated NY Steel
-NYS020,8.8656e-05,0.02,NYS,Tin Coated NY Steel
-NYXLB032,0.00018936,0.032,NYXLB,NYXL
-NYXLB040,0.00029021,0.04,NYXLB,NYXL
-NYXLB045,0.00035023,0.045,NYXLB,NYXL
-NYXLB050,0.00042791,0.05,NYXLB,NYXL
-NYXLB055,0.00052709,0.055,NYXLB,NYXL
-NYXLB060,0.00063355,0.06,NYXLB,NYXL
-NYXLB065,0.00073709,0.065,NYXLB,NYXL
-NYXLB070,0.00082636,0.07,NYXLB,NYXL
-NYXLB075,0.00093601,0.075,NYXLB,NYXL
-NYXLB080,0.0010611,0.08,NYXLB,NYXL
-NYXLB085,0.0012549,0.085,NYXLB,NYXL
-NYXLB095,0.0014993,0.095,NYXLB,NYXL
-NYXLB100,0.001688,0.1,NYXLB,NYXL
-NYXLB105,0.0018547,0.105,NYXLB,NYXL
-NYXLB125,0.0025493,0.125,NYXLB,NYXL
-NYXLB130,0.0028816,0.13,NYXLB,NYXL
-NYXLB100MS,0.001688,0.1,NYXLBMS,NYXL
-NYXLB130MS,0.0028816,0.13,NYXLBMS,NYXL
-NYXLB100SL,0.001688,0.1,NYXLBSL,NYXL
-NYXLB130SL,0.0028816,0.13,NYXLBSL,NYXL
-PB020,7.9816e-05,0.02,PB,Phosphor Bronze
-PB021,8.8655e-05,0.021,PB,Phosphor Bronze
-PB022,9.7982e-05,0.022,PB,Phosphor Bronze
-PB023,0.0001078,0.023,PB,Phosphor Bronze
-PB024,0.00011612,0.024,PB,Phosphor Bronze
-PB025,0.00012678,0.025,PB,Phosphor Bronze
-PB026,0.0001358,0.026,PB,Phosphor Bronze
-PB027,0.00014707,0.027,PB,Phosphor Bronze
-PB028,0.00015901,0.028,PB,Phosphor Bronze
-PB029,0.00017107,0.029,PB,Phosphor Bronze
-PB030,0.00018386,0.03,PB,Phosphor Bronze
-PB032,0.00020607,0.032,PB,Phosphor Bronze
-PB035,0.00024692,0.035,PB,Phosphor Bronze
-PB036,0.00026213,0.036,PB,Phosphor Bronze
-PB038,0.00028622,0.038,PB,Phosphor Bronze
-PB039,0.00030249,0.039,PB,Phosphor Bronze
-PB042,0.00035496,0.042,PB,Phosphor Bronze
-PB045,0.00040203,0.045,PB,Phosphor Bronze
-PB047,0.0004351,0.047,PB,Phosphor Bronze
-PB049,0.00047233,0.049,PB,Phosphor Bronze
-PB052,0.00052954,0.052,PB,Phosphor Bronze
-PB053,0.00054532,0.053,PB,Phosphor Bronze
-PB054,0.00056742,0.054,PB,Phosphor Bronze
-PB056,0.00060666,0.056,PB,Phosphor Bronze
-PB059,0.00067802,0.059,PB,Phosphor Bronze
-PBB045,0.00042114,0.045,PBB,Phosphor Bronze
-PBB065,0.00081426,0.065,PBB,Phosphor Bronze
-PBB080,0.0011998,0.08,PBB,Phosphor Bronze
-PBB100,0.0018332,0.1,PBB,Phosphor Bronze
-PBB130,0.0030241,0.13,PBB,Phosphor Bronze
-PBT0.46,1.0601e-05,0.0181,PBT,Nyltech
-PBT0.60,1.8022e-05,0.0236,PBT,Nyltech
-PBT0.62,1.9265e-05,0.0244,PBT,Nyltech
-PBT0.65,2.1206e-05,0.0256,PBT,Nyltech
-PBT0.67,2.2553e-05,0.0264,PBT,Nyltech
-PBT0.70,2.4649e-05,0.0276,PBT,Nyltech
-PBT0.77,2.9708e-05,0.0303,PBT,Nyltech
-PBT0.80,3.2108e-05,0.0315,PBT,Nyltech
-PBT0.82,3.3759e-05,0.0323,PBT,Nyltech
-PBT0.92,4.2404e-05,0.0362,PBT,Nyltech
-PBT0.95,4.5262e-05,0.0374,PBT,Nyltech
-PBT0.97,4.7219e-05,0.0382,PBT,Nyltech
-PL008,1.4185e-05,0.008,PL,Tin Coated Steel
-PL0085,1.6013e-05,0.0085,PL,Tin Coated Steel
-PL009,1.7953e-05,0.009,PL,Tin Coated Steel
-PL0095,2.0003e-05,0.0095,PL,Tin Coated Steel
-PL010,2.2164e-05,0.01,PL,Tin Coated Steel
-PL0105,2.4436e-05,0.0105,PL,Tin Coated Steel
-PL011,2.6818e-05,0.011,PL,Tin Coated Steel
-PL0115,2.9312e-05,0.0115,PL,Tin Coated Steel
-PL012,3.1916e-05,0.012,PL,Tin Coated Steel
-PL013,3.7457e-05,0.013,PL,Tin Coated Steel
-PL0135,4.0394e-05,0.0135,PL,Tin Coated Steel
-PL014,4.3441e-05,0.014,PL,Tin Coated Steel
-PL015,4.9869e-05,0.015,PL,Tin Coated Steel
-PL016,5.674e-05,0.016,PL,Tin Coated Steel
-PL017,6.4054e-05,0.017,PL,Tin Coated Steel
-PL018,7.1811e-05,0.018,PL,Tin Coated Steel
-PL019,8.0012e-05,0.019,PL,Tin Coated Steel
-PL020,8.8656e-05,0.02,PL,Tin Coated Steel
-PNG023,0.00011502,0.023,PNG,Pure Nickel
-PNG025,0.00013252,0.025,PNG,Pure Nickel
-PNG027,0.00015139,0.027,PNG,Pure Nickel
-PNG031,0.00020673,0.031,PNG,Pure Nickel
-PNG035,0.00025541,0.035,PNG,Pure Nickel
-PNG037,0.00028179,0.037,PNG,Pure Nickel
-PNG041,0.00034379,0.041,PNG,Pure Nickel
-PNG045,0.00040622,0.045,PNG,Pure Nickel
-PNG048,0.00045948,0.048,PNG,Pure Nickel
-PSB032,0.00017912,0.032,PSB,Stainless Steel
-PSB040,0.00026322,0.04,PSB,Stainless Steel
-PSB045,0.00034516,0.045,PSB,Stainless Steel
-PSB050,0.0004087,0.05,PSB,Stainless Steel
-PSB055,0.0005005,0.055,PSB,Stainless Steel
-PSB060,0.00058909,0.06,PSB,Stainless Steel
-PSB065,0.00069481,0.065,PSB,Stainless Steel
-PSB070,0.00079887,0.07,PSB,Stainless Steel
-PSB075,0.00090535,0.075,PSB,Stainless Steel
-PSB080,0.0010237,0.08,PSB,Stainless Steel
-PSB085,0.0011603,0.085,PSB,Stainless Steel
-PSB090,0.0013032,0.09,PSB,Stainless Steel
-PSB095,0.001439,0.095,PSB,Stainless Steel
-PSB100,0.0015764,0.1,PSB,Stainless Steel
-PSB105,0.0017126,0.105,PSB,Stainless Steel
-PSB110,0.0018804,0.11,PSB,Stainless Steel
-PSB125,0.0024486,0.125,PSB,Stainless Steel
-PSB130,0.0026099,0.13,PSB,Stainless Steel
-PSB135,0.0027627,0.135,PSB,Stainless Steel
-PSG021,7.5692e-05,0.021,PSG,Stainless Steel
-PSG024,0.00010281,0.024,PSG,Stainless Steel
-PSG026,0.00011713,0.026,PSG,Stainless Steel
-PSG028,0.00013256,0.028,PSG,Stainless Steel
-PSG030,0.00016087,0.03,PSG,Stainless Steel
-PSG032,0.00017912,0.032,PSG,Stainless Steel
-PSG036,0.00021894,0.036,PSG,Stainless Steel
-PSG038,0.00024052,0.038,PSG,Stainless Steel
-PSG042,0.00029409,0.042,PSG,Stainless Steel
-PSG046,0.00034516,0.046,PSG,Stainless Steel
-PSG050,0.00040068,0.05,PSG,Stainless Steel
-PSG052,0.00043011,0.052,PSG,Stainless Steel
-PVDF0.52,2.1223e-05,0.0205,PVDF,Carbon (PVDF)
-PVDF0.57,2.5339e-05,0.0224,PVDF,Carbon (PVDF)
-PVDF0.61,2.9089e-05,0.024,PVDF,Carbon (PVDF)
-PVDF0.62,3.0066e-05,0.0244,PVDF,Carbon (PVDF)
-PVDF0.63,3.106e-05,0.0248,PVDF,Carbon (PVDF)
-PVDF0.66,3.4139e-05,0.026,PVDF,Carbon (PVDF)
-PVDF0.69,3.7363e-05,0.0272,PVDF,Carbon (PVDF)
-PVDF0.71,3.9593e-05,0.028,PVDF,Carbon (PVDF)
-PVDF0.81,5.139e-05,0.0319,PVDF,Carbon (PVDF)
-PVDF0.84,5.5329e-05,0.0331,PVDF,Carbon (PVDF)
-PVDF0.86,5.8036e-05,0.0339,PVDF,Carbon (PVDF)
-PVDF1.05,8.6139e-05,0.0413,PVDF,Carbon (PVDF)
-ATN0.630MU,1.7631e-05,0.0248,T,Titanium Nylon
-T4501,2.2475e-05,0.028,T,Titanium Nylon
-T4601,2.3285e-05,0.0285,T,Titanium Nylon
-T4401,2.4109e-05,0.029,T,Titanium Nylon
-T4502,2.9723e-05,0.0322,T,Titanium Nylon
-T4602,3.0653e-05,0.0327,T,Titanium Nylon
-T4402,3.1789e-05,0.0333,T,Titanium Nylon
-T4503,4.6558e-05,0.0403,T,Titanium Nylon
-T4603,4.7955e-05,0.0409,T,Titanium Nylon
-T4403,4.9372e-05,0.0415,T,Titanium Nylon
-TWB050,0.00034808,0.05,TWB,Black Nylon
-TWB065,0.00059919,0.065,TWB,Black Nylon
-TWB085,0.00098572,0.085,TWB,Black Nylon
-TWB105,0.0016349,0.105,TWB,Black Nylon
-TWB135,0.0027516,0.135,TWB,Black Nylon
-TWB050M,0.00034808,0.05,TWBM,Black Nylon
-TWB065M,0.00059919,0.065,TWBM,Black Nylon
-TWB085M,0.00098572,0.085,TWBM,Black Nylon
-TWB105M,0.0016349,0.105,TWBM,Black Nylon
-TWB050S,0.00034808,0.05,TWBS,Black Nylon
-TWB065S,0.00059919,0.065,TWBS,Black Nylon
-TWB085S,0.00098572,0.085,TWBS,Black Nylon
-TWB105S,0.0016349,0.105,TWBS,Black Nylon
-UZAQDS1035,0.0001699,0.035,UZAQDS,Silver Plated Copper
-UZAQDS1036,0.00019742,0.036,UZAQDS,Silver Plated Copper
-UZAQDS1044,0.00032121,0.044,UZAQDS,Silver Plated Copper
-UZAQDS1046,0.0003449,0.046,UZAQDS,Silver Plated Copper
-UZAQDS1047,0.00035541,0.047,UZAQDS,Silver Plated Copper
-UZAQDS2028CF,8.5124e-05,0.028,UZAQDSCF,Silver Plated Copper
-UZAQDS2029CF,9.6147e-05,0.029,UZAQDSCF,Silver Plated Copper
-UZAQDS2030CF,0.00010066,0.03,UZAQDSCF,Silver Plated Copper
-XB065M,0.00074901,0.065,XBM,Nickel Plated Steel
-XB070M,0.00086151,0.07,XBM,Nickel Plated Steel
-XB080M,0.0011056,0.08,XBM,Nickel Plated Steel
-XB085M,0.0012514,0.085,XBM,Nickel Plated Steel
-XB100M,0.0017076,0.1,XBM,Nickel Plated Steel
-XB105M,0.0018729,0.105,XBM,Nickel Plated Steel
-XB065S,0.00074901,0.065,XBS,Nickel Plated Steel
-XB070S,0.00086151,0.07,XBS,Nickel Plated Steel
-XB080S,0.0011056,0.08,XBS,Nickel Plated Steel
-XB085S,0.0012514,0.085,XBS,Nickel Plated Steel
-XB100S,0.0017076,0.1,XBS,Nickel Plated Steel
-XB105S,0.0018729,0.105,XBS,Nickel Plated Steel
-XB100SL,0.0017076,0.1,XBSL,Nickel Plated Steel
-XB105SL,0.0018729,0.105,XBSL,Nickel Plated Steel
-XB130SL,0.0028163,0.13,XBSL,Nickel Plated Steel
-XLB032,0.00019021,0.032,XLB,Nickel Plated Steel
-XLB035,0.00022525,0.035,XLB,Nickel Plated Steel
-XLB040,0.00028182,0.04,XLB,Nickel Plated Steel
-XLB042,0.00031405,0.042,XLB,Nickel Plated Steel
-XLB045,0.00036969,0.045,XLB,Nickel Plated Steel
-XLB050,0.00043733,0.05,XLB,Nickel Plated Steel
-XLB052,0.00046223,0.052,XLB,Nickel Plated Steel
-XLB055,0.00053734,0.055,XLB,Nickel Plated Steel
-XLB060,0.000633,0.06,XLB,Nickel Plated Steel
-XLB065,0.00074901,0.065,XLB,Nickel Plated Steel
-XLB067,0.00079144,0.067,XLB,Nickel Plated Steel
-XLB070,0.00086151,0.07,XLB,Nickel Plated Steel
-XLB075,0.00097751,0.075,XLB,Nickel Plated Steel
-XLB080,0.0011056,0.08,XLB,Nickel Plated Steel
-XLB085,0.0012514,0.085,XLB,Nickel Plated Steel
-XLB090,0.0014091,0.09,XLB,Nickel Plated Steel
-XLB095,0.001557,0.095,XLB,Nickel Plated Steel
-XLB100,0.0017076,0.1,XLB,Nickel Plated Steel
-XLB105,0.0018729,0.105,XLB,Nickel Plated Steel
-XLB107,0.0019401,0.107,XLB,Nickel Plated Steel
-XLB110,0.0020336,0.11,XLB,Nickel Plated Steel
-XLB120,0.0024216,0.12,XLB,Nickel Plated Steel
-XLB125,0.0026548,0.125,XLB,Nickel Plated Steel
-XLB130,0.0028163,0.13,XLB,Nickel Plated Steel
-XLB135,0.0030677,0.135,XLB,Nickel Plated Steel
-XLB025W,0.0001185,0.025,XLBW,Nickel Plated Steel
-XLB028W,0.0001454,0.028,XLBW,Nickel Plated Steel
-XSBW022,9.5354e-05,0.022,XSBW,80/20 Bronze
-XSBW023,0.00010502,0.023,XSBW,80/20 Bronze
-XSBW024,0.00011517,0.024,XSBW,80/20 Bronze
-XSBW025,0.00012348,0.025,XSBW,80/20 Bronze
-XSBW026,0.00013212,0.026,XSBW,80/20 Bronze
-XSBW027,0.00014292,0.027,XSBW,80/20 Bronze
-XSBW030,0.00017847,0.03,XSBW,80/20 Bronze
-XSBW032,0.00019974,0.032,XSBW,80/20 Bronze
-XSBW035,0.00023409,0.035,XSBW,80/20 Bronze
-XSBW039,0.00029245,0.039,XSBW,80/20 Bronze
-XSBW042,0.00033693,0.042,XSBW,80/20 Bronze
-XSBW045,0.00038782,0.045,XSBW,80/20 Bronze
-XSBW047,0.00041951,0.047,XSBW,80/20 Bronze
-XSBW052,0.00051068,0.052,XSBW,80/20 Bronze
-XSBW053,0.00052545,0.053,XSBW,80/20 Bronze
-XSBW056,0.00058458,0.056,XSBW,80/20 Bronze
-XSNW024,0.00010785,0.024,XSNW,NYXL
-XSNW026,0.00012608,0.026,XSNW,NYXL
-XSNW028,0.00014479,0.028,XSNW,NYXL
-XSNW030,0.00016961,0.03,XSNW,NYXL
-XSNW032,0.00018936,0.032,XSNW,NYXL
-U3AGWNP034-NPK,0.00021031,0.034,XSNW,NYXL
-XSNW036,0.00023247,0.036,XSNW,NYXL
-XSNW038,0.00025583,0.038,XSNW,NYXL
-XSNW042,0.00031252,0.042,XSNW,NYXL
-U3AGWNP044,0.00033956,0.044,XSNW,NYXL
-U3AGWNP044-NPK,0.00033956,0.044,XSNW,NYXL
-XSNW046,0.00036781,0.046,XSNW,NYXL
-XSNW049,0.00041243,0.049,XSNW,NYXL
-XSNW052,0.00045977,0.052,XSNW,NYXL
-U3AGWNP056,0.00054833,0.056,XSNW,NYXL
-U3AGWNP056-NP,0.00054833,0.056,XSNW,NYXL
-XSPB022,9.7982e-05,0.022,XSPB,Phosphor Bronze
-XSPB023,0.0001078,0.023,XSPB,Phosphor Bronze
-XSPB024,0.00011612,0.024,XSPB,Phosphor Bronze
-XSPB0245,0.00012327,0.0245,XSPB,Phosphor Bronze
-XSPB025,0.0001268,0.025,XSPB,Phosphor Bronze
-XSPB026,0.0001358,0.026,XSPB,Phosphor Bronze
-XSPB027,0.00014707,0.027,XSPB,Phosphor Bronze
-XSPB028,0.00015901,0.028,XSPB,Phosphor Bronze
-XSPB030,0.00018386,0.03,XSPB,Phosphor Bronze
-XSPB032,0.00020607,0.032,XSPB,Phosphor Bronze
-XSPB034,0.00022963,0.034,XSPB,Phosphor Bronze
-XSPB035,0.00024692,0.035,XSPB,Phosphor Bronze
-XSPB039,0.00030249,0.039,XSPB,Phosphor Bronze
-XSPB042,0.00035496,0.042,XSPB,Phosphor Bronze
-XSPB044,0.000386,0.044,XSPB,Phosphor Bronze
-XSPB045,0.00040203,0.045,XSPB,Phosphor Bronze
-XSPB046,0.00042114,0.046,XSPB,Phosphor Bronze
-XSPB047,0.0004351,0.047,XSPB,Phosphor Bronze
-XSPB052,0.00052954,0.052,XSPB,Phosphor Bronze
-XSPB053,0.00054532,0.053,XSPB,Phosphor Bronze
-XSPB054,0.00056742,0.054,XSPB,Phosphor Bronze
-XSPB056,0.00060666,0.056,XSPB,Phosphor Bronze
-XSPB062,0.00074623,0.062,XSPB,Phosphor Bronze
-U3BLWPB024,0.00011612,0.024,XSPBM,Phosphor Bronze
-U3BLWPB026,0.0001358,0.026,XSPBM,Phosphor Bronze
-U3BLWPB038,0.00028622,0.038,XSPBM,Phosphor Bronze
-U3BLWPB040,0.00031949,0.04,XSPBM,Phosphor Bronze
-U3BLWPB041,0.00033668,0.041,XSPBM,Phosphor Bronze
-XSPB078T,0.0011435,0.078,XSPBT,Phosphor Bronze
-XSPL008,1.4185e-05,0.008,XSPL,Nickel Plated NY Steel
-XSPL009,1.7953e-05,0.009,XSPL,Nickel Plated NY Steel
-XSPL0095,2.0003e-05,0.0095,XSPL,Nickel Plated NY Steel
-XSPL010,2.2164e-05,0.01,XSPL,Nickel Plated NY Steel
-XSPL011,2.6818e-05,0.011,XSPL,Nickel Plated NY Steel
-XSPL0115,2.9312e-05,0.0115,XSPL,Nickel Plated NY Steel
-XSPL012,3.1916e-05,0.012,XSPL,Nickel Plated NY Steel
-XSPL0125,3.4631e-05,0.0125,XSPL,Nickel Plated NY Steel
-XSPL013,3.7457e-05,0.013,XSPL,Nickel Plated NY Steel
-XSPL014,4.3441e-05,0.014,XSPL,Nickel Plated NY Steel
-XSPL015,4.9869e-05,0.015,XSPL,Nickel Plated NY Steel
-XSPL0155,5.3249e-05,0.0155,XSPL,Nickel Plated NY Steel
-XSPL016,5.674e-05,0.016,XSPL,Nickel Plated NY Steel
-XSPL0165,6.0341e-05,0.0165,XSPL,Nickel Plated NY Steel
-XSPL017,6.4054e-05,0.017,XSPL,Nickel Plated NY Steel
-XSPL018,7.1811e-05,0.018,XSPL,Nickel Plated NY Steel
-XSPL019,8.0012e-05,0.019,XSPL,Nickel Plated NY Steel
-U3BLDPS010,2.2164e-05,0.01,XSPLM,Nickel Plated NY Steel
-U3BLDPS011,2.6818e-05,0.011,XSPLM,Nickel Plated NY Steel
-U3BLDPS0115,2.9312e-05,0.0115,XSPLM,Nickel Plated NY Steel
-U3BLDPS014,4.3441e-05,0.014,XSPLM,Nickel Plated NY Steel
-U3BLDPS015,4.9869e-05,0.015,XSPLM,Nickel Plated NY Steel
-U3BLDPS016,5.674e-05,0.016,XSPLM,Nickel Plated NY Steel
-XTNW024,0.00010827,0.024,XTNW,Nickel Plated Steel
-XTNW026,0.00012658,0.026,XTNW,Nickel Plated Steel
-XTNW028,0.0001454,0.028,XTNW,Nickel Plated Steel
-XTNW030,0.00017034,0.03,XTNW,Nickel Plated Steel
-XTNW032,0.00019021,0.032,XTNW,Nickel Plated Steel
-XTNW036,0.00023359,0.036,XTNW,Nickel Plated Steel
-XTNW038,0.0002571,0.038,XTNW,Nickel Plated Steel
-XTNW042,0.00031405,0.042,XTNW,Nickel Plated Steel
-XTNW046,0.00036969,0.046,XTNW,Nickel Plated Steel
-XTNW049,0.00041459,0.049,XTNW,Nickel Plated Steel
-XTNW052,0.00046223,0.052,XTNW,Nickel Plated Steel
-XTNW059,0.00061817,0.059,XTNW,Nickel Plated Steel
-XTPB022,9.7982e-05,0.022,XTPB,Phosphor Bronze
-XTPB023,0.0001078,0.023,XTPB,Phosphor Bronze
-XTPB024,0.00011612,0.024,XTPB,Phosphor Bronze
-XTPB025,0.00012678,0.025,XTPB,Phosphor Bronze
-XTPB026,0.0001358,0.026,XTPB,Phosphor Bronze
-XTPB027,0.00014707,0.027,XTPB,Phosphor Bronze
-XTPB028,0.00015901,0.028,XTPB,Phosphor Bronze
-XTPB029,0.00017107,0.029,XTPB,Phosphor Bronze
-XTPB032,0.00020607,0.032,XTPB,Phosphor Bronze
-XTPB035,0.00024692,0.035,XTPB,Phosphor Bronze
-XTPB039,0.00030249,0.039,XTPB,Phosphor Bronze
-XTPB042,0.00035496,0.042,XTPB,Phosphor Bronze
-XTPB045,0.00040203,0.045,XTPB,Phosphor Bronze
-XTPB047,0.0004351,0.047,XTPB,Phosphor Bronze
-XTPB048,0.00045493,0.048,XTPB,Phosphor Bronze
-XTPB052,0.00052954,0.052,XTPB,Phosphor Bronze
-XTPB053,0.00054532,0.053,XTPB,Phosphor Bronze
-XTPB056,0.00060666,0.056,XTPB,Phosphor Bronze
-XTPB060,0.00070279,0.06,XTPB,Phosphor Bronze
-XTPB070,0.00093323,0.07,XTPB,Phosphor Bronze
-XTPL008,1.4185e-05,0.008,XTPL,Tin Coated NY Steel
-XTPL009,1.7953e-05,0.009,XTPL,Tin Coated NY Steel
-XTPL010,2.2164e-05,0.01,XTPL,Tin Coated NY Steel
-XTPL011,2.6818e-05,0.011,XTPL,Tin Coated NY Steel
-XTPL012,3.1916e-05,0.012,XTPL,Tin Coated NY Steel
-XTPL013,3.7457e-05,0.013,XTPL,Tin Coated NY Steel
-XTPL014,4.3441e-05,0.014,XTPL,Tin Coated NY Steel
-XTPL016,5.674e-05,0.016,XTPL,Tin Coated NY Steel
-XTPL017,6.4054e-05,0.017,XTPL,Tin Coated NY Steel
-XTPL018,7.1811e-05,0.018,XTPL,Tin Coated NY Steel
-XTPL022,0.00010727,0.022,XTPL,Tin Coated NY Steel
+id,uw,gauge,instruments,group,group_id
+BEB028,2.2167e-05,0.0285,Classical Guitar,Black Nylon,BEB
+BEB032,2.8953e-05,0.0327,Classical Guitar,Black Nylon,BEB
+BEB040,4.5239e-05,0.04,Classical Guitar,Black Nylon,BEB
+BEB031W,0.00012253,0.031,Classical Guitar,80/20 Bronze,BEBW
+BEB037W,0.00020248,0.037,Classical Guitar,80/20 Bronze,BEBW
+BEB045W,0.00033228,0.045,Classical Guitar,80/20 Bronze,BEBW
+BEC028,2.2167e-05,0.028,Classical Guitar,Clear Nylon,BEC
+BEC032,2.8953e-05,0.032,Classical Guitar,Clear Nylon,BEC
+BEC040,4.5239e-05,0.04,Classical Guitar,Clear Nylon,BEC
+BES031W,0.00010422,0.031,Classical Guitar,Silver Plated Copper,BESW
+BES037W,0.00019877,0.037,Classical Guitar,Silver Plated Copper,BESW
+BES045W,0.00034353,0.045,Classical Guitar,Silver Plated Copper,BESW
+BW022,9.5354e-05,0.022,Acoustic Guitar,80/20 Bronze,BW
+BW023,0.00010502,0.023,Acoustic Guitar,80/20 Bronze,BW
+BW024,0.00011299,0.024,Acoustic Guitar,80/20 Bronze,BW
+BW025,0.00012348,0.025,Acoustic Guitar,80/20 Bronze,BW
+BW026,0.00013212,0.026,Acoustic Guitar,80/20 Bronze,BW
+BW027,0.00014292,0.027,Acoustic Guitar,80/20 Bronze,BW
+BW030,0.00017847,0.03,Acoustic Guitar,80/20 Bronze,BW
+BW032,0.00019974,0.032,Acoustic Guitar,80/20 Bronze,BW
+BW035,0.00023409,0.035,Acoustic Guitar,80/20 Bronze,BW
+BW039,0.00029245,0.039,Acoustic Guitar,80/20 Bronze,BW
+BW042,0.00033693,0.042,Acoustic Guitar,80/20 Bronze,BW
+BW045,0.00038782,0.045,Acoustic Guitar,80/20 Bronze,BW
+BW047,0.00041951,0.047,Acoustic Guitar,80/20 Bronze,BW
+BW052,0.00051068,0.052,Acoustic Guitar,80/20 Bronze,BW
+BW053,0.00052545,0.053,Acoustic Guitar,80/20 Bronze,BW
+BW056,0.00058458,0.056,Acoustic Guitar,80/20 Bronze,BW
+CB040,0.00032889,0.04,Bass Guitar,Stainless Steel,CB
+CB045,0.00040863,0.045,Bass Guitar,Stainless Steel,CB
+CB050,0.00050512,0.05,Bass Guitar,Stainless Steel,CB
+CB060,0.00074559,0.06,Bass Guitar,Stainless Steel,CB
+CB065,0.0008356,0.065,Bass Guitar,Stainless Steel,CB
+CB070,0.00097902,0.07,Bass Guitar,Stainless Steel,CB
+CB075,0.0011131,0.075,Bass Guitar,Stainless Steel,CB
+CB080,0.0012615,0.08,Bass Guitar,Stainless Steel,CB
+CB085,0.0014261,0.085,Bass Guitar,Stainless Steel,CB
+CB100,0.0019816,0.1,Bass Guitar,Stainless Steel,CB
+CB105,0.002122,0.105,Bass Guitar,Stainless Steel,CB
+CG020,9.2071e-05,0.02,Electric Guitar,Stainless Steel,CG
+CG022,0.00011093,0.022,Electric Guitar,Stainless Steel,CG
+CG024,0.00013154,0.024,Electric Guitar,Stainless Steel,CG
+CG026,0.0001539,0.026,Electric Guitar,Stainless Steel,CG
+CG028,0.00017332,0.028,Electric Guitar,Stainless Steel,CG
+CG030,0.00018412,0.03,Electric Guitar,Stainless Steel,CG
+CG032,0.00020793,0.032,Electric Guitar,Stainless Steel,CG
+CG035,0.00024687,0.035,Electric Guitar,Stainless Steel,CG
+CG038,0.00029025,0.038,Electric Guitar,Stainless Steel,CG
+CG040,0.0003301,0.04,Electric Guitar,Stainless Steel,CG
+CG042,0.00034959,0.042,Electric Guitar,Stainless Steel,CG
+CG045,0.00040856,0.045,Electric Guitar,Stainless Steel,CG
+CG048,0.00046825,0.048,Electric Guitar,Stainless Steel,CG
+CG050,0.0004849,0.05,Electric Guitar,Stainless Steel,CG
+CG052,0.00051856,0.052,Electric Guitar,Stainless Steel,CG
+CG056,0.00060431,0.056,Electric Guitar,Stainless Steel,CG
+CG065,0.00085843,0.065,Electric Guitar,Stainless Steel,CG
+FT023,0.00014048,0.023,Acoustic Guitar,Phosphor Bronze,FT
+FT024,0.00015222,0.024,Acoustic Guitar,Phosphor Bronze,FT
+FT026,0.00017857,0.026,Acoustic Guitar,Phosphor Bronze,FT
+X1AGFPP028-GR,0.00016456,0.028,Acoustic Guitar,Phosphor Bronze,FT
+X1AGFPP030-K,0.00020002,0.03,Acoustic Guitar,Phosphor Bronze,FT
+X1AGFPP032-K,0.00023925,0.032,Acoustic Guitar,Phosphor Bronze,FT
+X1AGFPP035-K,0.00027697,0.035,Acoustic Guitar,Phosphor Bronze,FT
+X1AGFPP036-K,0.0002929,0.036,Acoustic Guitar,Phosphor Bronze,FT
+X1AGFPP039-R,0.00032611,0.039,Acoustic Guitar,Phosphor Bronze,FT
+X1AGFPP042-R,0.00036091,0.042,Acoustic Guitar,Phosphor Bronze,FT
+X1AGFPP044-R,0.00040712,0.044,Acoustic Guitar,Phosphor Bronze,FT
+X1AGFPP045-R,0.0004202,0.045,Acoustic Guitar,Phosphor Bronze,FT
+X1AGFPP047,0.00045626,0.047,Acoustic Guitar,Phosphor Bronze,FT
+X1AGFPP053,0.00056994,0.053,Acoustic Guitar,Phosphor Bronze,FT
+X1AGFPP056,0.00063151,0.056,Acoustic Guitar,Phosphor Bronze,FT
+J6203,0.00011299,0.024,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+U1AMFN0250,1.7671e-05,0.025,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4301,2.1383e-05,0.0275,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J2701,2.2167e-05,0.028,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4304,9.7088e-05,0.028,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4501,2.2167e-05,0.028,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J27H01,2.2966e-05,0.0285,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4601,2.2966e-05,0.0285,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J2704,0.00010754,0.029,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4401,2.3779e-05,0.029,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4504,0.00010754,0.029,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J27H04,0.0001118,0.03,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4604,0.0001118,0.03,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4302,2.8413e-05,0.0317,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J2702,2.9316e-05,0.0322,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4502,2.9316e-05,0.0322,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J27H02,3.0234e-05,0.0327,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4602,3.0234e-05,0.0327,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4305,0.0001695,0.033,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J3102,3.1165e-05,0.0332,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4402,3.1165e-05,0.0332,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J6204,0.00022232,0.034,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J2705,0.0001949,0.035,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J3005,3.4636e-05,0.035,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4505,0.0001949,0.035,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J27H05,0.00020804,0.036,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4605,0.00020804,0.036,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4303,4.4563e-05,0.0397,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J2703,4.592e-05,0.0403,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4503,4.592e-05,0.0403,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J27H03,4.7529e-05,0.0409,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4603,4.7529e-05,0.041,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J3103,4.8696e-05,0.0415,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4403,4.8696e-05,0.0415,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4306,0.00028498,0.042,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4506,0.0003101,0.043,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4606,0.00033248,0.044,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4406,0.00034232,0.045,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4604C,0.00010521,0.029,Classical Guitar,Various,JC
+J4404C,0.00010988,0.03,Classical Guitar,Various,JC
+J4505C,0.00018034,0.035,Classical Guitar,Various,JC
+J4405C,0.0002082,0.036,Classical Guitar,Various,JC
+J4503C,4.738e-05,0.036,Classical Guitar,Various,JC
+J4603C,5.0105e-05,0.037,Classical Guitar,Various,JC
+J4403C,5.2822e-05,0.038,Classical Guitar,Various,JC
+J4606C,0.00035754,0.046,Classical Guitar,Various,JC
+J4406C,0.00036803,0.047,Classical Guitar,Various,JC
+J4504LP,9.156e-05,0.027,Classical Guitar,Polished Silver Plated Copper,JLP
+J4604LP,0.00010265,0.028,Classical Guitar,Polished Silver Plated Copper,JLP
+J4505LP,0.00017618,0.033,Classical Guitar,Polished Silver Plated Copper,JLP
+J4605LP,0.00020338,0.035,Classical Guitar,Polished Silver Plated Copper,JLP
+J4506LP,0.00032599,0.043,Classical Guitar,Polished Silver Plated Copper,JLP
+J4606LP,0.00034966,0.044,Classical Guitar,Polished Silver Plated Copper,JLP
+LE009,1.7953e-05,0.009,"Banjo, Mandolin, Other Instruments",Tin Coated Steel,LE
+LE0095,2.0003e-05,0.0095,"Banjo, Mandolin, Other Instruments",Tin Coated Steel,LE
+LE010,2.2164e-05,0.01,"Banjo, Mandolin, Other Instruments",Tin Coated Steel,LE
+LE011,2.6818e-05,0.011,"Banjo, Mandolin, Other Instruments",Tin Coated Steel,LE
+LE0115,2.9312e-05,0.0115,"Banjo, Mandolin, Other Instruments",Tin Coated Steel,LE
+LE012,3.1916e-05,0.012,"Banjo, Mandolin, Other Instruments",Tin Coated Steel,LE
+LE013,3.7457e-05,0.013,"Banjo, Mandolin, Other Instruments",Tin Coated Steel,LE
+LE014,4.3441e-05,0.014,"Banjo, Mandolin, Other Instruments",Tin Coated Steel,LE
+LE015,4.9869e-05,0.015,"Banjo, Mandolin, Other Instruments",Tin Coated Steel,LE
+LE016,5.674e-05,0.016,"Banjo, Mandolin, Other Instruments",Tin Coated Steel,LE
+LE020PB,7.9816e-05,0.02,"Banjo, Mandolin, Other Instruments",Phosphor Bronze,LEPB
+LE022PB,9.7982e-05,0.022,"Banjo, Mandolin, Other Instruments",Phosphor Bronze,LEPB
+LE023PB,0.0001078,0.023,"Banjo, Mandolin, Other Instruments",Phosphor Bronze,LEPB
+LE026PB,0.0001358,0.026,"Banjo, Mandolin, Other Instruments",Phosphor Bronze,LEPB
+LE028PB,0.00015684,0.028,"Banjo, Mandolin, Other Instruments",Phosphor Bronze,LEPB
+LE030PB,0.00018386,0.03,"Banjo, Mandolin, Other Instruments",Phosphor Bronze,LEPB
+LE032PB,0.00020607,0.032,"Banjo, Mandolin, Other Instruments",Phosphor Bronze,LEPB
+LE034PB,0.00023221,0.034,"Banjo, Mandolin, Other Instruments",Phosphor Bronze,LEPB
+LE036PB,0.00026213,0.036,"Banjo, Mandolin, Other Instruments",Phosphor Bronze,LEPB
+LE038PB,0.00028622,0.038,"Banjo, Mandolin, Other Instruments",Phosphor Bronze,LEPB
+LE040PB,0.00031949,0.04,"Banjo, Mandolin, Other Instruments",Phosphor Bronze,LEPB
+LE046PB,0.00042114,0.046,"Banjo, Mandolin, Other Instruments",Phosphor Bronze,LEPB
+LE049PB,0.00047233,0.049,"Banjo, Mandolin, Other Instruments",Phosphor Bronze,LEPB
+LE052PB,0.00052954,0.052,"Banjo, Mandolin, Other Instruments",Phosphor Bronze,LEPB
+LE062PB,0.00074623,0.062,"Banjo, Mandolin, Other Instruments",Phosphor Bronze,LEPB
+LE078PB,0.0011435,0.078,"Banjo, Mandolin, Other Instruments",Phosphor Bronze,LEPB
+LE092PB,0.0015849,0.092,"Banjo, Mandolin, Other Instruments",Phosphor Bronze,LEPB
+LE020W,7.4003e-05,0.02,"Banjo, Other Instruments",Nickel Plated Steel,LEW
+LE022W,9.1392e-05,0.022,"Banjo, Other Instruments",Nickel Plated Steel,LEW
+LE023W,0.00010082,0.023,"Banjo, Other Instruments",Nickel Plated Steel,LEW
+LE024W,0.00010827,0.024,"Banjo, Other Instruments",Nickel Plated Steel,LEW
+LE028W,0.0001454,0.028,"Banjo, Other Instruments",Nickel Plated Steel,LEW
+LE030W,0.00017034,0.03,"Banjo, Other Instruments",Nickel Plated Steel,LEW
+LE036W,0.00023359,0.036,"Banjo, Other Instruments",Nickel Plated Steel,LEW
+NB022,9.759e-05,0.022,Acoustic Guitar,Nickel Plated Bronze,NB
+NB023,0.00010738,0.023,Acoustic Guitar,Nickel Plated Bronze,NB
+NB024,0.00011566,0.024,Acoustic Guitar,Nickel Plated Bronze,NB
+NB025,0.00012629,0.025,Acoustic Guitar,Nickel Plated Bronze,NB
+NB026,0.00013525,0.026,Acoustic Guitar,Nickel Plated Bronze,NB
+NB027,0.00014645,0.027,Acoustic Guitar,Nickel Plated Bronze,NB
+NB030,0.00018306,0.03,Acoustic Guitar,Nickel Plated Bronze,NB
+NB032,0.00020512,0.032,Acoustic Guitar,Nickel Plated Bronze,NB
+NB035,0.00024572,0.035,Acoustic Guitar,Nickel Plated Bronze,NB
+NB039,0.000301,0.039,Acoustic Guitar,Nickel Plated Bronze,NB
+NB042,0.00035313,0.042,Acoustic Guitar,Nickel Plated Bronze,NB
+NB045,0.00039991,0.045,Acoustic Guitar,Nickel Plated Bronze,NB
+NB047,0.00043278,0.047,Acoustic Guitar,Nickel Plated Bronze,NB
+NB052,0.00052672,0.052,Acoustic Guitar,Nickel Plated Bronze,NB
+NB053,0.00054236,0.053,Acoustic Guitar,Nickel Plated Bronze,NB
+NB056,0.00060337,0.056,Acoustic Guitar,Nickel Plated Bronze,NB
+NHR030,0.00019791,0.03,Bass Guitar,Pure Nickel,NHR
+NHR040,0.00033047,0.04,Bass Guitar,Pure Nickel,NHR
+NHR045,0.00039373,0.045,Bass Guitar,Pure Nickel,NHR
+NHR050,0.00049463,0.05,Bass Guitar,Pure Nickel,NHR
+NHR060,0.000601,0.06,Bass Guitar,Pure Nickel,NHR
+NHR065,0.00066125,0.065,Bass Guitar,Pure Nickel,NHR
+NHR070,0.00076035,0.07,Bass Guitar,Pure Nickel,NHR
+NHR075,0.00087782,0.075,Bass Guitar,Pure Nickel,NHR
+NHR080,0.00099156,0.08,Bass Guitar,Pure Nickel,NHR
+NHR085,0.0010876,0.085,Bass Guitar,Pure Nickel,NHR
+NHR095,0.0016343,0.095,Bass Guitar,Pure Nickel,NHR
+NHR100,0.0017945,0.1,Bass Guitar,Pure Nickel,NHR
+NHR105,0.0020131,0.105,Bass Guitar,Pure Nickel,NHR
+NHR130,0.0030002,0.13,Bass Guitar,Pure Nickel,NHR
+NTA2.40,0.00029419,0.0945,Ukulele,Nyltech,NTA
+NTA3.00,0.00045977,0.118,Ukulele,Nyltech,NTA
+NTA4.20,0.00090061,0.165,Ukulele,Nyltech,NTA
+NTA5.00,0.0012776,0.197,Ukulele,Nyltech,NTA
+NW018,6.1926e-05,0.018,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW020,7.4003e-05,0.02,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW021,8.2453e-05,0.021,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW022,9.1392e-05,0.022,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW024,0.00010827,0.024,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW025,0.0001185,0.025,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW026,0.00012658,0.026,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW028,0.0001454,0.028,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW030,0.00017034,0.03,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW032,0.00019021,0.032,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW034,0.00021129,0.034,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW036,0.00023359,0.036,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW037,0.00024819,0.037,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW038,0.0002571,0.038,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW039,0.00027233,0.039,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW040,0.00028806,0.04,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW042,0.00031405,0.042,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW044,0.00034126,0.044,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW046,0.00036969,0.046,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW048,0.00039932,0.048,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW049,0.00041459,0.049,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW050,0.00043017,0.05,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW052,0.00046223,0.052,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW054,0.00051617,0.054,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW056,0.00055129,0.056,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW059,0.00061817,0.059,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW060,0.00064143,0.06,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW062,0.00068032,0.062,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW064,0.00072042,0.064,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW065,0.00074901,0.065,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW068,0.00081724,0.068,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NW074,0.00094948,0.074,"Electric Guitar, Other Instruments",Nickel Plated Steel,NW
+NYL022,1.3685e-05,0.022,"Classical Guitar, Other Instruments, Ukulele",Clear Nylon,NYL
+NYL024,1.6286e-05,0.024,"Classical Guitar, Other Instruments, Ukulele",Clear Nylon,NYL
+NYL029,2.3779e-05,0.029,"Classical Guitar, Other Instruments, Ukulele",Clear Nylon,NYL
+NYL030,2.5447e-05,0.03,"Classical Guitar, Other Instruments, Ukulele",Clear Nylon,NYL
+NYL034,3.2685e-05,0.034,"Classical Guitar, Other Instruments, Ukulele",Clear Nylon,NYL
+MFCZ159-1.143-A,5.7256e-05,0.045,"Classical Guitar, Other Instruments, Ukulele",Clear Nylon,NYL
+U2AMFN0220,1.3685e-05,0.022,"Classical Guitar, Other Instruments, Ukulele",Black Nylon,NYLB
+U2AMFN0260,1.9113e-05,0.026,"Classical Guitar, Other Instruments, Ukulele",Black Nylon,NYLB
+U2AMFN0280,2.2167e-05,0.028,"Classical Guitar, Other Instruments, Ukulele",Black Nylon,NYLB
+U2AMFN0285,2.2966e-05,0.0285,"Classical Guitar, Other Instruments, Ukulele",Black Nylon,NYLB
+U2AMFN0290,2.3779e-05,0.029,"Classical Guitar, Other Instruments, Ukulele",Black Nylon,NYLB
+U2AMFN0322,2.9316e-05,0.0322,"Classical Guitar, Other Instruments, Ukulele",Black Nylon,NYLB
+U2AMFN0327,3.0234e-05,0.0327,"Classical Guitar, Other Instruments, Ukulele",Black Nylon,NYLB
+U2AMFN0332,3.1165e-05,0.0332,"Classical Guitar, Other Instruments, Ukulele",Black Nylon,NYLB
+U2AMFN0360,3.6644e-05,0.036,"Classical Guitar, Other Instruments, Ukulele",Black Nylon,NYLB
+U2AMFN0403,4.592e-05,0.0403,"Classical Guitar, Other Instruments, Ukulele",Black Nylon,NYLB
+U2AMFN0410,4.7529e-05,0.041,"Classical Guitar, Other Instruments, Ukulele",Black Nylon,NYLB
+U1AQFBW029,0.00010112,0.029,Classical Guitar,80/20 Bronze,NYLBW
+U1AQFBW030,0.00010513,0.03,Classical Guitar,80/20 Bronze,NYLBW
+U1AQFBW035,0.00017061,0.035,Classical Guitar,80/20 Bronze,NYLBW
+U1AQFBW036,0.00019498,0.036,Classical Guitar,80/20 Bronze,NYLBW
+U1AQFBW043,0.00028997,0.043,Classical Guitar,80/20 Bronze,NYLBW
+U1AQFBW044,0.00030792,0.044,Classical Guitar,80/20 Bronze,NYLBW
+NYL024W,6.7841e-05,0.024,"Classical Guitar, Other Instruments, Ukulele",Silver Plated Copper,NYLW
+NYL025W,6.7841e-05,0.025,"Classical Guitar, Other Instruments, Ukulele",Silver Plated Copper,NYLW
+NYL026W,8.4715e-05,0.026,"Classical Guitar, Other Instruments, Ukulele",Silver Plated Copper,NYLW
+NYL028W,8.4715e-05,0.028,"Classical Guitar, Other Instruments, Ukulele",Silver Plated Copper,NYLW
+NYL031W,0.00011042,0.031,"Classical Guitar, Other Instruments, Ukulele",Silver Plated Copper,NYLW
+NYL034W,0.00018203,0.034,"Classical Guitar, Other Instruments, Ukulele",Silver Plated Copper,NYLW
+NYL041W,0.00024721,0.041,"Classical Guitar, Other Instruments, Ukulele",Silver Plated Copper,NYLW
+NYL056W,0.0005456,0.056,"Classical Guitar, Other Instruments, Ukulele",Silver Plated Copper,NYLW
+U1AQFS3028,0.00012129,0.028,"Classical Guitar, Other Instruments",Silver Plated Copper,NYLWP
+U1AQFS1032,0.00013604,0.032,"Classical Guitar, Other Instruments",Silver Plated Copper,NYLWP
+U1AQFS3034,0.00019163,0.034,"Classical Guitar, Other Instruments",Silver Plated Copper,NYLWP
+U1AQFS3042,0.0003319,0.042,"Classical Guitar, Other Instruments",Silver Plated Copper,NYLWP
+NYNW021,8.2121e-05,0.021,Electric Guitar,NYXL,NYNW
+NYNW022,9.1038e-05,0.022,Electric Guitar,NYXL,NYNW
+NYNW024,0.00010785,0.024,Electric Guitar,NYXL,NYNW
+NYNW025,0.00011806,0.025,Electric Guitar,NYXL,NYNW
+NYNW026,0.00012608,0.026,Electric Guitar,NYXL,NYNW
+NYNW028,0.00014479,0.028,Electric Guitar,NYXL,NYNW
+NYNW030,0.00016961,0.03,Electric Guitar,NYXL,NYNW
+NYNW032,0.00018936,0.032,Electric Guitar,NYXL,NYNW
+NYNW034,0.00021031,0.034,Electric Guitar,NYXL,NYNW
+NYNW036,0.00023247,0.036,Electric Guitar,NYXL,NYNW
+NYNW037,0.00024702,0.037,Electric Guitar,NYXL,NYNW
+NYNW038,0.00025583,0.038,Electric Guitar,NYXL,NYNW
+NYNW040,0.00028669,0.04,Electric Guitar,NYXL,NYNW
+NYNW042,0.00031252,0.042,Electric Guitar,NYXL,NYNW
+NYNW044,0.00033956,0.044,Electric Guitar,NYXL,NYNW
+NYNW046,0.00036781,0.046,Electric Guitar,NYXL,NYNW
+NYNW049,0.00041243,0.049,Electric Guitar,NYXL,NYNW
+NYNW050,0.00042791,0.05,Electric Guitar,NYXL,NYNW
+NYNW052,0.00045977,0.052,Electric Guitar,NYXL,NYNW
+NYNW054,0.00051343,0.054,Electric Guitar,NYXL,NYNW
+NYNW056,0.00054833,0.056,Electric Guitar,NYXL,NYNW
+NYNW059,0.00061496,0.059,Electric Guitar,NYXL,NYNW
+NYNW060,0.00063815,0.06,Electric Guitar,NYXL,NYNW
+NYNW064,0.00071663,0.064,Electric Guitar,NYXL,NYNW
+NYNW070,0.00085672,0.07,Electric Guitar,NYXL,NYNW
+NYNW074,0.00094406,0.074,Electric Guitar,NYXL,NYNW
+NYNW080,0.0010993,0.08,Electric Guitar,NYXL,NYNW
+NYNW084T,0.001203,0.084,Electric Guitar,NYXL,NYNWT
+NYS008,1.4185e-05,0.008,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,NYS
+NYS009,1.7953e-05,0.009,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,NYS
+NYS0095,2.0003e-05,0.0095,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,NYS
+NYS010,2.2164e-05,0.01,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,NYS
+NYS011,2.6818e-05,0.011,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,NYS
+NYS0115,2.9312e-05,0.0115,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,NYS
+NYS012,3.1916e-05,0.012,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,NYS
+NYS013,3.7457e-05,0.013,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,NYS
+NYS0135,4.0394e-05,0.0135,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,NYS
+NYS014,4.3441e-05,0.014,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,NYS
+NYS015,4.9869e-05,0.015,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,NYS
+NYS016,5.674e-05,0.016,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,NYS
+NYS017,6.4054e-05,0.017,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,NYS
+NYS018,7.1811e-05,0.018,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,NYS
+NYS019,8.0012e-05,0.019,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,NYS
+NYS020,8.8656e-05,0.02,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,NYS
+NYXLB032,0.00018936,0.032,Bass Guitar,NYXL,NYXLB
+NYXLB040,0.00029021,0.04,Bass Guitar,NYXL,NYXLB
+NYXLB045,0.00035023,0.045,Bass Guitar,NYXL,NYXLB
+NYXLB050,0.00042791,0.05,Bass Guitar,NYXL,NYXLB
+NYXLB055,0.00052709,0.055,Bass Guitar,NYXL,NYXLB
+NYXLB060,0.00063355,0.06,Bass Guitar,NYXL,NYXLB
+NYXLB065,0.00073709,0.065,Bass Guitar,NYXL,NYXLB
+NYXLB070,0.00082636,0.07,Bass Guitar,NYXL,NYXLB
+NYXLB075,0.00093601,0.075,Bass Guitar,NYXL,NYXLB
+NYXLB080,0.0010611,0.08,Bass Guitar,NYXL,NYXLB
+NYXLB085,0.0012549,0.085,Bass Guitar,NYXL,NYXLB
+NYXLB095,0.0014993,0.095,Bass Guitar,NYXL,NYXLB
+NYXLB100,0.001688,0.1,Bass Guitar,NYXL,NYXLB
+NYXLB105,0.0018547,0.105,Bass Guitar,NYXL,NYXLB
+NYXLB125,0.0025493,0.125,Bass Guitar,NYXL,NYXLB
+NYXLB130,0.0028816,0.13,Bass Guitar,NYXL,NYXLB
+NYXLB100MS,0.001688,0.1,Bass Guitar,NYXL,NYXLBMS
+NYXLB130MS,0.0028816,0.13,Bass Guitar,NYXL,NYXLBMS
+NYXLB100SL,0.001688,0.1,Bass Guitar,NYXL,NYXLBSL
+NYXLB130SL,0.0028816,0.13,Bass Guitar,NYXL,NYXLBSL
+PB020,7.9816e-05,0.02,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB021,8.8655e-05,0.021,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB022,9.7982e-05,0.022,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB023,0.0001078,0.023,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB024,0.00011612,0.024,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB025,0.00012678,0.025,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB026,0.0001358,0.026,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB027,0.00014707,0.027,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB028,0.00015901,0.028,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB029,0.00017107,0.029,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB030,0.00018386,0.03,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB032,0.00020607,0.032,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB035,0.00024692,0.035,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB036,0.00026213,0.036,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB038,0.00028622,0.038,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB039,0.00030249,0.039,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB042,0.00035496,0.042,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB045,0.00040203,0.045,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB047,0.0004351,0.047,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB049,0.00047233,0.049,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB052,0.00052954,0.052,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB053,0.00054532,0.053,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB054,0.00056742,0.054,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB056,0.00060666,0.056,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PB059,0.00067802,0.059,"Acoustic Guitar, Banjo, Mandolin",Phosphor Bronze,PB
+PBB045,0.00042114,0.045,Bass Guitar,Phosphor Bronze,PBB
+PBB065,0.00081426,0.065,Bass Guitar,Phosphor Bronze,PBB
+PBB080,0.0011998,0.08,Bass Guitar,Phosphor Bronze,PBB
+PBB100,0.0018332,0.1,Bass Guitar,Phosphor Bronze,PBB
+PBB130,0.0030241,0.13,Bass Guitar,Phosphor Bronze,PBB
+PBT0.46,1.0601e-05,0.0181,Ukulele,Nyltech,PBT
+PBT0.60,1.8022e-05,0.0236,Ukulele,Nyltech,PBT
+PBT0.62,1.9265e-05,0.0244,Ukulele,Nyltech,PBT
+PBT0.65,2.1206e-05,0.0256,Ukulele,Nyltech,PBT
+PBT0.67,2.2553e-05,0.0264,Ukulele,Nyltech,PBT
+PBT0.70,2.4649e-05,0.0276,Ukulele,Nyltech,PBT
+PBT0.77,2.9708e-05,0.0303,Ukulele,Nyltech,PBT
+PBT0.80,3.2108e-05,0.0315,Ukulele,Nyltech,PBT
+PBT0.82,3.3759e-05,0.0323,Ukulele,Nyltech,PBT
+PBT0.92,4.2404e-05,0.0362,Ukulele,Nyltech,PBT
+PBT0.95,4.5262e-05,0.0374,Ukulele,Nyltech,PBT
+PBT0.97,4.7219e-05,0.0382,Ukulele,Nyltech,PBT
+PL008,1.4185e-05,0.008,"Acoustic Guitar, Banjo, Bass Guitar, Electric Guitar, Mandolin, Other Instruments",Tin Coated Steel,PL
+PL0085,1.6013e-05,0.0085,"Acoustic Guitar, Banjo, Bass Guitar, Electric Guitar, Mandolin, Other Instruments",Tin Coated Steel,PL
+PL009,1.7953e-05,0.009,"Acoustic Guitar, Banjo, Bass Guitar, Electric Guitar, Mandolin, Other Instruments",Tin Coated Steel,PL
+PL0095,2.0003e-05,0.0095,"Acoustic Guitar, Banjo, Bass Guitar, Electric Guitar, Mandolin, Other Instruments",Tin Coated Steel,PL
+PL010,2.2164e-05,0.01,"Acoustic Guitar, Banjo, Bass Guitar, Electric Guitar, Mandolin, Other Instruments",Tin Coated Steel,PL
+PL0105,2.4436e-05,0.0105,"Acoustic Guitar, Banjo, Bass Guitar, Electric Guitar, Mandolin, Other Instruments",Tin Coated Steel,PL
+PL011,2.6818e-05,0.011,"Acoustic Guitar, Banjo, Bass Guitar, Electric Guitar, Mandolin, Other Instruments",Tin Coated Steel,PL
+PL0115,2.9312e-05,0.0115,"Acoustic Guitar, Banjo, Bass Guitar, Electric Guitar, Mandolin, Other Instruments",Tin Coated Steel,PL
+PL012,3.1916e-05,0.012,"Acoustic Guitar, Banjo, Bass Guitar, Electric Guitar, Mandolin, Other Instruments",Tin Coated Steel,PL
+PL013,3.7457e-05,0.013,"Acoustic Guitar, Banjo, Bass Guitar, Electric Guitar, Mandolin, Other Instruments",Tin Coated Steel,PL
+PL0135,4.0394e-05,0.0135,"Acoustic Guitar, Banjo, Bass Guitar, Electric Guitar, Mandolin, Other Instruments",Tin Coated Steel,PL
+PL014,4.3441e-05,0.014,"Acoustic Guitar, Banjo, Bass Guitar, Electric Guitar, Mandolin, Other Instruments",Tin Coated Steel,PL
+PL015,4.9869e-05,0.015,"Acoustic Guitar, Banjo, Bass Guitar, Electric Guitar, Mandolin, Other Instruments",Tin Coated Steel,PL
+PL016,5.674e-05,0.016,"Acoustic Guitar, Banjo, Bass Guitar, Electric Guitar, Mandolin, Other Instruments",Tin Coated Steel,PL
+PL017,6.4054e-05,0.017,"Acoustic Guitar, Banjo, Bass Guitar, Electric Guitar, Mandolin, Other Instruments",Tin Coated Steel,PL
+PL018,7.1811e-05,0.018,"Acoustic Guitar, Banjo, Bass Guitar, Electric Guitar, Mandolin, Other Instruments",Tin Coated Steel,PL
+PL019,8.0012e-05,0.019,"Acoustic Guitar, Banjo, Bass Guitar, Electric Guitar, Mandolin, Other Instruments",Tin Coated Steel,PL
+PL020,8.8656e-05,0.02,"Acoustic Guitar, Banjo, Bass Guitar, Electric Guitar, Mandolin, Other Instruments",Tin Coated Steel,PL
+PNG023,0.00011502,0.023,Electric Guitar,Pure Nickel,PNG
+PNG025,0.00013252,0.025,Electric Guitar,Pure Nickel,PNG
+PNG027,0.00015139,0.027,Electric Guitar,Pure Nickel,PNG
+PNG031,0.00020673,0.031,Electric Guitar,Pure Nickel,PNG
+PNG035,0.00025541,0.035,Electric Guitar,Pure Nickel,PNG
+PNG037,0.00028179,0.037,Electric Guitar,Pure Nickel,PNG
+PNG041,0.00034379,0.041,Electric Guitar,Pure Nickel,PNG
+PNG045,0.00040622,0.045,Electric Guitar,Pure Nickel,PNG
+PNG048,0.00045948,0.048,Electric Guitar,Pure Nickel,PNG
+PSB032,0.00017912,0.032,Bass Guitar,Stainless Steel,PSB
+PSB040,0.00026322,0.04,Bass Guitar,Stainless Steel,PSB
+PSB045,0.00034516,0.045,Bass Guitar,Stainless Steel,PSB
+PSB050,0.0004087,0.05,Bass Guitar,Stainless Steel,PSB
+PSB055,0.0005005,0.055,Bass Guitar,Stainless Steel,PSB
+PSB060,0.00058909,0.06,Bass Guitar,Stainless Steel,PSB
+PSB065,0.00069481,0.065,Bass Guitar,Stainless Steel,PSB
+PSB070,0.00079887,0.07,Bass Guitar,Stainless Steel,PSB
+PSB075,0.00090535,0.075,Bass Guitar,Stainless Steel,PSB
+PSB080,0.0010237,0.08,Bass Guitar,Stainless Steel,PSB
+PSB085,0.0011603,0.085,Bass Guitar,Stainless Steel,PSB
+PSB090,0.0013032,0.09,Bass Guitar,Stainless Steel,PSB
+PSB095,0.001439,0.095,Bass Guitar,Stainless Steel,PSB
+PSB100,0.0015764,0.1,Bass Guitar,Stainless Steel,PSB
+PSB105,0.0017126,0.105,Bass Guitar,Stainless Steel,PSB
+PSB110,0.0018804,0.11,Bass Guitar,Stainless Steel,PSB
+PSB125,0.0024486,0.125,Bass Guitar,Stainless Steel,PSB
+PSB130,0.0026099,0.13,Bass Guitar,Stainless Steel,PSB
+PSB135,0.0027627,0.135,Bass Guitar,Stainless Steel,PSB
+PSG021,7.5692e-05,0.021,Electric Guitar,Stainless Steel,PSG
+PSG024,0.00010281,0.024,Electric Guitar,Stainless Steel,PSG
+PSG026,0.00011713,0.026,Electric Guitar,Stainless Steel,PSG
+PSG028,0.00013256,0.028,Electric Guitar,Stainless Steel,PSG
+PSG030,0.00016087,0.03,Electric Guitar,Stainless Steel,PSG
+PSG032,0.00017912,0.032,Electric Guitar,Stainless Steel,PSG
+PSG036,0.00021894,0.036,Electric Guitar,Stainless Steel,PSG
+PSG038,0.00024052,0.038,Electric Guitar,Stainless Steel,PSG
+PSG042,0.00029409,0.042,Electric Guitar,Stainless Steel,PSG
+PSG046,0.00034516,0.046,Electric Guitar,Stainless Steel,PSG
+PSG050,0.00040068,0.05,Electric Guitar,Stainless Steel,PSG
+PSG052,0.00043011,0.052,Electric Guitar,Stainless Steel,PSG
+PVDF0.52,2.1223e-05,0.0205,"Classical Guitar, Ukulele",Carbon (PVDF),PVDF
+PVDF0.57,2.5339e-05,0.0224,"Classical Guitar, Ukulele",Carbon (PVDF),PVDF
+PVDF0.61,2.9089e-05,0.024,"Classical Guitar, Ukulele",Carbon (PVDF),PVDF
+PVDF0.62,3.0066e-05,0.0244,"Classical Guitar, Ukulele",Carbon (PVDF),PVDF
+PVDF0.63,3.106e-05,0.0248,"Classical Guitar, Ukulele",Carbon (PVDF),PVDF
+PVDF0.66,3.4139e-05,0.026,"Classical Guitar, Ukulele",Carbon (PVDF),PVDF
+PVDF0.69,3.7363e-05,0.0272,"Classical Guitar, Ukulele",Carbon (PVDF),PVDF
+PVDF0.71,3.9593e-05,0.028,"Classical Guitar, Ukulele",Carbon (PVDF),PVDF
+PVDF0.81,5.139e-05,0.0319,"Classical Guitar, Ukulele",Carbon (PVDF),PVDF
+PVDF0.84,5.5329e-05,0.0331,"Classical Guitar, Ukulele",Carbon (PVDF),PVDF
+PVDF0.86,5.8036e-05,0.0339,"Classical Guitar, Ukulele",Carbon (PVDF),PVDF
+PVDF1.05,8.6139e-05,0.0413,"Classical Guitar, Ukulele",Carbon (PVDF),PVDF
+ATN0.630MU,1.7631e-05,0.0248,"Classical Guitar, Ukulele",Titanium Nylon,T
+T4501,2.2475e-05,0.028,"Classical Guitar, Ukulele",Titanium Nylon,T
+T4601,2.3285e-05,0.0285,"Classical Guitar, Ukulele",Titanium Nylon,T
+T4401,2.4109e-05,0.029,"Classical Guitar, Ukulele",Titanium Nylon,T
+T4502,2.9723e-05,0.0322,"Classical Guitar, Ukulele",Titanium Nylon,T
+T4602,3.0653e-05,0.0327,"Classical Guitar, Ukulele",Titanium Nylon,T
+T4402,3.1789e-05,0.0333,"Classical Guitar, Ukulele",Titanium Nylon,T
+T4503,4.6558e-05,0.0403,"Classical Guitar, Ukulele",Titanium Nylon,T
+T4603,4.7955e-05,0.0409,"Classical Guitar, Ukulele",Titanium Nylon,T
+T4403,4.9372e-05,0.0415,"Classical Guitar, Ukulele",Titanium Nylon,T
+TWB050,0.00034808,0.05,Bass Guitar,Black Nylon,TWB
+TWB065,0.00059919,0.065,Bass Guitar,Black Nylon,TWB
+TWB085,0.00098572,0.085,Bass Guitar,Black Nylon,TWB
+TWB105,0.0016349,0.105,Bass Guitar,Black Nylon,TWB
+TWB135,0.0027516,0.135,Bass Guitar,Black Nylon,TWB
+TWB050M,0.00034808,0.05,Bass Guitar,Black Nylon,TWBM
+TWB065M,0.00059919,0.065,Bass Guitar,Black Nylon,TWBM
+TWB085M,0.00098572,0.085,Bass Guitar,Black Nylon,TWBM
+TWB105M,0.0016349,0.105,Bass Guitar,Black Nylon,TWBM
+TWB050S,0.00034808,0.05,Bass Guitar,Black Nylon,TWBS
+TWB065S,0.00059919,0.065,Bass Guitar,Black Nylon,TWBS
+TWB085S,0.00098572,0.085,Bass Guitar,Black Nylon,TWBS
+TWB105S,0.0016349,0.105,Bass Guitar,Black Nylon,TWBS
+UZAQDS1035,0.0001699,0.035,Classical Guitar,Silver Plated Copper,UZAQDS
+UZAQDS1036,0.00019742,0.036,Classical Guitar,Silver Plated Copper,UZAQDS
+UZAQDS1044,0.00032121,0.044,Classical Guitar,Silver Plated Copper,UZAQDS
+UZAQDS1046,0.0003449,0.046,Classical Guitar,Silver Plated Copper,UZAQDS
+UZAQDS1047,0.00035541,0.047,Classical Guitar,Silver Plated Copper,UZAQDS
+UZAQDS2028CF,8.5124e-05,0.028,Classical Guitar,Silver Plated Copper,UZAQDSCF
+UZAQDS2029CF,9.6147e-05,0.029,Classical Guitar,Silver Plated Copper,UZAQDSCF
+UZAQDS2030CF,0.00010066,0.03,Classical Guitar,Silver Plated Copper,UZAQDSCF
+XB065M,0.00074901,0.065,Bass Guitar,Nickel Plated Steel,XBM
+XB070M,0.00086151,0.07,Bass Guitar,Nickel Plated Steel,XBM
+XB080M,0.0011056,0.08,Bass Guitar,Nickel Plated Steel,XBM
+XB085M,0.0012514,0.085,Bass Guitar,Nickel Plated Steel,XBM
+XB100M,0.0017076,0.1,Bass Guitar,Nickel Plated Steel,XBM
+XB105M,0.0018729,0.105,Bass Guitar,Nickel Plated Steel,XBM
+XB065S,0.00074901,0.065,Bass Guitar,Nickel Plated Steel,XBS
+XB070S,0.00086151,0.07,Bass Guitar,Nickel Plated Steel,XBS
+XB080S,0.0011056,0.08,Bass Guitar,Nickel Plated Steel,XBS
+XB085S,0.0012514,0.085,Bass Guitar,Nickel Plated Steel,XBS
+XB100S,0.0017076,0.1,Bass Guitar,Nickel Plated Steel,XBS
+XB105S,0.0018729,0.105,Bass Guitar,Nickel Plated Steel,XBS
+XB100SL,0.0017076,0.1,Bass Guitar,Nickel Plated Steel,XBSL
+XB105SL,0.0018729,0.105,Bass Guitar,Nickel Plated Steel,XBSL
+XB130SL,0.0028163,0.13,Bass Guitar,Nickel Plated Steel,XBSL
+XLB032,0.00019021,0.032,Bass Guitar,Nickel Plated Steel,XLB
+XLB035,0.00022525,0.035,Bass Guitar,Nickel Plated Steel,XLB
+XLB040,0.00028182,0.04,Bass Guitar,Nickel Plated Steel,XLB
+XLB042,0.00031405,0.042,Bass Guitar,Nickel Plated Steel,XLB
+XLB045,0.00036969,0.045,Bass Guitar,Nickel Plated Steel,XLB
+XLB050,0.00043733,0.05,Bass Guitar,Nickel Plated Steel,XLB
+XLB052,0.00046223,0.052,Bass Guitar,Nickel Plated Steel,XLB
+XLB055,0.00053734,0.055,Bass Guitar,Nickel Plated Steel,XLB
+XLB060,0.000633,0.06,Bass Guitar,Nickel Plated Steel,XLB
+XLB065,0.00074901,0.065,Bass Guitar,Nickel Plated Steel,XLB
+XLB067,0.00079144,0.067,Bass Guitar,Nickel Plated Steel,XLB
+XLB070,0.00086151,0.07,Bass Guitar,Nickel Plated Steel,XLB
+XLB075,0.00097751,0.075,Bass Guitar,Nickel Plated Steel,XLB
+XLB080,0.0011056,0.08,Bass Guitar,Nickel Plated Steel,XLB
+XLB085,0.0012514,0.085,Bass Guitar,Nickel Plated Steel,XLB
+XLB090,0.0014091,0.09,Bass Guitar,Nickel Plated Steel,XLB
+XLB095,0.001557,0.095,Bass Guitar,Nickel Plated Steel,XLB
+XLB100,0.0017076,0.1,Bass Guitar,Nickel Plated Steel,XLB
+XLB105,0.0018729,0.105,Bass Guitar,Nickel Plated Steel,XLB
+XLB107,0.0019401,0.107,Bass Guitar,Nickel Plated Steel,XLB
+XLB110,0.0020336,0.11,Bass Guitar,Nickel Plated Steel,XLB
+XLB120,0.0024216,0.12,Bass Guitar,Nickel Plated Steel,XLB
+XLB125,0.0026548,0.125,Bass Guitar,Nickel Plated Steel,XLB
+XLB130,0.0028163,0.13,Bass Guitar,Nickel Plated Steel,XLB
+XLB135,0.0030677,0.135,Bass Guitar,Nickel Plated Steel,XLB
+XLB025W,0.0001185,0.025,Bass Guitar,Nickel Plated Steel,XLBW
+XLB028W,0.0001454,0.028,Bass Guitar,Nickel Plated Steel,XLBW
+XSBW022,9.5354e-05,0.022,Acoustic Guitar,80/20 Bronze,XSBW
+XSBW023,0.00010502,0.023,Acoustic Guitar,80/20 Bronze,XSBW
+XSBW024,0.00011517,0.024,Acoustic Guitar,80/20 Bronze,XSBW
+XSBW025,0.00012348,0.025,Acoustic Guitar,80/20 Bronze,XSBW
+XSBW026,0.00013212,0.026,Acoustic Guitar,80/20 Bronze,XSBW
+XSBW027,0.00014292,0.027,Acoustic Guitar,80/20 Bronze,XSBW
+XSBW030,0.00017847,0.03,Acoustic Guitar,80/20 Bronze,XSBW
+XSBW032,0.00019974,0.032,Acoustic Guitar,80/20 Bronze,XSBW
+XSBW035,0.00023409,0.035,Acoustic Guitar,80/20 Bronze,XSBW
+XSBW039,0.00029245,0.039,Acoustic Guitar,80/20 Bronze,XSBW
+XSBW042,0.00033693,0.042,Acoustic Guitar,80/20 Bronze,XSBW
+XSBW045,0.00038782,0.045,Acoustic Guitar,80/20 Bronze,XSBW
+XSBW047,0.00041951,0.047,Acoustic Guitar,80/20 Bronze,XSBW
+XSBW052,0.00051068,0.052,Acoustic Guitar,80/20 Bronze,XSBW
+XSBW053,0.00052545,0.053,Acoustic Guitar,80/20 Bronze,XSBW
+XSBW056,0.00058458,0.056,Acoustic Guitar,80/20 Bronze,XSBW
+XSNW024,0.00010785,0.024,Electric Guitar,NYXL,XSNW
+XSNW026,0.00012608,0.026,Electric Guitar,NYXL,XSNW
+XSNW028,0.00014479,0.028,Electric Guitar,NYXL,XSNW
+XSNW030,0.00016961,0.03,Electric Guitar,NYXL,XSNW
+XSNW032,0.00018936,0.032,Electric Guitar,NYXL,XSNW
+U3AGWNP034-NPK,0.00021031,0.034,Electric Guitar,NYXL,XSNW
+XSNW036,0.00023247,0.036,Electric Guitar,NYXL,XSNW
+XSNW038,0.00025583,0.038,Electric Guitar,NYXL,XSNW
+XSNW042,0.00031252,0.042,Electric Guitar,NYXL,XSNW
+U3AGWNP044,0.00033956,0.044,Electric Guitar,NYXL,XSNW
+U3AGWNP044-NPK,0.00033956,0.044,Electric Guitar,NYXL,XSNW
+XSNW046,0.00036781,0.046,Electric Guitar,NYXL,XSNW
+XSNW049,0.00041243,0.049,Electric Guitar,NYXL,XSNW
+XSNW052,0.00045977,0.052,Electric Guitar,NYXL,XSNW
+U3AGWNP056,0.00054833,0.056,Electric Guitar,NYXL,XSNW
+U3AGWNP056-NP,0.00054833,0.056,Electric Guitar,NYXL,XSNW
+XSPB022,9.7982e-05,0.022,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB023,0.0001078,0.023,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB024,0.00011612,0.024,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB0245,0.00012327,0.0245,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB025,0.0001268,0.025,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB026,0.0001358,0.026,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB027,0.00014707,0.027,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB028,0.00015901,0.028,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB030,0.00018386,0.03,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB032,0.00020607,0.032,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB034,0.00022963,0.034,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB035,0.00024692,0.035,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB039,0.00030249,0.039,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB042,0.00035496,0.042,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB044,0.000386,0.044,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB045,0.00040203,0.045,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB046,0.00042114,0.046,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB047,0.0004351,0.047,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB052,0.00052954,0.052,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB053,0.00054532,0.053,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB054,0.00056742,0.054,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB056,0.00060666,0.056,Acoustic Guitar,Phosphor Bronze,XSPB
+XSPB062,0.00074623,0.062,Acoustic Guitar,Phosphor Bronze,XSPB
+U3BLWPB024,0.00011612,0.024,Mandolin,Phosphor Bronze,XSPBM
+U3BLWPB026,0.0001358,0.026,Mandolin,Phosphor Bronze,XSPBM
+U3BLWPB038,0.00028622,0.038,Mandolin,Phosphor Bronze,XSPBM
+U3BLWPB040,0.00031949,0.04,Mandolin,Phosphor Bronze,XSPBM
+U3BLWPB041,0.00033668,0.041,Mandolin,Phosphor Bronze,XSPBM
+XSPB078T,0.0011435,0.078,Acoustic Guitar,Phosphor Bronze,XSPBT
+XSPL008,1.4185e-05,0.008,"Acoustic Guitar, Electric Guitar",Nickel Plated NY Steel,XSPL
+XSPL009,1.7953e-05,0.009,"Acoustic Guitar, Electric Guitar",Nickel Plated NY Steel,XSPL
+XSPL0095,2.0003e-05,0.0095,"Acoustic Guitar, Electric Guitar",Nickel Plated NY Steel,XSPL
+XSPL010,2.2164e-05,0.01,"Acoustic Guitar, Electric Guitar",Nickel Plated NY Steel,XSPL
+XSPL011,2.6818e-05,0.011,"Acoustic Guitar, Electric Guitar",Nickel Plated NY Steel,XSPL
+XSPL0115,2.9312e-05,0.0115,"Acoustic Guitar, Electric Guitar",Nickel Plated NY Steel,XSPL
+XSPL012,3.1916e-05,0.012,"Acoustic Guitar, Electric Guitar",Nickel Plated NY Steel,XSPL
+XSPL0125,3.4631e-05,0.0125,"Acoustic Guitar, Electric Guitar",Nickel Plated NY Steel,XSPL
+XSPL013,3.7457e-05,0.013,"Acoustic Guitar, Electric Guitar",Nickel Plated NY Steel,XSPL
+XSPL014,4.3441e-05,0.014,"Acoustic Guitar, Electric Guitar",Nickel Plated NY Steel,XSPL
+XSPL015,4.9869e-05,0.015,"Acoustic Guitar, Electric Guitar",Nickel Plated NY Steel,XSPL
+XSPL0155,5.3249e-05,0.0155,"Acoustic Guitar, Electric Guitar",Nickel Plated NY Steel,XSPL
+XSPL016,5.674e-05,0.016,"Acoustic Guitar, Electric Guitar",Nickel Plated NY Steel,XSPL
+XSPL0165,6.0341e-05,0.0165,"Acoustic Guitar, Electric Guitar",Nickel Plated NY Steel,XSPL
+XSPL017,6.4054e-05,0.017,"Acoustic Guitar, Electric Guitar",Nickel Plated NY Steel,XSPL
+XSPL018,7.1811e-05,0.018,"Acoustic Guitar, Electric Guitar",Nickel Plated NY Steel,XSPL
+XSPL019,8.0012e-05,0.019,"Acoustic Guitar, Electric Guitar",Nickel Plated NY Steel,XSPL
+U3BLDPS010,2.2164e-05,0.01,Mandolin,Nickel Plated NY Steel,XSPLM
+U3BLDPS011,2.6818e-05,0.011,Mandolin,Nickel Plated NY Steel,XSPLM
+U3BLDPS0115,2.9312e-05,0.0115,Mandolin,Nickel Plated NY Steel,XSPLM
+U3BLDPS014,4.3441e-05,0.014,Mandolin,Nickel Plated NY Steel,XSPLM
+U3BLDPS015,4.9869e-05,0.015,Mandolin,Nickel Plated NY Steel,XSPLM
+U3BLDPS016,5.674e-05,0.016,Mandolin,Nickel Plated NY Steel,XSPLM
+XTNW024,0.00010827,0.024,Electric Guitar,Nickel Plated Steel,XTNW
+XTNW026,0.00012658,0.026,Electric Guitar,Nickel Plated Steel,XTNW
+XTNW028,0.0001454,0.028,Electric Guitar,Nickel Plated Steel,XTNW
+XTNW030,0.00017034,0.03,Electric Guitar,Nickel Plated Steel,XTNW
+XTNW032,0.00019021,0.032,Electric Guitar,Nickel Plated Steel,XTNW
+XTNW036,0.00023359,0.036,Electric Guitar,Nickel Plated Steel,XTNW
+XTNW038,0.0002571,0.038,Electric Guitar,Nickel Plated Steel,XTNW
+XTNW042,0.00031405,0.042,Electric Guitar,Nickel Plated Steel,XTNW
+XTNW046,0.00036969,0.046,Electric Guitar,Nickel Plated Steel,XTNW
+XTNW049,0.00041459,0.049,Electric Guitar,Nickel Plated Steel,XTNW
+XTNW052,0.00046223,0.052,Electric Guitar,Nickel Plated Steel,XTNW
+XTNW059,0.00061817,0.059,Electric Guitar,Nickel Plated Steel,XTNW
+XTPB022,9.7982e-05,0.022,Acoustic Guitar,Phosphor Bronze,XTPB
+XTPB023,0.0001078,0.023,Acoustic Guitar,Phosphor Bronze,XTPB
+XTPB024,0.00011612,0.024,Acoustic Guitar,Phosphor Bronze,XTPB
+XTPB025,0.00012678,0.025,Acoustic Guitar,Phosphor Bronze,XTPB
+XTPB026,0.0001358,0.026,Acoustic Guitar,Phosphor Bronze,XTPB
+XTPB027,0.00014707,0.027,Acoustic Guitar,Phosphor Bronze,XTPB
+XTPB028,0.00015901,0.028,Acoustic Guitar,Phosphor Bronze,XTPB
+XTPB029,0.00017107,0.029,Acoustic Guitar,Phosphor Bronze,XTPB
+XTPB032,0.00020607,0.032,Acoustic Guitar,Phosphor Bronze,XTPB
+XTPB035,0.00024692,0.035,Acoustic Guitar,Phosphor Bronze,XTPB
+XTPB039,0.00030249,0.039,Acoustic Guitar,Phosphor Bronze,XTPB
+XTPB042,0.00035496,0.042,Acoustic Guitar,Phosphor Bronze,XTPB
+XTPB045,0.00040203,0.045,Acoustic Guitar,Phosphor Bronze,XTPB
+XTPB047,0.0004351,0.047,Acoustic Guitar,Phosphor Bronze,XTPB
+XTPB048,0.00045493,0.048,Acoustic Guitar,Phosphor Bronze,XTPB
+XTPB052,0.00052954,0.052,Acoustic Guitar,Phosphor Bronze,XTPB
+XTPB053,0.00054532,0.053,Acoustic Guitar,Phosphor Bronze,XTPB
+XTPB056,0.00060666,0.056,Acoustic Guitar,Phosphor Bronze,XTPB
+XTPB060,0.00070279,0.06,Acoustic Guitar,Phosphor Bronze,XTPB
+XTPB070,0.00093323,0.07,Acoustic Guitar,Phosphor Bronze,XTPB
+XTPL008,1.4185e-05,0.008,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,XTPL
+XTPL009,1.7953e-05,0.009,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,XTPL
+XTPL010,2.2164e-05,0.01,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,XTPL
+XTPL011,2.6818e-05,0.011,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,XTPL
+XTPL012,3.1916e-05,0.012,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,XTPL
+XTPL013,3.7457e-05,0.013,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,XTPL
+XTPL014,4.3441e-05,0.014,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,XTPL
+XTPL016,5.674e-05,0.016,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,XTPL
+XTPL017,6.4054e-05,0.017,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,XTPL
+XTPL018,7.1811e-05,0.018,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,XTPL
+XTPL022,0.00010727,0.022,"Acoustic Guitar, Electric Guitar",Tin Coated NY Steel,XTPL

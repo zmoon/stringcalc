@@ -236,6 +236,10 @@ df.loc[df["group_id"] == "JC", "material"] = "Various"
 group = df.groupby("group_id").material.first().rename("group")
 df = df.join(group, on="group_id", how="left")
 
+# Add string of instruments
+insts = df.groupby("group_id").instrument.sum().apply(lambda x: sorted(set(x))).str.join(", ")
+df = df.join(insts.rename("instruments"), on="group_id", how="left")
+
 # Write
 n = df.group_id.isnull().sum()
 if n > 0:
@@ -244,7 +248,7 @@ fn = "daddario-stp.csv"
 fp = HERE / "../stringcalc/data" / fn
 assert fp.parent.is_dir()
 (
-    df[["id", "uw", "gauge", "group_id", "group"]]
+    df[["id", "uw", "gauge", "instruments", "group", "group_id"]]
     .dropna(subset="group_id")
     .sort_values(by=["group_id", "gauge"])
     .to_csv(fp, index=False, float_format="%.5g")
