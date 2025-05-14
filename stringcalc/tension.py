@@ -37,18 +37,21 @@ def load_data() -> pd.DataFrame:
        Important columns:
 
        - ``id``: String (product) ID
-         (e.g. "PB053" for the string used for the low E in
+         (e.g. "DA:PB053" for the string used for the low E in
          D'Addario phosphor bronze acoustic guitar light set
          `EJ16 <https://www.daddario.com/products/guitar/acoustic-guitar/phosphor-bronze/ej16-phosphor-bronze-acoustic-guitar-strings-light-12-53/>`__).
 
-       - ``group_id``: String group ID (e.g. "PB" for D'Addario phosphor bronze)
+       - ``group_id``: String group ID (e.g. "DA:PB" for D'Addario phosphor bronze)
          used to identify a group of strings with the same manufacturer, material, etc.
 
        - ``uw``: String unit weight (mass per unit length) [lbm/in].
-         For PB053 this value is 0.000570.
+         For DA:PB053 this value is 0.000570.
 
        - ``gauge``: String gauge (diameter) [in].
-         For PB053 this value is 0.053.
+         For DA:PB053 this value is 0.053.
+
+       The "DA:" prefix in ``id`` and ``group_id``
+       indicates the data is from :func:`load_daddario_data`.
 
     Notes
     -----
@@ -59,6 +62,7 @@ def load_data() -> pd.DataFrame:
     --------
     load_aquila_data
     load_daddario_data
+    load_daddario_stp_data
     load_ghs_data
     load_stringjoy_data
     load_worth_data
@@ -242,6 +246,37 @@ def load_ghs_data(*, for_combined: bool = False) -> pd.DataFrame:
     return df.reset_index(drop=True)
 
 
+@lru_cache(2)
+def load_daddario_stp_data(*, for_combined: bool = False) -> pd.DataFrame:
+    """Load D'Addario data derived from the new String Tension Pro (STP).
+
+    https://www.daddario.com/string-tension-pro
+
+    STP is in beta as of June 2024.
+
+    Parameters
+    ----------
+    for_combined
+        Return the frame intended for use in the combined dataset (:func:`load_data`),
+        adding appropriate prefixes and dropping extraneous columns.
+    """
+
+    df = pd.read_csv(DATA.joinpath("daddario-stp.csv"), header=0).convert_dtypes()
+
+    if for_combined:
+        df = df.drop(columns=["instruments"])
+
+        df["id"] = "STP:" + df["id"]
+        df["group"] = "D'Addario (STP) - " + df["group"]
+        df["group_id"] = "STP:" + df["group_id"]
+
+    for name in ["instruments", "group", "group_id"]:
+        if name in df.columns:
+            df[name] = df[name].astype("category")
+
+    return df
+
+
 class _DataLoader(Protocol):
     def __call__(self, *, for_combined: bool = False) -> pd.DataFrame: ...  # noqa: E704
 
@@ -252,6 +287,7 @@ _DATA_LOADERS: list[_DataLoader] = [
     load_worth_data,
     load_stringjoy_data,
     load_ghs_data,
+    load_daddario_stp_data,
 ]
 
 
