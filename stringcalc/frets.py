@@ -88,19 +88,22 @@ def distances(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
     # TODO: comparison to just intonation for specified root
 
     df = pd.DataFrame({"n": n, "d": d, "dd": dd, "d_inv": L - d}).set_index("n")
-    desc = {
-        "n": "fret number",
-        "d": "distance from nut to fret",
-        "dd": "distance from previous fret to current",
-        "d_inv": "distance from fret to saddle",
-    }
-    fancy_col = {
-        "n": "n",
-        "d": "d",
-        "dd": "Δd",
-        "d_inv": "L−d",
-    }
-    df.attrs.update(col_desc=desc, fancy_col=fancy_col)
+    df.attrs.update(
+        {
+            "col_desc": {
+                "n": "fret number",
+                "d": "distance from nut to fret",
+                "dd": "distance from previous fret to current",
+                "d_inv": "distance from fret to saddle",
+            },
+            "fancy_col": {
+                "n": "n",
+                "d": "d",
+                "dd": "Δd",
+                "d_inv": "L−d",
+            },
+        }
+    )
 
     return df
 

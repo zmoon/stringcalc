@@ -553,16 +553,19 @@ def suggest_gauge(
         )
 
     df = data_sort[["id", "T", "dT"]].sort_values(by="dT").reset_index(drop=True)
-    desc = {
-        "id": "Product ID",
-        "T": "Tension",
-        "dT": "Tension difference from target tension",
-    }
-    fancy_col = {
-        "id": "ID",
-        "T": "T",
-        "dT": "ΔT",
-    }
-    df.attrs.update(col_desc=desc, fancy_col=fancy_col)
+    df.attrs.update(
+        {
+            "col_desc": {
+                "id": "Product ID",
+                "T": "Tension",
+                "dT": "Tension difference from target tension",
+            },
+            "fancy_col": {
+                "id": "ID",
+                "T": "T",
+                "dT": "ΔT",
+            },
+        }
+    )
 
     return df
