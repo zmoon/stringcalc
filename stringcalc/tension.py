@@ -13,7 +13,7 @@ import math
 import re
 import warnings
 from functools import lru_cache
-from typing import NamedTuple, Protocol
+from typing import NamedTuple, Protocol, cast
 
 import pandas as pd
 
@@ -27,6 +27,15 @@ def _get_data():
 
 
 DATA = _get_data()
+
+
+def _assure_string(s: pd.Series) -> pd.Series[str]:
+    """For pandas(-stubs), assure type checker that a Series is of string type.
+    Really we know that we have pandas string dtype, but pandas-stubs
+    doesn't know/care about this yet(?) in terms of concretizing Series.
+    """
+    assert s.dtype == "string"
+    return cast("pd.Series[str]", s)
 
 
 @lru_cache(1)
@@ -92,9 +101,11 @@ def load_daddario_data(*, for_combined: bool = False) -> pd.DataFrame:
     if for_combined:
         df = df.drop(columns=["notes", "tens"])
 
-        df["group"] = "D'Addario - " + df["category"] + " - " + df["group"]
-        df["group_id"] = "DA:" + df["group_id"]
-        df["id"] = "DA:" + df["id"]
+        df["group"] = (
+            "D'Addario - " + _assure_string(df["category"]) + " - " + _assure_string(df["group"])
+        )
+        df["group_id"] = "DA:" + _assure_string(df["group_id"])
+        df["id"] = "DA:" + _assure_string(df["id"])
 
         df = df.drop(columns=["category", "id_pref", "id_suff"])
 
@@ -137,12 +148,13 @@ def load_aquila_data(*, nng_density: float = 1300, for_combined: bool = False) -
     # Set group ID (used to select string type)
     df["group"] = "New Nylgut"
     df["group_id"] = "NNG"
+    df[["group", "group_id"]] = df[["group", "group_id"]].astype("string")
 
     gauge_eqv_cols = [col for col in df.columns if col.startswith("gauge_")]
     if for_combined:
-        df["group"] = "Aquila " + df["group"]
-        df["group_id"] = "A:" + df["group_id"]
-        df["id"] = "A:" + df["id"]
+        df["group"] = "Aquila " + _assure_string(df["group"])
+        df["group_id"] = "A:" + _assure_string(df["group_id"])
+        df["id"] = "A:" + _assure_string(df["id"])
 
         df = df.drop(columns=gauge_eqv_cols)
     else:
@@ -170,11 +182,12 @@ def load_worth_data(*, for_combined: bool = False) -> pd.DataFrame:
     # Set group ID (used to select string type)
     df["group"] = "Fluorocarbon"
     df["group_id"] = "FC"
+    df[["group", "group_id"]] = df[["group", "group_id"]].astype("string")
 
     if for_combined:
-        df["group"] = "Worth " + df["group"]
-        df["group_id"] = "W" + df["group_id"]
-        df["id"] = "WFC:" + df["id"]
+        df["group"] = "Worth " + _assure_string(df["group"])
+        df["group_id"] = "W" + _assure_string(df["group_id"])
+        df["id"] = "WFC:" + _assure_string(df["id"])
 
         df = df.drop(columns="rho")
 
@@ -200,9 +213,9 @@ def load_stringjoy_data(*, for_combined: bool = False) -> pd.DataFrame:
     df = pd.read_csv(DATA.joinpath("stringjoy.csv"), header=0).convert_dtypes()
 
     if for_combined:
-        df["id"] = "SJ:" + df["id"]
-        df["group"] = "Stringjoy " + df["group"]
-        df["group_id"] = "SJ:" + df["group_id"]
+        df["id"] = "SJ:" + _assure_string(df["id"])
+        df["group"] = "Stringjoy " + _assure_string(df["group"])
+        df["group_id"] = "SJ:" + _assure_string(df["group_id"])
 
     for name in ["group", "group_id"]:
         df[name] = df[name].astype("category")
@@ -232,9 +245,9 @@ def load_ghs_data(*, for_combined: bool = False) -> pd.DataFrame:
     df = df.dropna(subset=["gauge"])
 
     if for_combined:
-        df["id"] = "GHS:" + df["id"]
-        df["group"] = "GHS - " + df["group"]
-        df["group_id"] = "GHS:" + df["group_id"]
+        df["id"] = "GHS:" + _assure_string(df["id"])
+        df["group"] = "GHS - " + _assure_string(df["group"])
+        df["group_id"] = "GHS:" + _assure_string(df["group_id"])
 
     for name in ["group", "group_id"]:
         df[name] = df[name].astype("category")
