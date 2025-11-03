@@ -9,14 +9,14 @@ For example:
 
 from __future__ import annotations
 
-from typing import Union
+from typing import Final, Union
 
 import numpy as np
 import numpy.typing as npt  # v1.21 needed
 import pandas as pd
 from pint import Quantity, UnitRegistry
 
-ureg = UnitRegistry()
+ureg: Final[UnitRegistry] = UnitRegistry()
 # Q_ = ureg.Quantity  # mypy doesn't like this one
 
 QLike = Union[Quantity, str]
