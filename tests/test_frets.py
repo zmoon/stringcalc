@@ -60,8 +60,8 @@ def test_l_from_d(ab, d, expected):
 def test_l_from_d_pint():
     # Seems not to work with `pytest.approx`
     ret = frets.length_from_distance(ab=(1, 0), d="1in")
-    expected = 17.817 * frets.ureg["in"]
-    delta = 5e-4 * frets.ureg["in"]
+    expected = 17.817 * frets.ureg("in")
+    delta = 5e-4 * frets.ureg("in")
     assert expected - delta <= ret <= expected + delta
 
 
