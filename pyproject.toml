@@ -37,7 +37,6 @@ cli = [
     "typer",
 ]
 doc = [
-    "click <8.2",
     "matplotlib",
     "myst-nb",
     "myst-parser",
