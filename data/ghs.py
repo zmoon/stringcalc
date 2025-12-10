@@ -5,16 +5,11 @@ from the calculator https://www.ghsstrings.com/pages/tension-calc
 
 import re
 import string
-import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import requests
-
-if sys.version_info < (3, 10):
-    print("Python version >= 3.10 required.")
-    raise SystemExit(0)
 
 HERE = Path(__file__).parent
 
