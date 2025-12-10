@@ -1,0 +1,258 @@
+"""
+D'Addario String Tension Pro
+
+It's back---got the beta email notice on 2024-06-12.
+"""
+
+import re
+from pathlib import Path
+from urllib.parse import urlsplit
+
+import pandas as pd
+import requests
+
+HERE = Path(__file__).parent
+
+url_app = "https://www.daddario.com/string-tension-pro"
+url_rec_js = (
+    "https://embed.cartfulsolutions.com/daddario-string-tension-finder/recommendation.min.js"
+)
+url_data = (
+    "https://embed.cartfulsolutions.com/daddario-string-tension-finder/data/strings_dataset.json"
+)
+
+r = requests.get(url_app)
+r.raise_for_status()
+p = urlsplit(url_rec_js)
+assert p.netloc in r.text
+assert p.path in r.text
+
+r = requests.get(url_rec_js)
+data_urls = re.findall(
+    r"\"(https://[a-z\./]*/daddario-string-tension-finder/data/[a-z_\./]*)\"", r.text
+)
+data_urls.sort()
+print("data URLs:")
+print("\n".join(f"- {url}" for url in data_urls))
+assert len(data_urls) > 0
+assert url_data in data_urls
+
+r = requests.get(url_data)
+r.raise_for_status()
+raw_data = r.json()
+
+# List of entries, for example:
+#
+#  {'SetItemNumber': 'EJ13',
+#   'ComponentItemNumber': 'PL011',
+#   'SubComponent': 'U1AGFPL011-NP',
+#   'SequenceNumber': 1,
+#   'ItemClassPosition1': 'A',
+#   'ItemClassPosition2': 'B',
+#   'ItemClassPosition3': 'J',
+#   'ItemClassPosition4': 'A',
+#   'SizeInInches(gauge)': 11,
+#   'SizeInMillimeters(gauge)': 279.4,
+#   'StringConstruction': 'Plain Steel',
+#   'MassPerUnitLength': 2.68184e-05,
+#   'Instrument': 'Acoustic Guitar',
+#   'Material': 'Tin Coated Steel',
+#   'EndType': 'Small Ball End'},
+#
+# Individual string data is duplicated, for the sake of sets.
+
+df = (
+    pd.DataFrame(raw_data)
+    .drop(
+        columns=[
+            "SequenceNumber",
+            "ItemClassPosition1",
+            "ItemClassPosition2",
+            "ItemClassPosition3",
+            "ItemClassPosition4",
+        ]
+    )
+    .rename(
+        columns={
+            "SetItemNumber": "set",
+            "ComponentItemNumber": "id",
+            "SubComponent": "sub_comp",  # like a long ID?
+            "SizeInInches(gauge)": "gauge",
+            "SizeInMillimeters(gauge)": "gauge_mm",
+            "StringConstruction": "construction",
+            "MassPerUnitLength": "uw",
+            "Instrument": "instrument",
+            "Material": "material",
+            "EndType": "end_type",
+        }
+    )
+)
+
+assert all(c == c.lower() for c in df.columns)
+
+df0 = df.copy()
+
+# Fix NYS008 for U2AGFPL008-NP (factor of 10 too high)
+sub_comp = "U2AGFPL008-NP"
+row = df[df.sub_comp == sub_comp]
+assert len(row) == 1
+assert (row.gauge == 80).all()
+assert (row.gauge_mm == 2032.0).all()
+df.loc[df.sub_comp == sub_comp, "gauge"] /= 10
+df.loc[df.sub_comp == sub_comp, "gauge_mm"] /= 10
+
+# Use sub-component for IDs for MISC??
+df["id"] = df["sub_comp"].where(df["id"] == "MISC", df["id"])
+
+# Move to one row per ID
+assert not df["id"].is_unique
+rows = []
+for id_, g in df.groupby("id"):
+    if g.duplicated().any():
+        # print(f"ID {id_} has duplicate rows")
+        g = g.drop_duplicates(keep="first")
+
+    nu = g.nunique()
+
+    if nu["uw"] != 1:
+        print(f"ID {id_} has {nu['uw']} unique values of unit weight")
+        continue
+
+    if nu["material"] != 1:
+        print(f"ID {id_} has {nu['material']} unique values of string material")
+        continue
+
+    if nu["gauge"] != 1:
+        print(f"ID {id_} has {nu['gauge']} unique values of string gauge")
+        continue
+
+    uniques = [
+        "id",
+        "gauge",
+        "gauge_mm",
+        "construction",
+        "uw",
+        "material",
+        "end_type",
+    ]
+    assert all(nu[col] == 1 for col in uniques)
+
+    non_uniques = [
+        "instrument",
+        "set",
+        "sub_comp",
+    ]
+    assert nu["set"] > 1 or len(g) == 1
+
+    row = g[uniques].iloc[0]
+    for col in non_uniques:
+        row[col] = sorted(g[col].unique())
+
+    rows.append(row)
+
+df = pd.DataFrame(rows).sort_values(by="id").reset_index(drop=True)
+
+# Fix gauge
+assert df.gauge.min() > 1
+df["gauge"] = df["gauge"] / 1000
+df["gauge_mm"] = df["gauge_mm"] / 1000
+
+# Group IDs like original
+s_re = r"(?P<id_pref>[A-Z]+)(?P<id_gauge>[0-9]+\.?[0-9]+)(?P<id_suff>[A-Z\-]*)"
+is_simple_id = df["id"].str.fullmatch(s_re)
+n = is_simple_id.value_counts()[False]
+if n > 0:
+    print(f"{n}/{len(df)} IDs do not match the group ID pattern")
+df_ = df.loc[is_simple_id, "id"].str.extract(s_re)
+df_["group_id"] = df_["id_pref"] + df_["id_suff"]
+
+df = df.join(df_.drop(columns=["id_pref", "id_suff"]), how="left")
+
+# Special group ID cases
+
+# https://www.daddario.com/products/guitar/ukulele/pro-arte-titanium-ukulele/ej87c-titanium-ukulele-concert/
+df.loc[df["id"] == "ATN0.630MU", "group_id"] = "T"
+
+# https://www.daddario.com/products/guitar/classical-guitar/classics/ej27h-student-nylon-hard-tension/
+df.loc[df["id"].str.startswith("J27H"), "group_id"] = "J"
+
+# https://www.daddario.com/products/guitar/classical-guitar/classics/ej27n-12-student-nylon-fractional-normal-tension/
+df.loc[df["id"] == "MFCZ159-1.143-A", "group_id"] = "NYL"
+
+# The remaining strings are long more-complex IDs that start with U{1,2,3} or X1
+# Note: info about potential group to assign to can be gleaned by looking at the set(s)
+s_re_ux = r"(U[1-3][A-Z])|(X1[A-Z])"
+assert df[df.group_id.isnull()].id.str.slice(0, 3).str.fullmatch(s_re_ux).all()
+
+# https://www.daddario.com/products/guitar/acoustic-guitar/flat-tops-phosphor-bronze/eft13-phosphor-bronze-flat-tops-medium-16-56/
+pref = "X1AGFPP"
+assert df[df["id"].str.startswith(pref)].group_id.isnull().all()
+df.loc[df["id"].str.startswith(pref), "group_id"] = "FT"
+
+# https://www.daddario.com/products/guitar/classical-guitar/pro-arte-nylon/ej47-8020-bronze-pro-arte-nylon-normal-tension/
+pref = "U1AQFBW"
+assert df[df["id"].str.startswith(pref)].group_id.isnull().all()
+df.loc[df["id"].str.startswith(pref), "group_id"] = "NYLBW"  # 80/20 bronze wound nylon
+
+# https://www.daddario.com/products/guitar/classical-guitar/pro-arte-nylon/ej49-pro-arte-black-nylon-normal-tension/
+pref = "U2AMFN"
+assert df[df["id"].str.startswith(pref)].group_id.isnull().all()
+df.loc[df["id"].str.startswith(pref), "group_id"] = "NYLB"  # black plain nylon
+
+# https://www.daddario.com/products/guitar/classical-guitar/pro-arte-nylon/ej51-pro-arte-with-polished-basses-hard-tension/
+pref = "U1AQFS"
+assert df[df["id"].str.startswith(pref)].group_id.isnull().all()
+df.loc[df["id"].str.startswith(pref), "group_id"] = "NYLWP"  # polished silver plated nylon
+
+# https://www.daddario.com/products/guitar/mandolin/xs-mandolin-set/10-38-light-xs-phosphor-bronze-mandolin-strings/
+pref = "U3BLWP"
+assert df[df["id"].str.startswith(pref)].group_id.isnull().all()
+df.loc[df["id"].str.startswith(pref), "group_id"] = "XSPBM"
+pref = "U3BLDPS"
+assert df[df["id"].str.startswith(pref)].group_id.isnull().all()
+df.loc[df["id"].str.startswith(pref), "group_id"] = "XSPLM"
+
+# https://www.daddario.com/products/guitar/electric-guitar/xs-electric-guitar-strings/95-44-super-light-plus-xs-nickel-electric-guitar-strings/
+pref = "U3AGWNP"
+assert df[df["id"].str.startswith(pref)].group_id.isnull().all()
+df.loc[df["id"].str.startswith(pref), "group_id"] = "XSNW"
+
+# https://www.daddario.com/products/guitar/classical-guitar/pro-arte-nylon/ej52-pro-arte-alto-guitar-normal-tension/
+# high B for alto guitar
+df.loc[df["id"] == "U1AMFN0250", "group_id"] = "J"
+
+# TODO: other EJs (e.g. EJ TT), XT, XS, ...
+
+# Material is mostly unique for a group ID, though different group IDs may have the same material
+nmat = df.groupby("group_id").material.nunique()
+nmat_is_not_unique = nmat.gt(1)
+assert set(nmat[nmat_is_not_unique].index) == {"J", "JC"}
+assert set(df.query("group_id == 'NYL'").material.unique()) == {"Clear Nylon"}
+
+df.loc[df["group_id"] == "J", "material"] = "Various"
+df.loc[df["group_id"] == "JC", "material"] = "Various"
+
+# Use material for group name
+group = df.groupby("group_id").material.first().rename("group")
+df = df.join(group, on="group_id", how="left")
+
+# Add string of instruments
+insts = df.groupby("group_id").instrument.sum().apply(lambda x: sorted(set(x))).str.join(", ")
+df = df.join(insts.rename("instruments"), on="group_id", how="left")
+
+# Write
+n = df.group_id.isnull().sum()
+if n > 0:
+    print(f"{n}/{len(df)} strings have no group ID and will be dropped")
+fn = "daddario-stp.csv"
+fp = HERE / "../stringcalc/data" / fn
+assert fp.parent.is_dir()
+(
+    df[["id", "uw", "gauge", "instruments", "group", "group_id"]]
+    .dropna(subset="group_id")
+    .sort_values(by=["group_id", "gauge"])
+    .to_csv(fp, index=False, float_format="%.5g")
+)
+
+# Reload
+dfr = pd.read_csv(fp, header=0)
