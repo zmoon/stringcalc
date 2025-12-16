@@ -23,6 +23,12 @@ Source = "https://github.com/zmoon/stringcalc"
 Documentation = "https://stringcalc.readthedocs.io"
 
 [project.optional-dependencies]
+cli = [
+    "rich",
+    "typer",
+]
+
+[dependency-groups]
 test = [
     "mypy",
     "pandas-stubs",
@@ -31,10 +37,6 @@ test = [
 ]
 dev = [
     "ipython",
-]
-cli = [
-    "rich",
-    "typer",
 ]
 doc = [
     "matplotlib",
@@ -49,9 +51,11 @@ doc = [
 [project.scripts]
 stringcalc = "stringcalc.cli:app"
 
+[tool.uv]
+default-groups = "all"
+
 [tool.flit.sdist]
 exclude = ["data/", ".github/", "panel/", ".gitignore"]
-
 
 [tool.black]
 line-length = 100

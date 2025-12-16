@@ -3,6 +3,8 @@ data/*.png
 docs/api/
 panel/app.html
 
+uv.lock
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
