@@ -47,6 +47,11 @@ doc = [
     "sphinx-click",
     "sphinx-copybutton",
 ]
+panel = [
+    "hvplot",
+    "panel ==1.*",
+    "watchfiles",
+]
 
 [project.scripts]
 stringcalc = "stringcalc.cli:app"
