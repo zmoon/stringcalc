@@ -104,7 +104,7 @@ jobs:
       - name: Build app (pyodide)
         run: |
           uv run panel convert panel/app.py --to pyodide
-          mv ./panel/app.html ./stringcalc-panel.html
+          mv ./app.html ./stringcalc-panel.html
 
       - name: Upload built app
         if: matrix.stringcalc == 'pypi'
