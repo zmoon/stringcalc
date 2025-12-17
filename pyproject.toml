@@ -29,6 +29,9 @@ cli = [
 ]
 
 [dependency-groups]
+data = [
+    "requests",
+]
 test = [
     "mypy",
     "pandas-stubs",
