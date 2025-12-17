@@ -19,29 +19,27 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+      - name: Install uv and set the Python version
+        uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip setuptools wheel
-          python -m pip install flit
-          flit install
+          uv sync --all-extras --group test
 
       - name: Test with pytest
-        run: pytest -v
+        run: uv run pytest -v
 
       - name: Docstring doctest
-        run: pytest --doctest-modules stringcalc -v
+        run: uv run pytest --doctest-modules stringcalc -v
 
       - name: Test code blocks
-        run: pytest --codeblocks README.md docs -v
+        run: uv run pytest --codeblocks README.md docs -v
 
       - name: Check type annotations
         run: |
-          mypy --non-interactive .
+          uv run mypy --non-interactive .
 
       - name: Check data prep scripts still work
         run: |
@@ -54,7 +52,7 @@ jobs:
           cd ../tmp/stringcalc/data
           for f in *.py; do
             if [ $f == "daddario_extract.py" ]; then continue; fi
-            python $f
+            uv run python $f
           done
 
           # Compare results to those in the repo
@@ -78,26 +76,40 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Install dependencies (micromamba)
-        uses: mamba-org/setup-micromamba@v2
+      - name: Install uv and set the Python version
+        uses: astral-sh/setup-uv@v7
         with:
-          environment-file: panel/environment.yml
-          cache-environment: true
-          cache-downloads: true
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          uv sync --group panel
 
       - name: Install stringcalc (${{ matrix.stringcalc }})
         run: |
-          if [ "${{ matrix.stringcalc }}" == "local" ]; then
-            pip install . --no-deps
-          elif [ "${{ matrix.stringcalc }}" == "pypi" ]; then
-            pip install stringcalc
+          if [ "${{ matrix.stringcalc }}" == "pypi" ]; then
+            uv pip install stringcalc
           else
             exit 1
           fi
 
       - name: Run the app script
-        run: python panel/app.py
+        run: uv run python panel/app.py
 
       - name: Run mypy
         run: |
-          mypy --non-interactive panel/app.py
+          uv add mypy --group panel
+          uv run mypy --non-interactive panel/app.py
+
+      - name: Build app (pyodide)
+        run: |
+          uv run panel convert panel/app.py --to pyodide
+          mv ./panel/app.html ./stringcalc-panel.html
+
+      - name: Upload built app
+        if: matrix.stringcalc == 'pypi'
+        uses: actions/upload-artifact@v6
+        with:
+          name: panel
+          path: stringcalc-panel.html
+          retention-days: 1
