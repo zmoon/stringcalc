@@ -87,7 +87,9 @@ jobs:
 
       - name: Install stringcalc (${{ matrix.stringcalc }})
         run: |
-          if [ "${{ matrix.stringcalc }}" == "pypi" ]; then
+          if [ "${{ matrix.stringcalc }}" == "local" ]; then
+            :
+          elif [ "${{ matrix.stringcalc }}" == "pypi" ]; then
             uv pip install stringcalc
           else
             exit 1
