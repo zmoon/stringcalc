@@ -96,9 +96,9 @@ jobs:
       - name: Run the app script
         run: uv run python panel/app.py
 
-      - name: Run mypy
+      - name: Check type annotations in app script
         run: |
-          uv add mypy --group panel
+          uv pip install mypy
           uv run mypy --non-interactive panel/app.py
 
       - name: Build app (pyodide)
