@@ -56,9 +56,6 @@ panel = [
 [project.scripts]
 stringcalc = "stringcalc.cli:app"
 
-[tool.uv]
-default-groups = "all"
-
 [tool.flit.sdist]
 exclude = ["data/", ".github/", "panel/", ".gitignore"]
 

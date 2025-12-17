@@ -4,14 +4,22 @@ build:
   os: ubuntu-lts-latest
   tools:
     python: "3.13"
-
-python:
-  install:
-    - method: pip
-      path: .
-      extra_requirements:
-        - doc
-        - cli
+  jobs:
+    pre_create_environment:
+      - asdf plugin add uv
+      - asdf install uv latest
+      - asdf global uv latest
+    create_environment:
+      - uv venv "${READTHEDOCS_VIRTUALENV_PATH}"
+    install:
+      - UV_PROJECT_ENVIRONMENT="${READTHEDOCS_VIRTUALENV_PATH}"
+        uv sync --frozen
+        --group doc
+        --group panel
+        --extra cli
+    pre_build:
+      - UV_PROJECT_ENVIRONMENT="${READTHEDOCS_VIRTUALENV_PATH}"
+        uv run panel convert panel/app.py --to pyodide --out docs/_static/panel/
 
 sphinx:
   configuration: docs/conf.py
