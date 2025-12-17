@@ -44,23 +44,21 @@ jobs:
       - name: Check data prep scripts still work
         run: |
           # Copy to temp location
-          mkdir -p ../tmp/stringcalc
-          cp -vr data ../tmp/stringcalc/
-          cp -vr stringcalc ../tmp/stringcalc/
+          mkdir -p stringcalc/data/_orig
+          cp stringcalc/data/*.csv stringcalc/data/_orig/
 
           # Run scripts
-          cd ../tmp/stringcalc/data
-          for f in *.py; do
+          for f in data/*.py; do
             if [ $f == "daddario_extract.py" ]; then continue; fi
             uv run python $f
           done
 
           # Compare results to those in the repo
-          cd ../stringcalc/data
+          cd stringcalc/data
           rc=0
           for f in *.csv; do
             echo $f
-            cmp $f $GITHUB_WORKSPACE/stringcalc/data/$f || rc=$?
+            cmp _orig/$f $f || rc=$?
           done
           exit $rc
 
