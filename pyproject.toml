@@ -9,7 +9,7 @@ readme = "README.md"
 license = {file = "LICENSE"}
 classifiers = ["License :: OSI Approved :: MIT License"]
 dynamic = ["version", "description"]
-requires-python = "~=3.10"
+requires-python = ">=3.10,<4"
 dependencies = [
     "numpy >=1.21",
     "pandas",
@@ -23,6 +23,15 @@ Source = "https://github.com/zmoon/stringcalc"
 Documentation = "https://stringcalc.readthedocs.io"
 
 [project.optional-dependencies]
+cli = [
+    "rich",
+    "typer",
+]
+
+[dependency-groups]
+data = [
+    "requests",
+]
 test = [
     "mypy",
     "pandas-stubs",
@@ -31,10 +40,6 @@ test = [
 ]
 dev = [
     "ipython",
-]
-cli = [
-    "rich",
-    "typer",
 ]
 doc = [
     "matplotlib",
@@ -45,13 +50,17 @@ doc = [
     "sphinx-click",
     "sphinx-copybutton",
 ]
+panel = [
+    "hvplot",
+    "panel ==1.*",
+    "watchfiles",
+]
 
 [project.scripts]
 stringcalc = "stringcalc.cli:app"
 
 [tool.flit.sdist]
 exclude = ["data/", ".github/", "panel/", ".gitignore"]
-
 
 [tool.black]
 line-length = 100

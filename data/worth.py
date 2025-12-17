@@ -8,14 +8,10 @@ from pathlib import Path
 
 sys.path.append("../")
 
-# import matplotlib as mpl
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
 # from stringcalc.tension import load_data
-
-plt.close("all")
 
 HERE = Path(__file__).parent
 

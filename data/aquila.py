@@ -10,14 +10,10 @@ from pathlib import Path
 
 sys.path.append("../")
 
-# import matplotlib as mpl
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
 from stringcalc.tension import load_data
-
-plt.close("all")
 
 HERE = Path(__file__).parent
 
@@ -60,10 +56,10 @@ df = df.dropna(subset=["id"])
 #
 # What do the data suggest that we are comparing to?
 
-(1300 / df[["gauge_nylon_web", "gauge_nylon_pdf"]].pow(2).div(df.gauge.pow(2), axis="rows")).plot(
-    ylabel="estimated nylon density",
-    marker=".",
-)
+# (1300 / df[["gauge_nylon_web", "gauge_nylon_pdf"]].pow(2).div(df.gauge.pow(2), axis="rows")).plot(
+#     ylabel="estimated nylon density",
+#     marker=".",
+# )
 
 # Estimate density of D'Addario NYL strings
 df2 = load_data().query("group_id == 'DA:NYL'").copy()
@@ -73,7 +69,7 @@ df2["rho"] = df2.uw / (np.pi * df2.gauge**2 / 4) * 1 / (2.54**3) * 1e6 / 2.205
 assert df2.rho.std() / df2.rho.mean() < 0.001
 rho_bar = df2.rho.mean()
 
-df2.plot(x="gauge", y="rho", ylabel="Computed D'Addario NYL density")
+# df2.plot(x="gauge", y="rho", ylabel="Computed D'Addario NYL density")
 
 # rho ~ 1/gauge^2 => rho gauge^2 = c
 df["gauge_da_nylon"] = np.sqrt(1300 * df.gauge**2 / rho_bar)

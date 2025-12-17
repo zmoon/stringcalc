@@ -24,45 +24,44 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip setuptools wheel
-          python -m pip install flit
-          flit install
+          uv sync --all-extras --group test --group data
 
       - name: Test with pytest
-        run: pytest -v
+        run: uv run pytest -v
 
       - name: Docstring doctest
-        run: pytest --doctest-modules stringcalc -v
+        run: uv run pytest --doctest-modules stringcalc -v
 
       - name: Test code blocks
-        run: pytest --codeblocks README.md docs -v
+        run: uv run pytest --codeblocks README.md docs -v
 
       - name: Check type annotations
         run: |
-          mypy --non-interactive .
+          uv run mypy --non-interactive .
 
       - name: Check data prep scripts still work
         run: |
           # Copy to temp location
-          mkdir -p ../tmp/stringcalc
-          cp -vr data ../tmp/stringcalc/
-          cp -vr stringcalc ../tmp/stringcalc/
+          mkdir -p stringcalc/data/_orig
+          cp stringcalc/data/*.csv stringcalc/data/_orig/
 
           # Run scripts
-          cd ../tmp/stringcalc/data
-          for f in *.py; do
-            if [ $f == "daddario_extract.py" ]; then continue; fi
-            python $f
+          for f in data/*.py; do
+            if [ $(basename $f) == "daddario_extract.py" ]; then continue; fi
+            uv run python $f
           done
 
           # Compare results to those in the repo
-          cd ../stringcalc/data
+          cd stringcalc/data
           rc=0
           for f in *.csv; do
             echo $f
-            cmp $f $GITHUB_WORKSPACE/stringcalc/data/$f || rc=$?
+            cmp _orig/$f $f || rc=$?
           done
           exit $rc
 
@@ -78,26 +77,45 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Install dependencies (micromamba)
-        uses: mamba-org/setup-micromamba@v2
+      - name: Set up Python
+        uses: actions/setup-python@v6
         with:
-          environment-file: panel/environment.yml
-          cache-environment: true
-          cache-downloads: true
+          python-version: "3.13"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+
+      - name: Install dependencies
+        run: |
+          uv sync --group panel
 
       - name: Install stringcalc (${{ matrix.stringcalc }})
         run: |
           if [ "${{ matrix.stringcalc }}" == "local" ]; then
-            pip install . --no-deps
+            :
           elif [ "${{ matrix.stringcalc }}" == "pypi" ]; then
-            pip install stringcalc
+            uv pip install stringcalc
           else
             exit 1
           fi
 
       - name: Run the app script
-        run: python panel/app.py
+        run: uv run python panel/app.py
 
-      - name: Run mypy
+      - name: Check type annotations in app script
         run: |
-          mypy --non-interactive panel/app.py
+          uv pip install mypy
+          uv run mypy --non-interactive panel/app.py
+
+      - name: Build app (pyodide)
+        run: |
+          uv run panel convert panel/app.py --to pyodide
+          mv ./app.html ./stringcalc-panel.html
+
+      - name: Upload built app
+        if: matrix.stringcalc == 'pypi'
+        uses: actions/upload-artifact@v6
+        with:
+          name: panel
+          path: stringcalc-panel.html
+          retention-days: 1
