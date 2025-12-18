@@ -6,14 +6,11 @@ import panel as pn
 from stringcalc.frets import distances, length_from_distance
 from stringcalc.tension import DENSITY_LB_IN, gauge, load_data, suggest_gauge
 
-try:
-    from stringcalc.util import get_version
-except ImportError:
 
-    def get_version(*, git: bool = True) -> str:
-        import stringcalc
+def get_version() -> str:
+    import stringcalc
 
-        return getattr(stringcalc, "__version__", "?")
+    return getattr(stringcalc, "__version__", "?")
 
 
 WIDTH = 450

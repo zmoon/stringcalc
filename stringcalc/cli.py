@@ -99,18 +99,15 @@ def pretty_warnings(f):
 
 def _version_callback(show: bool):
     if show:
-        import subprocess
-
         from . import __version__
 
         v = f"[rgb(184,115,51)]stringcalc[/] [bold blue]{__version__}[/]"
         try:
-            cmd = ["git", "-C", HERE.as_posix(), "rev-parse", "--verify", "--short", "HEAD"]
-            cp = subprocess.run(cmd, text=True, capture_output=True, check=True)
-        except Exception:
+            i = v.index("+")
+        except ValueError:
             pass
         else:
-            v += f" [rgb(100,100,100)]({cp.stdout.strip()})[/]"
+            v = v[:i] + "[rgb(100,100,100)]" + v[i:] + "[/]"
 
         console.print(v, highlight=False)
 
