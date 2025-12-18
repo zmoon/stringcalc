@@ -2,4 +2,9 @@
 Calculations for instrument strings
 """
 
-__version__ = "0.1.0.dev18"
+try:
+    from ._version import __version__
+except ImportError:
+    __version__ = "0.0.0"
+else:
+    del _version  # noqa: F821
