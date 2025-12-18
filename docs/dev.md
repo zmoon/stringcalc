@@ -23,3 +23,18 @@ Build the docs:
 ```sh
 uv run sphinx-build docs docs/_build/html
 ```
+
+Check the version:
+
+```sh
+uv run stringcalc --version
+```
+
+After adding a new annotated version tag,
+you may need to touch one of the files
+in order for uv/hatch to detect that a rebuild is needed,
+or use:
+
+```sh
+uv run --reinstall-package stringcalc stringcalc --version
+```
