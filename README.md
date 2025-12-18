@@ -12,29 +12,3 @@ stringcalc gauge --suggest -T 17 -L 23 -P G2 -P D3 -P A3 -P E4 -N 6 --type DA:LE
 ```
 
 <img src="./docs/cli_gauge-suggest_tb23nw.svg" alt="CLI gauge suggestion output for 23&quot; TB for D'Addario loop-end nickel-wound strings" width="550">
-
-## Development
-
-Using [uv](https://docs.astral.sh/uv/), prepare the venv:
-
-```
-uv sync --all-groups --all-extras
-```
-
-Run the tests:
-
-```
-uv run pytest
-```
-
-Build the Panel app:
-
-```
-uv run panel convert panel/app.py --to pyodide --out docs/_static/panel/
-```
-
-Build the docs:
-
-```
-uv run sphinx-build docs docs/_build/html
-```

@@ -51,4 +51,5 @@ api.rst
 cli.rst
 prior-art.md
 GitHub <https://github.com/zmoon/stringcalc>
+dev.md
 ```
