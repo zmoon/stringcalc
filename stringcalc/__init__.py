@@ -1,5 +1,5 @@
 """
-Calculations for instrument strings
+Instrument string calculations
 """
 
 try:
