@@ -6,7 +6,8 @@ build-backend = "hatchling.build"
 name = "stringcalc"
 authors = [{name = "zmoon", email = "zmoon92@gmail.com"}]
 readme = "README.md"
-license = {file = "LICENSE"}
+license = "MIT"
+license-files = ["LICENSE"]
 classifiers = ["License :: OSI Approved :: MIT License"]
 dynamic = ["version", "description"]
 requires-python = ">=3.10,<4"
