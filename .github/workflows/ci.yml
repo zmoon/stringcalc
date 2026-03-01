@@ -114,7 +114,7 @@ jobs:
 
       - name: Upload built app
         if: matrix.stringcalc == 'pypi'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: panel
           path: stringcalc-panel.html
