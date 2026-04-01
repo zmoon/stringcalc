@@ -36,7 +36,6 @@ for i, c in enumerate(s[a + len(start) :]):
 
 chunk = s[a + len(start) : b + 1]
 assert chunk[0] == "{" and chunk[-1] == "}"
-print(chunk)
 
 # Hack: add key names to globals
 while True:
