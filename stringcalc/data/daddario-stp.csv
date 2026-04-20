@@ -1,8 +1,8 @@
 id,uw,gauge,instruments,group,group_id
-BEB028,2.2167e-05,0.0285,Classical Guitar,Black Nylon,BEB
-BEB032,2.8953e-05,0.0327,Classical Guitar,Black Nylon,BEB
-BEB040,4.5239e-05,0.04,Classical Guitar,Black Nylon,BEB
-BEB031W,0.00012253,0.031,Classical Guitar,80/20 Bronze,BEBW
+BEB028,2.2966e-05,0.0285,Classical Guitar,Black Nylon,BEB
+BEB032,3.0234e-05,0.0327,Classical Guitar,Black Nylon,BEB
+BEB040,4.592e-05,0.04,Classical Guitar,Black Nylon,BEB
+BEB031W,0.00010373,0.031,Classical Guitar,80/20 Bronze,BEBW
 BEB037W,0.00020248,0.037,Classical Guitar,80/20 Bronze,BEBW
 BEB045W,0.00033228,0.045,Classical Guitar,80/20 Bronze,BEBW
 BEC028,2.2167e-05,0.028,Classical Guitar,Clear Nylon,BEC
