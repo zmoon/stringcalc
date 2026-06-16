@@ -36,8 +36,8 @@ data = [
 test = [
     "mypy",
     "pandas-stubs",
-    "pytest",
-    "pytest-codeblocks",
+    "pytest ==9.*",
+    "pytest-codeblocks >=0.18.0",
 ]
 dev = [
     "ipython",
