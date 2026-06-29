@@ -1,7 +1,4 @@
 id,uw,gauge,instruments,group,group_id
-BEB028,2.2966e-05,0.0285,Classical Guitar,Black Nylon,BEB
-BEB032,3.0234e-05,0.0327,Classical Guitar,Black Nylon,BEB
-BEB040,4.592e-05,0.04,Classical Guitar,Black Nylon,BEB
 BEB031W,0.00010373,0.031,Classical Guitar,80/20 Bronze,BEBW
 BEB037W,0.00020248,0.037,Classical Guitar,80/20 Bronze,BEBW
 BEB045W,0.00033228,0.045,Classical Guitar,80/20 Bronze,BEBW
@@ -77,7 +74,6 @@ J2704,0.00010754,0.029,"Classical Guitar, Mandolin, Other Instruments, Ukulele",
 J4504,0.00010754,0.029,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
 J27H04,0.0001118,0.03,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
 J4604,0.0001118,0.03,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
-J4502,2.9316e-05,0.0322,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
 J4602,3.0234e-05,0.0327,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
 J4305,0.0001695,0.033,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
 J4402,3.1165e-05,0.0332,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
@@ -93,6 +89,7 @@ J4306,0.00028498,0.042,"Classical Guitar, Mandolin, Other Instruments, Ukulele",
 J4506,0.0003101,0.043,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
 J4606,0.00033248,0.044,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
 J4406,0.00034232,0.045,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
+J4502,2.9316e-05,,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
 J4604C,0.00010521,0.029,Classical Guitar,Various,JC
 J4404C,0.00010988,0.03,Classical Guitar,Various,JC
 J4505C,0.00018034,0.035,Classical Guitar,Various,JC
