@@ -82,7 +82,7 @@ def distances(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
     else:
         raise ValueError(f"invalid `method` {method!r}")
 
-    dd = np.append(d[0], np.diff(d))  # type: ignore[index]
+    dd = np.append(d[0], np.diff(d))  # type: ignore[index,call-overload]
 
     # TODO: d to +5 or +7 frets?
     # TODO: comparison to just intonation for specified root
