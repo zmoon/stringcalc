@@ -14,6 +14,11 @@ or run it in an ephemeral environment with::
 
    uvx stringcalc[cli]
 
-.. click:: stringcalc.cli:_typer_click_object
+.. typer:: stringcalc.cli:app
    :prog: stringcalc
-   :nested: full
+   :width: 87
+   :show-nested:
+   :make-sections:
+   :preferred: html
+   :iframe-height: 380
+   :markup-mode: markdown
