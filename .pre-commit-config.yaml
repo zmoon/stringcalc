@@ -14,7 +14,7 @@ repos:
         args: [--py310-plus]
 
   - repo: https://github.com/PyCQA/isort
-    rev: "8.0.1"
+    rev: "9.0.0b1"
     hooks:
       - id: isort
 
@@ -29,6 +29,6 @@ repos:
       - id: flake8
 
   - repo: https://github.com/rbubley/mirrors-prettier
-    rev: "v3.9.4"
+    rev: "v3.9.5"
     hooks:
       - id: prettier
