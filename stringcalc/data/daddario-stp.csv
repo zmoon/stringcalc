@@ -55,18 +55,18 @@ CG065,0.00085843,0.065,Electric Guitar,Stainless Steel,CG
 FT023,0.00014048,0.023,Acoustic Guitar,Phosphor Bronze,FT
 FT024,0.00015222,0.024,Acoustic Guitar,Phosphor Bronze,FT
 FT026,0.00017857,0.026,Acoustic Guitar,Phosphor Bronze,FT
-X1AGFPP028-GR,0.00016456,0.028,Acoustic Guitar,Phosphor Bronze,FT
-X1AGFPP030-K,0.00020002,0.03,Acoustic Guitar,Phosphor Bronze,FT
-X1AGFPP032-K,0.00023925,0.032,Acoustic Guitar,Phosphor Bronze,FT
-X1AGFPP035-K,0.00027697,0.035,Acoustic Guitar,Phosphor Bronze,FT
-X1AGFPP036-K,0.0002929,0.036,Acoustic Guitar,Phosphor Bronze,FT
-X1AGFPP039-R,0.00032611,0.039,Acoustic Guitar,Phosphor Bronze,FT
-X1AGFPP042-R,0.00036091,0.042,Acoustic Guitar,Phosphor Bronze,FT
-X1AGFPP044-R,0.00040712,0.044,Acoustic Guitar,Phosphor Bronze,FT
-X1AGFPP045-R,0.0004202,0.045,Acoustic Guitar,Phosphor Bronze,FT
-X1AGFPP047,0.00045626,0.047,Acoustic Guitar,Phosphor Bronze,FT
-X1AGFPP053,0.00056994,0.053,Acoustic Guitar,Phosphor Bronze,FT
-X1AGFPP056,0.00063151,0.056,Acoustic Guitar,Phosphor Bronze,FT
+FT028,0.00016456,0.028,Acoustic Guitar,Phosphor Bronze,FT
+FT030,0.00020002,0.03,Acoustic Guitar,Phosphor Bronze,FT
+FT032,0.00023925,0.032,Acoustic Guitar,Phosphor Bronze,FT
+FT035,0.00027697,0.035,Acoustic Guitar,Phosphor Bronze,FT
+FT036,0.0002929,0.036,Acoustic Guitar,Phosphor Bronze,FT
+FT039,0.00032611,0.039,Acoustic Guitar,Phosphor Bronze,FT
+FT042,0.00036091,0.042,Acoustic Guitar,Phosphor Bronze,FT
+FT044,0.00040712,0.044,Acoustic Guitar,Phosphor Bronze,FT
+FT045,0.0004202,0.045,Acoustic Guitar,Phosphor Bronze,FT
+FT047,0.00045626,0.047,Acoustic Guitar,Phosphor Bronze,FT
+FT053,0.00056994,0.053,Acoustic Guitar,Phosphor Bronze,FT
+FT056,0.00063151,0.056,Acoustic Guitar,Phosphor Bronze,FT
 J6203,0.00011299,0.024,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
 J4304,9.7088e-05,0.028,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
 J4501,2.2167e-05,0.028,"Classical Guitar, Mandolin, Other Instruments, Ukulele",Various,J
@@ -212,12 +212,10 @@ U2AMFN0220,1.3685e-05,0.022,"Other Instruments, Ukulele",Black Nylon,NYLB
 U2AMFN0260,1.9113e-05,0.026,"Other Instruments, Ukulele",Black Nylon,NYLB
 U2AMFN0280,2.2167e-05,0.028,"Other Instruments, Ukulele",Black Nylon,NYLB
 U2AMFN0285,2.2966e-05,0.0285,"Other Instruments, Ukulele",Black Nylon,NYLB
-U2AMFN0290,2.3779e-05,0.029,"Other Instruments, Ukulele",Black Nylon,NYLB
 U2AMFN0322,2.9316e-05,0.0322,"Other Instruments, Ukulele",Black Nylon,NYLB
 U2AMFN0327,3.0234e-05,0.0327,"Other Instruments, Ukulele",Black Nylon,NYLB
 U2AMFN0332,3.1165e-05,0.0332,"Other Instruments, Ukulele",Black Nylon,NYLB
 U2AMFN0360,3.6644e-05,0.036,"Other Instruments, Ukulele",Black Nylon,NYLB
-U2AMFN0403,4.592e-05,0.0403,"Other Instruments, Ukulele",Black Nylon,NYLB
 U1AQFBW029,0.00010112,0.029,Classical Guitar,80/20 Bronze,NYLBW
 U1AQFBW030,0.00010513,0.03,Classical Guitar,80/20 Bronze,NYLBW
 U1AQFBW035,0.00017061,0.035,Classical Guitar,80/20 Bronze,NYLBW
