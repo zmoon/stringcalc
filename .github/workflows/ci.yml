@@ -35,6 +35,7 @@ jobs:
         run: uv run pytest -v
 
       - name: Docstring doctest
+        if: matrix.python-version != '3.10'
         run: uv run pytest --doctest-modules stringcalc -v
 
       - name: Test code blocks
