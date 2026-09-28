@@ -131,7 +131,7 @@ def length_from_distance(ab: tuple[int | None, int | None], d: float | QLike) ->
     >>> round(length_from_distance((0, 1), 1.4), 2)
     24.94
     >>> round(length_from_distance((0, 1), "3 cm").to("inch"), 2)
-    <Quantity(21.04, 'inch')>
+    Quantity(21.04, "inch")
     """
     if isinstance(d, str):
         d = ureg(d)
