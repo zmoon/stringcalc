@@ -346,6 +346,11 @@ def test_cli_pint():
     assert "647.7 mm" in res.output
     assert "(mm)" in res.output
 
+    res_bare = runner.invoke(app, ["frets", "-L", "25.5", "-u", "mm", "-N", "3"])
+    assert res_bare.exit_code == 0, res_bare.output
+    assert "647.7 mm" in res_bare.output
+    assert "(mm)" in res_bare.output
+
     res_bad = runner.invoke(app, ["frets", "-L", "5 kg"])
     assert res_bad.exit_code == 2
 
@@ -353,6 +358,19 @@ def test_cli_pint():
     res = runner.invoke(app, ["length", "0-1=3 cm", "-u", "in", "--round", "2"])
     assert res.exit_code == 0, res.output
     assert res.output.strip() == '21.04"'
+
+    res_full = runner.invoke(app, ["length", "0-1=3 cm", "-u", "in"])
+    assert res_full.exit_code == 0, res_full.output
+    assert res_full.output.strip().startswith("21.043882")
+    assert res_full.output.strip().endswith('"')
+
+    res_bare_full = runner.invoke(app, ["length", "0-1=1.4"])
+    assert res_bare_full.exit_code == 0, res_bare_full.output
+    assert res_bare_full.output.strip().startswith("24.94401524")
+
+    res_bare_verbose = runner.invoke(app, ["length", "0-1=1.4", "--verbose"])
+    assert res_bare_verbose.exit_code == 0, res_bare_verbose.output
+    assert "24.944." in res_bare_verbose.output
 
     res_bad = runner.invoke(app, ["length", "0-1=5 kg"])
     assert res_bad.exit_code == 2
@@ -427,3 +445,60 @@ def test_cli_pint():
         ],
     )
     assert res_bad.exit_code == 2
+
+    # gauge --suggest fanned with mixed units and --verbose
+    res_fan = runner.invoke(
+        app,
+        [
+            "gauge",
+            "--suggest",
+            "-T",
+            "17",
+            "-L",
+            "25.5",
+            "-L",
+            "628 mm",
+            "-w",
+            "44 mm",
+            "-e",
+            "3 mm",
+            "-P",
+            "E2",
+            "-P",
+            "A2",
+            "--verbose",
+        ],
+    )
+    assert res_fan.exit_code == 0, res_fan.output
+    assert "44 mm" in res_fan.output
+    assert "3 mm" in res_fan.output
+    assert "38 mm" in res_fan.output
+    assert "mm @ E2" in res_fan.output
+    assert "Closest gauges" in res_fan.output
+
+    # CLI rejects non-positive inputs cleanly with exit code 2
+    for args in [
+        ["gauge", "-T", "-5", "-L", "25.5", "-P", "E4", "--type", "PL"],
+        ["gauge", "-T", "15", "-L", "0", "-P", "E4", "--type", "PL"],
+        ["gauge", "-T", "15", "-L", "25.5", "-P", "E4", "-d", "0"],
+    ]:
+        assert runner.invoke(app, args).exit_code == 2
+
+
+def test_tension_non_positive():
+    with pytest.raises(ValueError, match="must be positive"):
+        load_aquila_data(nng_density=0)
+    with pytest.raises(ValueError, match="must be positive"):
+        tension(String(L=-25.5, type="PB", gauge=0.042, wound=True))
+    with pytest.raises(ValueError, match="must be positive"):
+        tension(String(L=25.5, type="PB", gauge=0, wound=True))
+    with pytest.raises(ValueError, match="must be positive"):
+        unit_weight(-10, 25.5, "E4")
+    with pytest.raises(ValueError, match="must be positive"):
+        unit_weight(10, 0, "E4")
+    with pytest.raises(ValueError, match="must be positive"):
+        gauge("0 g/cm^3", 10, 25.5, "E4")
+    with pytest.raises(ValueError, match="must be positive"):
+        suggest_gauge(-10, 25.5, "E4")
+    with pytest.raises(ValueError, match="must be positive"):
+        suggest_gauge(10, 0, "E4")

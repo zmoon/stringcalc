@@ -256,14 +256,10 @@ def _cli_unit(u: str, *, dim: str, allow_mass_as_force: bool = False) -> _UnitTy
     return unit
 
 
-def _to_cli_unit(
-    val: float | Quantity, target_u: _UnitType, *, default_unit: str | None = None
-) -> Quantity:
-    """Convert a float or Quantity to ``target_u``."""
-    if isinstance(val, Quantity):
-        return val.to(target_u, "gravity")
-    unit = default_unit if default_unit is not None else target_u
-    return ureg.Quantity(val, unit).to(target_u, "gravity")
+def _to_cli_unit(val: float | Quantity, target_u: _UnitType, *, default_unit: str) -> Quantity:
+    """Convert a float (assumed in ``default_unit``) or Quantity to ``target_u``."""
+    q = val if isinstance(val, Quantity) else ureg.Quantity(val, default_unit)
+    return q.to(target_u, "gravity")
 
 
 def _fmt_val(v: float | Quantity, default_unit_suffix: str = "", *, fmt: str = "g") -> str:
@@ -273,8 +269,7 @@ def _fmt_val(v: float | Quantity, default_unit_suffix: str = "", *, fmt: str = "
         if v.units == ureg.Unit("inch"):
             return f'{mag}"'
         return f"{mag} {v.units}"
-    mag = format(v, fmt) if fmt != "g" else f"{v}"
-    return f"{mag}{default_unit_suffix}"
+    return f"{format(v, fmt)}{default_unit_suffix}"
 
 
 @app.command()
@@ -299,13 +294,16 @@ def frets(
     # TODO: `method`
     # TODO: `format` (rich, CSV, etc.)
 ):
-    """Display fret distance table for `N` frets and scale length `L`."""
+    """Display fret distance table for `N` frets and scale length `L`.
+
+    Unitless `L` values default to inches when `--units` is specified.
+    """
     from .frets import distances
 
     L_val = _cli_val(L, dim="[length]")
     if units is not None:
         target_u = _cli_unit(units, dim="[length]")
-        L_val = _to_cli_unit(L_val, target_u)
+        L_val = _to_cli_unit(L_val, target_u, default_unit="inch")
 
     try:
         df = distances(N=N, L=L_val).reset_index()
@@ -357,6 +355,7 @@ def length(
     Where `a` and `b` are fret numbers
     (use '0' or 'n' for nut, 's' for saddle)
     and `d` is the corresponding distance (optionally with units, e.g. '0-1=3 cm').
+    Unitless `d` values default to inches when `--units` is specified.
     """
     from .frets import length_from_distance
 
@@ -393,7 +392,7 @@ def length(
             res = round(res, round_)
 
     d_str = _fmt_val(d)
-    res_str = _fmt_val(res, fmt="" if round_ is not None else "g")
+    res_str = _fmt_val(res, fmt="" if (not verbose or round_ is not None) else "g")
 
     if verbose:
         a_name = _ab_name(a)
@@ -540,7 +539,7 @@ def gauge_(
                 error("Must supply nut width for fanned calculation.", rc=2)
 
             nw_val = _cli_val(nut_width, dim="[length]")
-            nw_in, _ = _to_magnitude(nw_val, "inch")
+            nw_in, u_nw = _to_magnitude(nw_val, "inch")
             if nw_in <= 0:
                 error("Nut width must be positive.", rc=2)
 
@@ -555,24 +554,46 @@ def gauge_(
                 e_b_in, e_t_in = es_in
 
             L_b_in, u_Lb = _to_magnitude(L_vals[0], "inch")
-            L_t_in, _ = _to_magnitude(L_vals[1], "inch")
+            L_t_in, u_Lt = _to_magnitude(L_vals[1], "inch")
+            if L_b_in <= 0 or L_t_in <= 0:
+                error("Scale lengths must be positive.", rc=2)
             dLdx = (L_t_in - L_b_in) / nw_in
             d_space = (nw_in - e_b_in - e_t_in) / (n_str - 1)  # string spacing
             xs_in = [e_b_in + i * d_space for i in range(n_str)]
-            Ls_in = [round(L_b_in + dLdx * x, 4) for x in xs_in]
-            if u_Lb is not None:
+            Ls_in = [L_b_in + dLdx * x for x in xs_in]
+            out_u = u_Lb or u_Lt
+            if out_u is not None:
                 L_vals = [
-                    ureg.Quantity(round(ureg.Quantity(l_in, "inch").to(u_Lb).magnitude, 4), u_Lb)
+                    ureg.Quantity(round(ureg.Quantity(l_in, "inch").to(out_u).magnitude, 4), out_u)
                     for l_in in Ls_in
                 ]
             else:
-                L_vals = [float(l_in) for l_in in Ls_in]
+                L_vals = [round(float(l_in), 4) for l_in in Ls_in]
             if verbose:
-                info(f"Nut width:               {nut_width}")
-                info(f"Left/bass edge space:    {e_b_in}")
-                info(f"Right/treble edge space: {e_t_in}")
-                info(f"Computed string spacing: {round(d_space, 4)}")
-                info(f"Computed string nut positions: {[round(x, 4) for x in xs_in]}")
+
+                def _fmt_fan(val_in: float) -> str:
+                    if u_nw is not None:
+                        q = ureg.Quantity(
+                            round(float(ureg.Quantity(val_in, "inch").to(u_nw).magnitude), 4),
+                            u_nw,
+                        )
+                        return _fmt_val(q)
+                    return f'{round(val_in, 4)}"'
+
+                xs_disp = [
+                    (
+                        round(float(ureg.Quantity(x, "inch").to(u_nw).magnitude), 4)
+                        if u_nw is not None
+                        else round(x, 4)
+                    )
+                    for x in xs_in
+                ]
+                xs_u = f"{u_nw}" if u_nw is not None and u_nw != ureg.Unit("inch") else '"'
+                info(f"Nut width:               {_fmt_fan(nw_in)}")
+                info(f"Left/bass edge space:    {_fmt_fan(e_b_in)}")
+                info(f"Right/treble edge space: {_fmt_fan(e_t_in)}")
+                info(f"Computed string spacing: {_fmt_fan(d_space)}")
+                info(f"Computed string nut positions ({xs_u}): {xs_disp}")
 
         if verbose:
             info(f"Searching string types: {types_set}")
@@ -649,7 +670,10 @@ def gauge_(
             type_verbose = type_ if type_ in DENSITY_LB_IN else _STRING_TYPE_ALIAS_TO_VERBOSE[type_]
             dens = DENSITY_LB_IN[type_verbose]
 
-        g = gauge(dens, T=T_, L=L_, pitch=P_)
+        try:
+            g = gauge(dens, T=T_, L=L_, pitch=P_)
+        except ValueError as e:
+            error(f"Failed to compute gauge. Message: {e}", rc=2)
         if units is not None:
             target_l_u = _cli_unit(units, dim="[length]")
             g = _to_cli_unit(g, target_l_u, default_unit="inch")

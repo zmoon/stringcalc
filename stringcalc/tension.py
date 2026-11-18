@@ -179,6 +179,8 @@ def load_aquila_data(
         adding appropriate prefixes and dropping extraneous columns.
     """
     rho_lbm_in3, _ = _to_magnitude(nng_density, "lbm / inch ** 3", default_unit="kg / m ** 3")
+    if not rho_lbm_in3 > 0:
+        raise ValueError("`nng_density` must be positive")
 
     return _load_aquila_data_cached(nng_density_lbm_in3=rho_lbm_in3, for_combined=for_combined)
 
@@ -421,6 +423,10 @@ def tension(s: String, pitch: str = "A4") -> float | Quantity:
     t = s.type
     L, u_L = _to_magnitude(s.L, "inch")
     g, u_g = _to_magnitude(s.gauge, "inch")
+    if not L > 0:
+        raise ValueError("`L` must be positive")
+    if not g > 0:
+        raise ValueError("`gauge` must be positive")
 
     if t in {"PL", "S", "PS"}:  # plain steel
         tda = "DA:PL"
@@ -497,6 +503,10 @@ def unit_weight(T: float | QLike, L: float | QLike, pitch: str) -> float | Quant
 
     T_lbf, u_T = _to_magnitude(T, "lbf", allow_mass_as_force=True)
     L_in, u_L = _to_magnitude(L, "inch")
+    if not T_lbf > 0:
+        raise ValueError("`T` must be positive")
+    if not L_in > 0:
+        raise ValueError("`L` must be positive")
 
     F = Pitch.from_name(pitch).etf
 
@@ -543,6 +553,8 @@ def gauge(
         Pitch name in SPN, e.g. "A4".
     """
     rho_lbm_in3, u_rho = _to_magnitude(density, "lbm / inch ** 3")
+    if not rho_lbm_in3 > 0:
+        raise ValueError("`density` must be positive")
     T_lbf, u_T = _to_magnitude(T, "lbf", allow_mass_as_force=True)
     L_in, u_L = _to_magnitude(L, "inch")
 
@@ -593,6 +605,10 @@ def suggest_gauge(
 
     T_lbf, u_T = _to_magnitude(T, "lbf", allow_mass_as_force=True)
     L_in, _ = _to_magnitude(L, "inch")
+    if not T_lbf > 0:
+        raise ValueError("`T` must be positive")
+    if not L_in > 0:
+        raise ValueError("`L` must be positive")
 
     if types is None:
         types = {"DA:PB", "DA:PL"}
