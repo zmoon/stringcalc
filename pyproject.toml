@@ -10,11 +10,11 @@ license = "MIT"
 license-files = ["LICENSE"]
 classifiers = ["License :: OSI Approved :: MIT License"]
 dynamic = ["version", "description"]
-requires-python = ">=3.10,<4"
+requires-python = ">=3.11,<4"
 dependencies = [
     "numpy >=1.21",
     "pandas",
-    "pint >=0.24",
+    "pint >=0.25",
     "pyabc2",
 ]
 
