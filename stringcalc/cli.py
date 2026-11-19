@@ -5,9 +5,16 @@ CLI
 from __future__ import annotations
 
 import functools
+import math
 import os
 import re
+import tokenize
 from pathlib import Path
+from typing import NoReturn
+
+from pint import PintError, Quantity
+
+from ._ureg import _normalize_input, _to_force_quantity, _to_magnitude, _UnitType, ureg
 
 try:
     import typer
@@ -65,7 +72,7 @@ def _maybe_export_output(cmd):
     return inner
 
 
-def error(s: str, *, rc: int = 1, markup: bool = True) -> None:
+def error(s: str, *, rc: int = 1, markup: bool = False) -> NoReturn:
     """Print error message."""
     console.print(s, style=Style(color="red", bold=True), highlight=False, markup=markup)
     assert rc != 0
@@ -213,26 +220,106 @@ def pprint_table(df, *, title: str, float_format: str, panel=False) -> None:
     console.print(_rich_table(df, title=title, float_format=float_format, panel=panel))
 
 
+def _cli_val(s: str, *, dim: str, allow_mass_as_force: bool = False) -> float | Quantity:
+    """Parse a CLI option string as float or validated Quantity, exiting with code 2 on error."""
+    s_stripped = s.strip()
+    try:
+        return float(s_stripped)
+    except ValueError:
+        pass
+
+    try:
+        q: Quantity = ureg.Quantity(s_stripped)
+        if q.unitless:
+            return float(q.magnitude)
+
+        norm = _normalize_input(q, dim, allow_mass_as_force=allow_mass_as_force)
+        assert isinstance(norm, Quantity)
+        return norm
+    except (PintError, ValueError, ArithmeticError, tokenize.TokenError) as e:
+        error(f"Invalid value {s!r}. Message: {e}", rc=2)
+
+
+def _cli_unit(u: str, *, dim: str, allow_mass_as_force: bool = False) -> _UnitType:
+    """Parse a CLI unit string and validate its dimensionality."""
+    try:
+        unit: _UnitType = ureg.Unit(u)
+    except (PintError, ValueError, ArithmeticError, tokenize.TokenError) as e:
+        error(f"Invalid unit {u!r}. Message: {e}", rc=2)
+
+    q = ureg.Quantity(1.0, unit)
+    if allow_mass_as_force and q.check("[mass]"):
+        try:
+            q = _to_force_quantity(q, strict=True)
+        except ValueError as e:
+            error(str(e), rc=2)
+        unit = q.units
+
+    if not q.check(dim):
+        error(f"Unit {u!r} does not have expected dimensionality {dim}.", rc=2)
+
+    return unit
+
+
+def _to_cli_unit(val: float | Quantity, target_u: _UnitType, *, default_unit: str) -> Quantity:
+    """Convert a float (assumed in ``default_unit``) or Quantity to ``target_u``."""
+    q = val if isinstance(val, Quantity) else ureg.Quantity(val, default_unit)
+    return q.to(target_u, "gravity")
+
+
+def _fmt_val(v: float | Quantity, default_unit_suffix: str = "", *, fmt: str = "g") -> str:
+    """Format a float or Quantity compactly for CLI titles and messages."""
+    if isinstance(v, Quantity):
+        mag = format(float(v.magnitude), fmt)
+        if v.units == ureg.Unit("inch"):
+            return f'{mag}"'
+        return f"{mag} {v.units}"
+    return f"{format(v, fmt)}{default_unit_suffix}"
+
+
 @app.command()
 @_maybe_export_output
 def frets(
     N: int = typer.Option(
         17, "-N", "--number", help="Number of frets, starting from nut (fret 0)."
     ),
-    L: float = typer.Option(..., "-L", "--scale-length", help="Scale length."),
+    L: str = typer.Option(
+        ...,
+        "-L",
+        "--scale-length",
+        help="Scale length (e.g. '25.5', '25.5\"', '650 mm').",
+    ),
+    units: str | None = typer.Option(
+        None,
+        "-u",
+        "--units",
+        help="Output length units (e.g. 'in', 'mm').",
+    ),
     float_format: str = typer.Option(r"%.3f", help="Format for float-to-string conversion."),
     # TODO: `method`
     # TODO: `format` (rich, CSV, etc.)
 ):
-    """Display fret distance table for `N` frets and scale length `L`."""
+    """Display fret distance table for `N` frets and scale length `L`.
+
+    Unitless `L` values default to inches when `--units` is specified.
+    """
     from .frets import distances
 
-    df = distances(N=N, L=L).reset_index()
+    L_val = _cli_val(L, dim="[length]")
+    if units is not None:
+        target_u = _cli_unit(units, dim="[length]")
+        L_val = _to_cli_unit(L_val, target_u, default_unit="inch")
 
-    pprint_table(df, title=f"Fret distances for L={L}", float_format=float_format)
+    try:
+        df = distances(N=N, L=L_val).reset_index()
+    except ValueError as e:
+        error(f"Failed to compute fret distances. Message: {e}", rc=2)
+
+    L_title = _fmt_val(L_val)
+    pprint_table(df, title=f"Fret distances for L={L_title}", float_format=float_format)
 
 
-_RE_LENGTH_SPEC = re.compile(r"(?P<a>[0-9]+|[ns])-(?P<b>[0-9]+|[ns])=(?P<d>[0-9e\.\+\-\.]+)")
+_RE_LENGTH_SPEC = re.compile(r"(?P<a>[0-9]+|[ns])-(?P<b>[0-9]+|[ns])=(?P<d>.+)")
 
 
 def _ab_interp(s: str) -> int | None:
@@ -257,14 +344,23 @@ def _ab_name(n: int | None) -> str:
 @_maybe_export_output
 def length(
     spec: str = typer.Argument(...),
-    round_: int = typer.Option(None, "--round", help="Round result to this decimal precision."),
+    units: str | None = typer.Option(
+        None,
+        "-u",
+        "--units",
+        help="Output length units (e.g. 'in', 'mm').",
+    ),
+    round_: int | None = typer.Option(
+        None, "--round", help="Round result to this decimal precision."
+    ),
     verbose: bool = typer.Option(False),
 ):
     """Calculate the scale length implied by spec 'a-b=d'.
 
     Where `a` and `b` are fret numbers
     (use '0' or 'n' for nut, 's' for saddle)
-    and `d` is the corresponding distance.
+    and `d` is the corresponding distance (optionally with units, e.g. '0-1=3 cm').
+    Unitless `d` values default to inches when `--units` is specified.
     """
     from .frets import length_from_distance
 
@@ -273,44 +369,138 @@ def length(
         error(
             f"Input failed to match a-b=d spec format regex {_RE_LENGTH_SPEC.pattern!r}",
             rc=2,
-            markup=False,
         )
 
-    assert m is not None
     dct = m.groupdict()
     try:
         a = _ab_interp(dct["a"])
         b = _ab_interp(dct["b"])
-        d = float(dct["d"])
     except ValueError as e:
         error(f"Failed to convert input to frets. Message: {e}", rc=2)
+
+    d = _cli_val(dct["d"], dim="[length]")
 
     try:
         res = length_from_distance((a, b), d)
     except ValueError as e:
         error(f"Failed to compute scale length. Message: {e}", rc=2)
 
+    if units is not None:
+        target_u = _cli_unit(units, dim="[length]")
+        res = _to_cli_unit(res, target_u, default_unit="inch")
+
     if round_ is not None:
-        res = round(float(res), round_)
+        if isinstance(res, Quantity):
+            res = ureg.Quantity(round(float(res.magnitude), round_), res.units)
+        else:
+            res = round(res, round_)
+
+    d_str = _fmt_val(d)
+    res_str = _fmt_val(res, fmt="" if (not verbose or round_ is not None) else "g")
 
     if verbose:
         a_name = _ab_name(a)
         b_name = _ab_name(b)
         console.print(
             f"A distance from [green]{a_name}[/] to [red]{b_name}[/] "
-            f"of [cyan]{d}[/] implies a scale length of [bold cyan underline]{res}[/].",
+            f"of [cyan]{d_str}[/] implies a scale length of [bold cyan underline]{res_str}[/].",
             highlight=False,
         )
     else:
-        console.print(res)
+        console.print(res_str)
+
+
+def _from_inch(val_in: float, u: _UnitType) -> float:
+    """Convert an inch magnitude to ``u`` rounded to 4 decimal places."""
+    return round(float(ureg.Quantity(val_in, "inch").to(u).magnitude), 4)
+
+
+def _fanned_lengths(
+    L_vals: list[float | Quantity],
+    *,
+    n_str: int,
+    nut_width: str | None,
+    edge_space: list[str] | None,
+    verbose: bool,
+) -> list[float | Quantity]:
+    """Compute per-string scale lengths for fanned-fret calculations."""
+    if len(L_vals) != 2:
+        error(
+            "Must supply two scale lengths (bass and treble sides) for fanned calculation. "
+            f"Got {len(L_vals)}.",
+            rc=2,
+        )
+    if n_str < 2:
+        error("Need at least two strings for fanned calculation.", rc=2)
+    if not nut_width:
+        error("Must supply nut width for fanned calculation.", rc=2)
+
+    nw_val = _cli_val(nut_width, dim="[length]")
+    nw_in, u_nw = _to_magnitude(nw_val, "inch")
+    if not (0 < nw_in < math.inf):
+        error("Nut width must be positive and finite.", rc=2)
+
+    if edge_space is None:
+        e_b_in, e_t_in = 5 / 32, 1 / 8
+    else:
+        es_in = [_to_magnitude(_cli_val(e, dim="[length]"), "inch")[0] for e in edge_space]
+        if len(es_in) == 1:
+            es_in *= 2
+        elif len(es_in) > 2:
+            error(f"Specify one or two edge space values. Got {len(edge_space)}.", rc=2)
+        if not all(math.isfinite(e) for e in es_in):
+            error("Edge space values must be finite.", rc=2)
+        e_b_in, e_t_in = es_in
+
+    L_b_in, u_Lb = _to_magnitude(L_vals[0], "inch")
+    L_t_in, u_Lt = _to_magnitude(L_vals[1], "inch")
+    if not (0 < L_b_in < math.inf and 0 < L_t_in < math.inf):
+        error("Scale lengths must be positive and finite.", rc=2)
+
+    dLdx = (L_t_in - L_b_in) / nw_in
+    d_space = (nw_in - e_b_in - e_t_in) / (n_str - 1)  # string spacing
+    xs_in = [e_b_in + i * d_space for i in range(n_str)]
+    Ls_in = [L_b_in + dLdx * x for x in xs_in]
+    out_u = u_Lb or u_Lt
+    out_vals: list[float | Quantity]
+    if out_u is not None:
+        out_vals = [ureg.Quantity(_from_inch(l_in, out_u), out_u) for l_in in Ls_in]
+    else:
+        out_vals = [round(float(l_in), 4) for l_in in Ls_in]
+
+    if verbose:
+        disp_u = u_nw or ureg.Unit("inch")
+
+        def _fmt_fan(val_in: float) -> str:
+            return _fmt_val(ureg.Quantity(_from_inch(val_in, disp_u), disp_u))
+
+        xs_disp = [_from_inch(x, disp_u) for x in xs_in]
+        xs_u = f"{disp_u}" if disp_u != ureg.Unit("inch") else '"'
+        info(f"Nut width:               {_fmt_fan(nw_in)}")
+        info(f"Left/bass edge space:    {_fmt_fan(e_b_in)}")
+        info(f"Right/treble edge space: {_fmt_fan(e_t_in)}")
+        info(f"Computed string spacing: {_fmt_fan(d_space)}")
+        info(f"Computed string nut positions ({xs_u}): {xs_disp}")
+
+    return out_vals
 
 
 @app.command(name="gauge")
 @pretty_warnings
 @_maybe_export_output
 def gauge_(
-    T: list[float] = typer.Option(..., "-T", "--tension", help="Desired tension"),
-    L: list[float] = typer.Option(..., "-L", "--length", help="String length (scale length)."),
+    T: list[str] = typer.Option(
+        ...,
+        "-T",
+        "--tension",
+        help="Desired tension (e.g. '17', '17 lbf', '7.5 kg', '75 N').",
+    ),
+    L: list[str] = typer.Option(
+        ...,
+        "-L",
+        "--length",
+        help="String length / scale length (e.g. '25.5', '25.5\"', '650 mm').",
+    ),
     P: list[str] = typer.Option(
         ..., "-P", "--pitch", help="Pitch in scientific pitch notation (e.g. 'E4')."
     ),
@@ -318,19 +508,34 @@ def gauge_(
         False,
         help=("If true, suggest gauges (strings) to use. If false, compute exact gauge."),
     ),
-    types: list[str] = typer.Option(
+    types: list[str] | None = typer.Option(
         None,
         "--type",
         help=(
             "String type. Can specify multiple times if using --suggest. "
             "For --suggest, defaults to D'Addario phosphor bronze and plain steel ('DA:PB', 'DA:PL'). "
-            "If not using --suggest, must specify exactly one type (no default). "
+            "If not using --suggest, specify one type or --density."
         ),
+    ),
+    density: str | None = typer.Option(
+        None,
+        "-d",
+        "--density",
+        help=(
+            "Material density for exact gauge calculation "
+            "(e.g. '1300 kg/m^3', '1.14 g/cm^3', or float in lbm/in^3)."
+        ),
+    ),
+    units: str | None = typer.Option(
+        None,
+        "-u",
+        "--units",
+        help="Output units (tension units for --suggest, length units for exact gauge).",
     ),
     nsuggest: int = typer.Option(
         3, "-N", "--nsuggest", help="Number of suggestions. Only relevant if using --suggest."
     ),
-    is_fan: bool = typer.Option(
+    is_fan: bool | None = typer.Option(
         None,
         "--fanned",
         help=(
@@ -338,16 +543,16 @@ def gauge_(
             "Assumed if two scale lengths are provided."
         ),
     ),
-    nut_width: float = typer.Option(
+    nut_width: str | None = typer.Option(
         None,
         "-w",
         "--nut-width",
         help=(
-            "Neck width at (center of?) nut (for fanned calculations). "
+            "Neck width at (center of?) nut (for fanned calculations, e.g. '1.75', '44.5 mm'). "
             "Required if using --fanned."
         ),
     ),
-    edge_space: list[float] = typer.Option(
+    edge_space: list[str] | None = typer.Option(
         None,
         "-e",
         "--edge-space",
@@ -369,15 +574,25 @@ def gauge_(
 ):
     """Compute gauge(s) from string information.
 
-    IMPORTANT: currently must use `T` in lbf and `L` in inches,
-    returning result(s) in inches.
+    Unitless values for `T`, `L`, `nut_width`, `edge_space`, and `density`
+    default to lbf, inches, and lbm/in^3; Pint unit strings (e.g. '650 mm',
+    '75 N', '7.5 kg', '1.3 g/cm^3') are also supported.
     """
     from itertools import cycle
 
     from .tension import _STRING_TYPE_ALIAS_TO_VERBOSE, DENSITY_LB_IN, gauge, suggest_gauge
 
+    T_vals: list[float | Quantity] = [
+        _cli_val(t, dim="[force]", allow_mass_as_force=True) for t in T
+    ]
+    L_vals: list[float | Quantity] = [_cli_val(l_, dim="[length]") for l_ in L]
+
     if suggest:
         from rich.columns import Columns
+
+        if units is not None:
+            target_t_u = _cli_unit(units, dim="[force]", allow_mass_as_force=True)
+            T_vals = [_to_cli_unit(t, target_t_u, default_unit="lbf") for t in T_vals]
 
         types_set: set[str]
         if not types:
@@ -388,52 +603,29 @@ def gauge_(
             types_set = set(types)
 
         if is_fan is None:
-            is_fan = len(L) == 2
+            is_fan = len(L_vals) == 2
         if is_fan:
-            if len(L) != 2:
-                error(
-                    "Must supply two scale lengths (bass and treble sides) for fanned calculation. "
-                    f"Got {len(L)}.",
-                    rc=2,
-                )
-            n_str = max(len(T), len(P))
-            if n_str < 2:
-                error("Need at least two strings for fanned calculation.", rc=2)
-            if not nut_width:
-                error("Must supply nut width for fanned calculation.", rc=2)
-            if edge_space is None:
-                edge_space = [5 / 32, 1 / 8]
-            else:
-                if len(edge_space) == 1:
-                    edge_space *= 2
-                elif len(edge_space) > 2:
-                    error(f"Specify one or two edge space values. Got {len(edge_space)}.", rc=2)
-            e_b, e_t = edge_space
-            L_b, L_t = L
-            dLdx = (L_t - L_b) / nut_width
-            d = (nut_width - e_b - e_t) / (n_str - 1)  # string spacing
-            xs = [e_b + i * d for i in range(n_str)]
-            L = [round(L_b + dLdx * x, 4) for x in xs]
-            if verbose:
-                info(f"Nut width:               {nut_width}")
-                info(f"Left/bass edge space:    {e_b}")
-                info(f"Right/treble edge space: {e_t}")
-                info(f"Computed string spacing: {round(d, 4)}")
-                info(f"Computed string nut positions: {[round(x, 4) for x in xs]}")
+            L_vals = _fanned_lengths(
+                L_vals,
+                n_str=max(len(T_vals), len(P)),
+                nut_width=nut_width,
+                edge_space=edge_space,
+                verbose=verbose,
+            )
 
         if verbose:
             info(f"Searching string types: {types_set}")
 
-        n_cases = max(len(T), len(L), len(P))
-        if not all(len(x) == n_cases or len(x) == 1 for x in (T, L, P)):  # type: ignore[arg-type]
+        n_cases = max(len(T_vals), len(L_vals), len(P))
+        if not all(len(x) == n_cases or len(x) == 1 for x in (T_vals, L_vals, P)):
             error(
                 "Must supply single or same number of values for each of T, L, P. "
-                f"Got {len(T)}, {len(L)}, {len(P)}.",
+                f"Got {len(T_vals)}, {len(L_vals)}, {len(P)}.",
                 rc=2,
             )
 
         tables = []
-        for n, (T_, L_, P_) in enumerate(zip(cycle(T), cycle(L), cycle(P))):
+        for n, (T_, L_, P_) in enumerate(zip(cycle(T_vals), cycle(L_vals), cycle(P))):
             if n >= n_cases:
                 break
 
@@ -442,10 +634,13 @@ def gauge_(
             except ValueError as e:
                 error(f"Failed to compute gauge suggestions. Message: {e}", rc=2)
 
-            g_df.attrs["col_desc"]["dT"] += f" ({T_} lbf)"
+            g_df.attrs["col_desc"][
+                "dT"
+            ] = f"Tension difference from target tension ({_fmt_val(T_, ' lbf')})"
+            L_title = _fmt_val(L_, '"')
             table = _rich_table(
                 g_df,
-                title=f'Closest gauges\nfor {L_}" @ {P_}',
+                title=f"Closest gauges\nfor {L_title} @ {P_}",
                 float_format=float_format,
                 panel=n_cases > 1,
                 column_info=column_info,
@@ -456,44 +651,68 @@ def gauge_(
         console.print(Columns(tables))
 
     else:
-        if not types:
+        if types and density is not None:
+            error("Specify either --type or --density, not both.", rc=2)
+        if not types and density is None:
             error(
-                "Must supply type to use exact gauge calculation, e.g. 'plain nylon', 'plain steel'.",
+                "Must supply --type (e.g. 'plain nylon', 'plain steel') or --density "
+                "(e.g. '1.3 g/cm^3') to use exact gauge calculation.",
                 rc=2,
             )
-
-        if len(types) > 1:
-            error(f"Only specify one type for exact gauge calculation. Got {types}.", rc=2)
 
         try:
-            (T_,), (L_,), (P_,) = T, L, P
+            (T_,), (L_,), (P_,) = T_vals, L_vals, P
         except ValueError:
             error(
-                f"Only supply one value for each of T, L, P. Got {len(T)}, {len(L)}, {len(P)}.",
+                f"Only supply one value for each of T, L, P. "
+                f"Got {len(T_vals)}, {len(L_vals)}, {len(P)}.",
                 rc=2,
             )
 
-        type_ = types[0]
-        allowed_type_keys = sorted(
-            list(DENSITY_LB_IN) + list(_STRING_TYPE_ALIAS_TO_VERBOSE), key=lambda s: s.lower()
-        )
-        if type_ not in allowed_type_keys:
-            error(f"Type {type_!r} not allowed. Use one of {allowed_type_keys}.", rc=2)
+        dens: float | Quantity
+        type_verbose: str | None = None
+        if density is not None:
+            dens = _cli_val(density, dim="[mass] / [length] ** 3")
+        else:
+            assert types is not None
+            if len(types) > 1:
+                error(f"Only specify one type for exact gauge calculation. Got {types}.", rc=2)
 
-        type_verbose = type_ if type_ in DENSITY_LB_IN else _STRING_TYPE_ALIAS_TO_VERBOSE[type_]
-        dens = DENSITY_LB_IN[type_verbose]
+            type_ = types[0]
+            allowed_type_keys = sorted(
+                list(DENSITY_LB_IN) + list(_STRING_TYPE_ALIAS_TO_VERBOSE), key=lambda s: s.lower()
+            )
+            if type_ not in allowed_type_keys:
+                error(f"Type {type_!r} not allowed. Use one of {allowed_type_keys}.", rc=2)
 
-        g = gauge(dens, T=T_, L=L_, pitch=P_)
+            type_verbose = type_ if type_ in DENSITY_LB_IN else _STRING_TYPE_ALIAS_TO_VERBOSE[type_]
+            dens = DENSITY_LB_IN[type_verbose]
+
+        try:
+            g = gauge(dens, T=T_, L=L_, pitch=P_)
+        except ValueError as e:
+            error(f"Failed to compute gauge. Message: {e}", rc=2)
+        if units is not None:
+            target_l_u = _cli_unit(units, dim="[length]")
+            g = _to_cli_unit(g, target_l_u, default_unit="inch")
 
         if verbose:
+            T_str = _fmt_val(T_, " lbf")
+            L_str = _fmt_val(L_, '"')
+            g_str = _fmt_val(g, '"', fmt=".3g")
+            if type_verbose is not None:
+                mat_part = f"a [green]{type_verbose}[/] string"
+            else:
+                dens_str = _fmt_val(dens, " lbm/in³")
+                mat_part = f"a string of density [green]{dens_str}[/]"
             console.print(
-                f"To get tension of [green]{T_} lbf[/] on a [green]{type_verbose}[/] string "
-                f'of length [green]{L_}"[/] tuned to [cyan]{P_}[/], '
-                f'gauge [bold cyan underline]{g:.3g}"[/] should be used.',
+                f"To get tension of [green]{T_str}[/] on {mat_part} "
+                f"of length [green]{L_str}[/] tuned to [cyan]{P_}[/], "
+                f"gauge [bold cyan underline]{g_str}[/] should be used.",
                 highlight=False,
             )
         else:
-            console.print(g)
+            console.print(_fmt_val(g, fmt="") if isinstance(g, Quantity) else g)
 
 
 _typer_click_object = typer.main.get_command(app)  # for sphinx-click in docs

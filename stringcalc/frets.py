@@ -9,22 +9,19 @@ For example:
 
 from __future__ import annotations
 
-from typing import Final, Union
-
 import numpy as np
 import numpy.typing as npt  # v1.21 needed
 import pandas as pd
-from pint import Quantity, UnitRegistry
+from pint import Quantity
 
-ureg: Final[UnitRegistry] = UnitRegistry()
-# Q_ = ureg.Quantity  # mypy doesn't like this one
-
-QLike = Union[Quantity, str]
+from ._ureg import QLike, _check_positive, _normalize_input, ureg
 
 # Note also `pint._typing.UnitLike`
 
 
-def distance_et(n: int | npt.ArrayLike, *, L: float) -> np.float64 | npt.NDArray[np.float64]:
+def distance_et(
+    n: int | npt.ArrayLike, *, L: float | QLike
+) -> np.float64 | npt.NDArray[np.float64] | Quantity:
     r"""Exact equal-temperament distance from nut for fret(s) `n` for scale length `L`.
 
     Using the 12th-root-of-2 method.
@@ -41,17 +38,23 @@ def distance_et(n: int | npt.ArrayLike, *, L: float) -> np.float64 | npt.NDArray
         Fret number (or array-like of them).
         If floats are passed, they will be floored before computing.
     L
-        Scale length.
+        Scale length. Can be a float or a Pint quantity / string (e.g. ``'25.5"'``, ``'650 mm'``).
     """
+    L_norm = _normalize_input(L, "[length]")
+    _check_positive(L_norm, "L")
+
     n = np.floor(n, dtype=np.float64)
 
     if not np.all(n > 0):
         raise ValueError("input fret numbers should be positive")
 
-    return (L * (1 - 2 ** (-n / 12))).astype(np.float64)
+    factor = (1 - 2 ** (-n / 12)).astype(np.float64)
+    if isinstance(L_norm, Quantity):
+        return ureg.Quantity(L_norm.magnitude * factor, L_norm.units)
+    return (L_norm * factor).astype(np.float64)
 
 
-def distances(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
+def distances(N: int, *, L: float | QLike, method: str = "et") -> pd.DataFrame:
     """Fret distance DataFrame for `N` frets and scale length `L`.
 
     Parameters
@@ -59,7 +62,7 @@ def distances(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
     N
         Number of frets (not including nut) to compute.
     L
-        Scale length.
+        Scale length. Can be a float or a Pint quantity / string (e.g. ``'25.5"'``, ``'650 mm'``).
     method
         Method to use for computing fret distances.
 
@@ -75,26 +78,39 @@ def distances(N: int, *, L: float, method: str = "et") -> pd.DataFrame:
        - ``d_inv``: distance from fret to saddle
     """
     assert N >= 1  # guarantees `d` is array with at least one value
+    L_norm = _normalize_input(L, "[length]")
+    _check_positive(L_norm, "L")
+
+    if isinstance(L_norm, Quantity):
+        L_mag = float(L_norm.magnitude)
+        L_unit_str: str | None = f"{L_norm.units}"
+    else:
+        L_mag = float(L_norm)
+        L_unit_str = None
+
     n = np.arange(1, N + 1)
 
     if method in {"et"}:
-        d = distance_et(n, L=L)
+        d = distance_et(n, L=L_mag)
     else:
         raise ValueError(f"invalid `method` {method!r}")
 
+    assert not isinstance(d, Quantity)
     dd = np.append(d[0], np.diff(d))  # type: ignore[index,call-overload]
 
     # TODO: d to +5 or +7 frets?
     # TODO: comparison to just intonation for specified root
 
-    df = pd.DataFrame({"n": n, "d": d, "dd": dd, "d_inv": L - d}).set_index("n")
+    df = pd.DataFrame({"n": n, "d": d, "dd": dd, "d_inv": L_mag - d}).set_index("n")
+    unit_suffix = f" ({L_unit_str})" if L_unit_str is not None else ""
     df.attrs.update(
         {
+            "units": L_unit_str,
             "col_desc": {
                 "n": "fret number",
-                "d": "distance from nut to fret",
-                "dd": "distance from previous fret to current",
-                "d_inv": "distance from fret to saddle",
+                "d": f"distance from nut to fret{unit_suffix}",
+                "dd": f"distance from previous fret to current{unit_suffix}",
+                "d_inv": f"distance from fret to saddle{unit_suffix}",
             },
             "fancy_col": {
                 "n": "n",
@@ -133,11 +149,8 @@ def length_from_distance(ab: tuple[int | None, int | None], d: float | QLike) ->
     >>> round(length_from_distance((0, 1), "3 cm").to("inch"), 2)
     Quantity(21.04, "inch")
     """
-    if isinstance(d, str):
-        d = ureg(d)
-
-    if not d > 0:
-        raise ValueError("`d` must be positive")
+    d = _normalize_input(d, "[length]")
+    _check_positive(d, "d")
 
     a, b = ab
 
@@ -159,23 +172,14 @@ def length_from_distance(ab: tuple[int | None, int | None], d: float | QLike) ->
 
 
 if __name__ == "__main__":
-    L = 21
+    L = ureg.Quantity(21, "inch")
     N = 19
-    units = "inches"
     float_format = "%.3f"
 
     df = distances(N, L=L)
 
-    if units.lower() in {"inches", "in", "in.", '"'}:
-        su_l = '"'
-        su_si = "in"
-    elif units.lower() in {"mm"}:
-        su_l = su_si = "mm"
-    else:
-        raise ValueError(f"invalid `units` {units!r}")
-
-    print(f'L = {L}" (scale length)')
+    print(f"L = {L} (scale length)")
     print(df.to_string(float_format=float_format))  # type: ignore[call-overload]
     l = max(len(s) for s in df.attrs["col_desc"])  # noqa: E741
     for k, v in df.attrs["col_desc"].items():
-        print(f"{k:{l+2}}{v}{'' if k == 'n' else f' ({su_si})'}")
+        print(f"{k:{l+2}}{v}")

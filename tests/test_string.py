@@ -1,12 +1,17 @@
 import itertools
 
+import numpy as np
+import pint
+import pint.testing
 import pytest
 
+import stringcalc
 from stringcalc.tension import (
     _DATA_LOADERS,
     _STRING_TYPE_ALIASES,
     String,
     gauge,
+    load_aquila_data,
     load_daddario_data,
     load_data,
     load_stringjoy_data,
@@ -197,3 +202,382 @@ def test_string_suggest_da_conv_warning():
         UserWarning, match=r"string type groups \['PB', 'PL'\] assumed to be D'Addario"
     ):
         suggest_gauge(20, 25.5, "G3", types={"PB", "PL"})
+
+
+def test_ureg_setup():
+    ureg = stringcalc.ureg
+    assert pint.get_application_registry().get() is not ureg
+    assert ureg("0.285 lbm / in**3").check("[mass] / [length] ** 3")
+    assert f"{ureg('1.3 g/cm^3')}" == "1.3 g/cm³"
+    assert f"{ureg('25.5 in')}" == "25.5 in"
+    pint.testing.assert_equal(ureg('25.5"'), ureg("25.5 in"))
+    pint.testing.assert_equal(ureg("25.5″"), ureg("25.5 in"))
+    pint.testing.assert_allclose(ureg("10 lb").to("lbf", "gravity"), ureg("10 lbf"))
+    pint.testing.assert_allclose(ureg("10 kg").to("kgf", "gravity"), ureg("10 kgf"))
+
+    other_ureg = pint.UnitRegistry()
+    pint.testing.assert_allclose(
+        unit_weight(pint.Quantity("19.6 lb"), other_ureg("25.5 in"), "E4"),
+        unit_weight("19.6 lbf", '25.5"', "E4"),
+    )
+    pint.testing.assert_allclose(
+        gauge(other_ureg("1.87 g/cm^3"), pint.Quantity("9.3 lbf"), other_ureg("43.2 cm"), "C4"),
+        gauge("1.87 g/cm^3", "9.3 lbf", "43.2 cm", "C4"),
+    )
+
+    latex_ureg = pint.UnitRegistry()
+    latex_ureg.formatter.default_format = "L"
+    pint.testing.assert_allclose(
+        gauge(latex_ureg("1.87 g/cm^3"), pint.Quantity("9.3 lbf"), latex_ureg("43.2 cm"), "C4"),
+        gauge("1.87 g/cm^3", "9.3 lbf", "43.2 cm", "C4"),
+    )
+
+
+def test_ureg_quotes_and_gravity():
+    ureg = stringcalc.ureg
+    assert ureg.Unit('"') == ureg.Unit("inch")
+    assert ureg.Unit("″") == ureg.Unit("inch")
+    pint.testing.assert_equal(ureg('0.285 lbm / "^3'), ureg("0.285 lbm / in**3"))
+
+    # Bidirectional gravity context
+    pint.testing.assert_allclose(ureg("10 lbf").to("lb", "gravity"), ureg("10 lb"))
+    pint.testing.assert_allclose(ureg("10 kgf").to("kg", "gravity"), ureg("10 kg"))
+    pint.testing.assert_allclose((ureg("1 kg") * ureg.g0).to("kg", "gravity"), ureg("1 kg"))
+
+
+def test_ureg_helpers():
+    from stringcalc._ureg import _normalize_input, _to_force_quantity, _to_magnitude, ureg
+
+    # _to_force_quantity
+    q_n = ureg("10 N")
+    assert _to_force_quantity(q_n) is q_n
+    pint.testing.assert_allclose(_to_force_quantity(ureg("10 lb")), ureg("10 lbf"))
+    pint.testing.assert_allclose(_to_force_quantity(ureg("10 lbm")), ureg("10 lbf"))
+    pint.testing.assert_allclose(_to_force_quantity(ureg("8 kg")), ureg("8 kgf"))
+    pint.testing.assert_allclose(_to_force_quantity(ureg("500 g")), ureg("500 gf"))
+    q_oz = _to_force_quantity(ureg("16 oz"))
+    assert q_oz.units == ureg.Unit("ozf")
+    pint.testing.assert_allclose(q_oz, ureg("16 ozf"))
+    assert _to_force_quantity(ureg("1000 mg")).units == ureg.Unit("lbf")
+    with pytest.raises(ValueError, match="Unsupported mass unit"):
+        _to_force_quantity(ureg("1000 mg"), strict=True)
+
+    # _normalize_input
+    res_num = _normalize_input(25, "[length]")
+    assert res_num == 25.0 and isinstance(res_num, float)
+    with pytest.raises(pint.DimensionalityError):
+        _normalize_input("10 lb", "[force]", allow_mass_as_force=False)
+    pint.testing.assert_allclose(
+        _normalize_input("10 lb", "[force]", allow_mass_as_force=True),
+        ureg("10 lbf"),
+    )
+
+    # _to_magnitude
+    assert _to_magnitude(12, "inch") == (12.0, None)
+    mag_rho, unit_rho = _to_magnitude(1300, "lbm / inch ** 3", default_unit="kg / m ** 3")
+    assert unit_rho is None
+    assert mag_rho == pytest.approx(ureg("1300 kg/m^3").to("lbm / inch ** 3").magnitude)
+
+    mag_f, unit_f = _to_magnitude("8 kg", "lbf", allow_mass_as_force=True)
+    assert unit_f == ureg.Unit("kgf")
+    assert mag_f == pytest.approx(ureg("8 kgf").to("lbf").magnitude)
+
+
+def test_load_aquila_data_pint():
+    df_float = load_aquila_data(nng_density=1300)
+    df_str = load_aquila_data(nng_density="1.3 g/cm^3")
+    df_q = load_aquila_data(nng_density=stringcalc.ureg.Quantity(1300, "kg / m**3"))
+    np.testing.assert_allclose(df_str["uw"], df_float["uw"], rtol=1e-12)
+    np.testing.assert_allclose(df_q["uw"], df_float["uw"], rtol=1e-12)
+
+    with pytest.raises(pint.DimensionalityError):
+        load_aquila_data(nng_density="1.3 g/cm^2")
+
+
+def test_string_from_spec_metric():
+    s_mm = String.from_spec("647.7mm PB .042w")
+    s_cm = String.from_spec("64.77 cm PB .042w")
+    assert s_mm.L == pytest.approx(25.5)
+    assert s_cm.L == pytest.approx(25.5)
+
+
+def test_tension_pint():
+    ureg = stringcalc.ureg
+    s_float = String.from_spec('25.5" PB .042')
+    s_q = String(L=ureg('25.5"'), type="PB", gauge=ureg("0.042 in"), wound=True)
+    s_mm = String(L="647.7 mm", type="PB", gauge="1.0668 mm", wound=True)
+
+    expected = tension(s_float, pitch="A2") * ureg("lbf")
+    pint.testing.assert_allclose(tension(s_q, pitch="A2"), expected)
+    pint.testing.assert_allclose(tension(s_mm, pitch="A2"), expected)
+
+
+def test_unit_weight_pint():
+    ureg = stringcalc.ureg
+    expected = 0.00002680 * ureg("lbm / in")
+    pint.testing.assert_allclose(unit_weight("19.6 lbf", '25.5"', "E4"), expected, rtol=0.01)
+    pint.testing.assert_allclose(unit_weight("19.6 lb", "647.7 mm", "E4"), expected, rtol=0.01)
+
+    with pytest.raises(pint.DimensionalityError):
+        unit_weight("19.6 m", 25.5, "E4")
+
+
+def test_gauge_pint():
+    ureg = stringcalc.ureg
+    # Brauchli's Worth tension chart in native metric units
+    g = gauge("1.87 g/cm^3", "9.3 lbf", "43.2 cm", "C4")
+    pint.testing.assert_allclose(g.to("cm"), 0.074 * ureg("cm"), rtol=0.01)
+
+    g_mass_t = gauge("1.87 g/cm^3", "9.3 lb", "43.2 cm", "C4")
+    pint.testing.assert_allclose(g_mass_t, g)
+
+    with pytest.raises(pint.DimensionalityError):
+        gauge("1.87 g/cm^2", 9.3, 17.01, "C4")
+
+
+def test_suggest_gauge_pint():
+    df_lbf = suggest_gauge("17 lbf", '23"', "G2", types={"DA:LEW", "DA:LE"})
+    assert df_lbf.attrs["units"] == {"T": "lbf", "dT": "lbf"}
+    assert "(lbf)" in df_lbf.attrs["col_desc"]["T"]
+
+    df_kg = suggest_gauge("8 kg", "650 mm", "E4")
+    assert df_kg.attrs["units"] == {"T": "kgf", "dT": "kgf"}
+    assert "(kgf)" in df_kg.attrs["col_desc"]["T"]
+
+    df_kgf = suggest_gauge("8 kgf", "650 mm", "E4")
+    np.testing.assert_allclose(df_kg["T"], df_kgf["T"])
+    np.testing.assert_allclose(df_kg["dT"], df_kgf["dT"])
+
+
+def test_cli_pint():
+    from typer.testing import CliRunner
+
+    from stringcalc.cli import app
+
+    runner = CliRunner()
+
+    # frets
+    res = runner.invoke(app, ["frets", "-L", "25.5 in", "-u", "mm", "-N", "3"])
+    assert res.exit_code == 0, res.output
+    assert "647.7 mm" in res.output
+    assert "(mm)" in res.output
+
+    res_bare = runner.invoke(app, ["frets", "-L", "25.5", "-u", "mm", "-N", "3"])
+    assert res_bare.exit_code == 0, res_bare.output
+    assert "647.7 mm" in res_bare.output
+    assert "(mm)" in res_bare.output
+
+    res_bad = runner.invoke(app, ["frets", "-L", "5 kg"])
+    assert res_bad.exit_code == 2
+    assert "[mass]" in res_bad.output
+    assert "[length]" in res_bad.output
+
+    res_bad_u = runner.invoke(app, ["frets", "-L", "25.5", "-u", "kg"])
+    assert res_bad_u.exit_code == 2
+    assert "[length]" in res_bad_u.output
+
+    # length
+    res = runner.invoke(app, ["length", "0-1=3 cm", "-u", "in", "--round", "2"])
+    assert res.exit_code == 0, res.output
+    assert res.output.strip() == '21.04"'
+
+    res_full = runner.invoke(app, ["length", "0-1=3 cm", "-u", "in"])
+    assert res_full.exit_code == 0, res_full.output
+    assert res_full.output.strip().startswith("21.043882")
+    assert res_full.output.strip().endswith('"')
+
+    res_bare_full = runner.invoke(app, ["length", "0-1=1.4"])
+    assert res_bare_full.exit_code == 0, res_bare_full.output
+    assert res_bare_full.output.strip().startswith("24.94401524")
+
+    res_bare_verbose = runner.invoke(app, ["length", "0-1=1.4", "--verbose"])
+    assert res_bare_verbose.exit_code == 0, res_bare_verbose.output
+    assert "24.944." in res_bare_verbose.output
+
+    res_bad = runner.invoke(app, ["length", "0-1=5 kg"])
+    assert res_bad.exit_code == 2
+
+    # gauge --suggest
+    res = runner.invoke(app, ["gauge", "--suggest", "-T", "7.5 kg", "-L", "650 mm", "-P", "E4"])
+    assert res.exit_code == 0, res.output
+    assert "650 mm" in res.output
+    assert "kgf" in res.output
+
+    # gauge --suggest fanned with units
+    res = runner.invoke(
+        app,
+        [
+            "gauge",
+            "--suggest",
+            "-T",
+            "17",
+            "-L",
+            "25.5 in",
+            "-L",
+            "24.75 in",
+            "-w",
+            "44 mm",
+            "-e",
+            "3 mm",
+            "-P",
+            "E2",
+            "-P",
+            "A2",
+        ],
+    )
+    assert res.exit_code == 0, res.output
+    assert "Closest gauges" in res.output
+
+    # gauge exact with --density and --units
+    res = runner.invoke(
+        app,
+        [
+            "gauge",
+            "-T",
+            "9.3 lb",
+            "-L",
+            "43.2 cm",
+            "-P",
+            "C4",
+            "-d",
+            "1.87 g/cm^3",
+            "-u",
+            "mm",
+        ],
+    )
+    assert res.exit_code == 0, res.output
+    assert "0.74" in res.output
+    assert "mm" in res.output
+
+    # gauge exact error when both --type and --density provided
+    res_bad = runner.invoke(
+        app,
+        [
+            "gauge",
+            "-T",
+            "15",
+            "-L",
+            "25.5",
+            "-P",
+            "E4",
+            "--type",
+            "PL",
+            "-d",
+            "0.285",
+        ],
+    )
+    assert res_bad.exit_code == 2
+
+    # gauge --suggest fanned with mixed units and --verbose
+    res_fan = runner.invoke(
+        app,
+        [
+            "gauge",
+            "--suggest",
+            "-T",
+            "17",
+            "-L",
+            "25.5",
+            "-L",
+            "628 mm",
+            "-w",
+            "44 mm",
+            "-e",
+            "3 mm",
+            "-P",
+            "E2",
+            "-P",
+            "A2",
+            "--verbose",
+        ],
+    )
+    assert res_fan.exit_code == 0, res_fan.output
+    assert "44 mm" in res_fan.output
+    assert "3 mm" in res_fan.output
+    assert "38 mm" in res_fan.output
+    assert "mm @ E2" in res_fan.output
+    assert "Closest gauges" in res_fan.output
+
+    # CLI rejects non-positive, non-finite, unmapped mass units, and malformed math cleanly
+    for args in [
+        ["frets", "-L", "inf in"],
+        ["frets", "-L", "1/0 in"],
+        ["frets", "-L", "(25.5 in"],
+        ["frets", "-L", "25.5 ** 10000 in"],
+        ["frets", "-L", "25.5", "-u", "1/0 in"],
+        ["gauge", "-T", "-5", "-L", "25.5", "-P", "E4", "--type", "PL"],
+        ["gauge", "-T", "15", "-L", "0", "-P", "E4", "--type", "PL"],
+        ["gauge", "-T", "15", "-L", "25.5", "-P", "E4", "-d", "0"],
+        ["gauge", "--suggest", "-T", "17", "-L", "25.5", "-P", "E4", "-u", "mg"],
+    ]:
+        res_err = runner.invoke(app, args)
+        assert res_err.exit_code == 2
+        assert isinstance(res_err.exception, SystemExit)
+
+    # Additional CLI unit/output paths: -u oz, -u N, bare length -u, exact --verbose
+    res_oz = runner.invoke(
+        app, ["gauge", "--suggest", "-T", "17", "-L", "25.5", "-P", "E4", "-u", "oz"]
+    )
+    assert res_oz.exit_code == 0, res_oz.output
+    assert "ozf" in res_oz.output
+
+    res_n = runner.invoke(
+        app, ["gauge", "--suggest", "-T", "17", "-L", "25.5", "-P", "E4", "-u", "N"]
+    )
+    assert res_n.exit_code == 0, res_n.output
+    assert "(N)" in res_n.output
+
+    res_len_mm = runner.invoke(app, ["length", "0-1=1.4", "-u", "mm", "--round", "2"])
+    assert res_len_mm.exit_code == 0, res_len_mm.output
+    assert res_len_mm.output.strip() == "633.58 mm"
+
+    res_exact_type_v = runner.invoke(
+        app, ["gauge", "-T", "15", "-L", "25.5", "-P", "E4", "--type", "PL", "--verbose"]
+    )
+    assert res_exact_type_v.exit_code == 0, res_exact_type_v.output
+    assert "plain steel" in res_exact_type_v.output
+    assert "15 lbf" in res_exact_type_v.output
+
+    res_exact_dens_v = runner.invoke(
+        app,
+        [
+            "gauge",
+            "-T",
+            "15",
+            "-L",
+            "25.5",
+            "-P",
+            "E4",
+            "-d",
+            "1.3 g/cm^3",
+            "-u",
+            "mm",
+            "--verbose",
+        ],
+    )
+    assert res_exact_dens_v.exit_code == 0, res_exact_dens_v.output
+    assert "1.3 g/cm³" in res_exact_dens_v.output
+    assert "mm" in res_exact_dens_v.output
+
+
+def test_tension_non_positive():
+    with pytest.raises(ValueError, match="must be positive"):
+        load_aquila_data(nng_density=0)
+    with pytest.raises(ValueError, match="must be positive"):
+        tension(String(L=-25.5, type="PB", gauge=0.042, wound=True))
+    with pytest.raises(ValueError, match="must be positive"):
+        tension(String(L=25.5, type="PB", gauge=0, wound=True))
+    with pytest.raises(ValueError, match="must be positive"):
+        unit_weight(-10, 25.5, "E4")
+    with pytest.raises(ValueError, match="must be positive"):
+        unit_weight(float("inf"), 25.5, "E4")
+    with pytest.raises(ValueError, match="must be positive"):
+        unit_weight(10, 0, "E4")
+    with pytest.raises(ValueError, match="must be positive"):
+        gauge("0 g/cm^3", 10, 25.5, "E4")
+    with pytest.raises(ValueError, match="must be positive"):
+        gauge("inf g/cm^3", 10, 25.5, "E4")
+    with pytest.raises(ValueError, match="must be positive"):
+        suggest_gauge(-10, 25.5, "E4")
+    with pytest.raises(ValueError, match="must be positive"):
+        suggest_gauge(10, 0, "E4")

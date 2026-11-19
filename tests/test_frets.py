@@ -1,4 +1,6 @@
 import numpy as np
+import pint
+import pint.testing
 import pytest
 
 from stringcalc import frets
@@ -64,15 +66,83 @@ def test_l_from_d_pint():
     delta = 5e-4 * frets.ureg("in")
     assert expected - delta <= ret <= expected + delta
 
+    pint.testing.assert_allclose(
+        frets.length_from_distance(ab=(1, 0), d='1"'),
+        17.817 * frets.ureg("in"),
+        rtol=1e-4,
+    )
+
+    other_ureg = pint.UnitRegistry()
+    pint.testing.assert_allclose(
+        frets.length_from_distance((0, 1), other_ureg("3 cm")).to("inch"),
+        21.04388 * frets.ureg("in"),
+        rtol=1e-4,
+    )
+
+
+@pytest.mark.parametrize("d", ["5 kg", "5"])
+def test_l_from_d_invalid_units(d):
+    with pytest.raises(pint.DimensionalityError):
+        frets.length_from_distance((0, 1), d)
+
+
+def test_d_et_pint():
+    pint.testing.assert_allclose(
+        frets.distance_et(12, L=frets.ureg("25.5 in")),
+        12.75 * frets.ureg("in"),
+    )
+    pint.testing.assert_allclose(
+        frets.distance_et([12, 24], L="650 mm"),
+        np.array([325.0, 487.5]) * frets.ureg("mm"),
+    )
+    pint.testing.assert_allclose(
+        frets.distance_et(12, L='25.5"'),
+        12.75 * frets.ureg("in"),
+    )
+    pint.testing.assert_allclose(
+        frets.distance_et(12, L="25.5″"),
+        12.75 * frets.ureg("in"),
+    )
+    pint.testing.assert_allclose(
+        frets.distance_et(12, L=pint.Quantity(25.5, "in")),
+        12.75 * frets.ureg("in"),
+    )
+
+
+@pytest.mark.parametrize("L", ["5 kg", "25.5"])
+def test_d_et_invalid_units(L):
+    with pytest.raises(pint.DimensionalityError):
+        frets.distance_et(12, L=L)
+
+
+@pytest.mark.parametrize("L", ["-5 in", "inf in", float("inf")])
+def test_d_et_invalid_L(L):
+    with pytest.raises(ValueError, match="must be positive"):
+        frets.distance_et(12, L=L)
+
+
+def test_ds_invalid_L():
+    with pytest.raises(ValueError, match="must be positive"):
+        frets.distances(N=12, L="inf in")
+
+
+def test_ds_pint():
+    ret = frets.distances(N=24, L="650 mm")
+    assert ret.loc[12].d == pytest.approx(325.0)
+    assert ret.loc[24].d == pytest.approx(487.5)
+    assert ret.attrs["units"] == "mm"
+    assert "(mm)" in ret.attrs["col_desc"]["d"]
+
 
 def test_l_from_d_invalid_ab():
     with pytest.raises(ValueError, match="must be different"):
         frets.length_from_distance((0, 0), 10)
 
 
-def test_l_from_d_invalid_d():
+@pytest.mark.parametrize("d", [-10, "inf in", float("inf")])
+def test_l_from_d_invalid_d(d):
     with pytest.raises(ValueError, match="must be positive"):
-        frets.length_from_distance((0, 1), -10)
+        frets.length_from_distance((0, 1), d)
 
 
 def test_main():

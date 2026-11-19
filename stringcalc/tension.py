@@ -15,7 +15,11 @@ import warnings
 from functools import lru_cache
 from typing import NamedTuple, Protocol, cast
 
+import numpy as np
 import pandas as pd
+from pint import Quantity
+
+from ._ureg import QLike, _check_positive, _to_magnitude, ureg
 
 
 def _get_data():
@@ -127,27 +131,13 @@ def _get_daddario_group_ids() -> set[str]:
 
 
 @lru_cache
-def load_aquila_data(*, nng_density: float = 1300, for_combined: bool = False) -> pd.DataFrame:
-    """Load Aquila NNG (New Nylgut) data.
-
-    Parameters
-    ----------
-    nng_density
-        Assumed density of Aquila NNG strings, in [kg m-3].
-        They are supposed to be the same density as gut.
-        https://www.cs.helsinki.fi/u/wikla/mus/Calcs/wwwscalc.html says gut is 1276 kg m-3;
-        I have seen 1300 elsewhere.
-    for_combined
-        Return the frame intended for use in the combined dataset (:func:`load_data`),
-        adding appropriate prefixes and dropping extraneous columns.
-    """
-    import numpy as np
-
+def _load_aquila_data_cached(
+    *, nng_density_lbm_in3: float, for_combined: bool = False
+) -> pd.DataFrame:
     df = pd.read_csv(DATA.joinpath("aquila-nng.csv"), header=0).convert_dtypes()
 
-    # Compute UW
-    # TODO: use Pint
-    df["uw"] = nng_density * 2.205 / 1e6 * (2.54**3) * (np.pi * df.gauge**2 / 4)
+    # Compute UW [lbm / in]
+    df["uw"] = nng_density_lbm_in3 * (np.pi * df.gauge**2 / 4)
 
     # Set group ID (used to select string type)
     df["group"] = "New Nylgut"
@@ -168,6 +158,30 @@ def load_aquila_data(*, nng_density: float = 1300, for_combined: bool = False) -
         df[name] = df[name].astype("category")
 
     return df
+
+
+def load_aquila_data(
+    *, nng_density: float | QLike = 1300, for_combined: bool = False
+) -> pd.DataFrame:
+    """Load Aquila NNG (New Nylgut) data.
+
+    Parameters
+    ----------
+    nng_density
+        Assumed density of Aquila NNG strings.
+        If a plain float is given, it is assumed to be in [kg m-3].
+        Can also be a Pint quantity or unit string (e.g. ``'1.3 g/cm^3'``).
+        They are supposed to be the same density as gut.
+        https://www.cs.helsinki.fi/u/wikla/mus/Calcs/wwwscalc.html says gut is 1276 kg m-3;
+        I have seen 1300 elsewhere.
+    for_combined
+        Return the frame intended for use in the combined dataset (:func:`load_data`),
+        adding appropriate prefixes and dropping extraneous columns.
+    """
+    rho_lbm_in3, _ = _to_magnitude(nng_density, "lbm / inch ** 3", default_unit="kg / m ** 3")
+    _check_positive(rho_lbm_in3, "nng_density")
+
+    return _load_aquila_data_cached(nng_density_lbm_in3=rho_lbm_in3, for_combined=for_combined)
 
 
 @lru_cache(2)
@@ -306,27 +320,26 @@ _DATA_LOADERS: list[_DataLoader] = [
 
 _re_string_spec = re.compile(
     r"(?P<L>[\.0-9]+)"
-    r" *(?P<Lu>\"|m{2})"
+    r" *(?P<Lu>\"|″|in(?:ch(?:es)?)?|[cm]m)"
     r" +(?P<type>[A-Z]+)"
-    r" +(?P<gauge>[\.[0-9]+)"
+    r" +(?P<gauge>[\.0-9]+)"
     r" *(?P<pw>[pPwW])?"
 )
 
 
 class String(NamedTuple):
-    L: float
-    """Scale length."""
+    L: float | QLike
+    """Scale length (float in inches, or a Pint quantity / string)."""
     type: str
     """String type abbreviation, such as D'Addario "PB", "PL", or "NYL"."""
-    gauge: float
-    """String gauge."""
+    gauge: float | QLike
+    """String gauge (float in inches, or a Pint quantity / string)."""
     wound: bool
     """Whether the string is wound (as opposed to plain)."""
 
     # TODO: `wound` isn't really relevant for single string, since `type` tells us whether wound or not
     # i.e., `wound` can be a property (as well as winding and core materials, loop vs ball, ...?)
     # OR: store core and winding material, keeping it more general, instead of using D'Addario IDs
-    # TODO: unit support (pint?)
 
     @classmethod
     def from_spec(cls, s: str):
@@ -342,11 +355,13 @@ class String(NamedTuple):
         d = m.groupdict()
 
         try:
-            L = float(d["L"])
+            L_raw = float(d["L"])
         except Exception as e:
             raise ValueError(
                 f"detected string length {d['L']!r} could not be coerced to float"
             ) from e
+
+        L = float(ureg.Quantity(L_raw, d["Lu"]).to("inch").magnitude)
 
         type_ = d["type"]
 
@@ -375,11 +390,14 @@ class String(NamedTuple):
         return cls(L, type_, gauge, wound)
 
     def __str__(self):
-        sgauge = str(self.gauge)
+        L_in, _ = _to_magnitude(self.L, "inch")
+        g_in, _ = _to_magnitude(self.gauge, "inch")
+
+        sgauge = str(g_in)
         if sgauge.startswith("0."):
             sgauge = sgauge[1:]
 
-        return f"{self.L}\" {self.type} {sgauge}{'p' if not self.wound else ''}"
+        return f"{L_in}\" {self.type} {sgauge}{'p' if not self.wound else ''}"
 
     # TODO: .tune_to() method, returning a TunedString
 
@@ -387,7 +405,7 @@ class String(NamedTuple):
 # TODO: TunedString class with Pitch
 
 
-def tension(s: String, pitch: str = "A4") -> float:
+def tension(s: String, pitch: str = "A4") -> float | Quantity:
     """Compute tension for :class:`String`.
 
     Results are for a single type, e.g. plain steel or phosphor bronze.
@@ -402,8 +420,10 @@ def tension(s: String, pitch: str = "A4") -> float:
     from pyabc2 import Pitch
 
     t = s.type
-    g = s.gauge
-    L = s.L
+    L, u_L = _to_magnitude(s.L, "inch")
+    g, u_g = _to_magnitude(s.gauge, "inch")
+    _check_positive(L, "L")
+    _check_positive(g, "gauge")
 
     if t in {"PL", "S", "PS"}:  # plain steel
         tda = "DA:PL"
@@ -419,6 +439,9 @@ def tension(s: String, pitch: str = "A4") -> float:
     data = load_data().query(f"group_id == '{tda}'")
 
     rows = data.loc[data.gauge == g]
+    if len(rows) == 0 and u_g is not None:
+        rows = data.loc[np.isclose(data.gauge.astype(float), g, atol=1e-6, rtol=0)]
+
     if len(rows) == 0:
         raise ValueError(
             f"gauge {g} not found. "
@@ -454,28 +477,38 @@ def tension(s: String, pitch: str = "A4") -> float:
 
     T = UW * (2 * L * F) ** 2 / 386.09
 
+    if u_L is not None or u_g is not None:
+        return ureg.Quantity(T, "lbf")
     return T
 
 
-def unit_weight(T: float, L: float, pitch: str) -> float:
+def unit_weight(T: float | QLike, L: float | QLike, pitch: str) -> float | Quantity:
     """From scale length, pitch, and desired tension, compute unit weight
     (mass per unit length) [lbm in-1].
 
     Parameters
     ----------
     T
-        Tension [lbf].
+        Tension (float in [lbf], or a Pint quantity / string).
+        Mass units (e.g. ``'lb'``, ``'kg'``) are converted to force under standard gravity.
     L
-        Scale length [in].
+        Scale length (float in [in], or a Pint quantity / string).
     pitch
         Pitch name in SPN, e.g. "A4".
     """
     from pyabc2 import Pitch
 
+    T_lbf, u_T = _to_magnitude(T, "lbf", allow_mass_as_force=True)
+    L_in, u_L = _to_magnitude(L, "inch")
+    _check_positive(T_lbf, "T")
+    _check_positive(L_in, "L")
+
     F = Pitch.from_name(pitch).etf
 
-    UW = (T * 386.09) / (2 * L * F) ** 2
+    UW = (T_lbf * 386.09) / (2 * L_in * F) ** 2
 
+    if u_T is not None or u_L is not None:
+        return ureg.Quantity(UW, "lbm / inch")
     return UW
 
 
@@ -495,39 +528,45 @@ _STRING_TYPE_ALIAS_TO_VERBOSE = {
 }
 
 
-def gauge(density: float, T: float, L: float, pitch: str) -> float:
+def gauge(
+    density: float | QLike, T: float | QLike, L: float | QLike, pitch: str
+) -> float | Quantity:
     """From density, scale length, pitch, and desired tension, compute gauge.
     Not nominal gauge, precise diameter.
 
     Parameters
     ----------
     density
-        String material density [lbm in-3].
-
-        .. important::
-           Although [kg m-3] and [g cm-3] units are more common for density,
-           currently you must convert to [lbm in-3] in order to get a correct answer.
-           But Pint support for this is coming soon!
+        String material density (float in [lbm in-3], or a Pint quantity / string,
+        e.g. ``'1.14 g/cm^3'`` or ``'1300 kg/m^3'``).
     T
-        Tension [lbf].
+        Tension (float in [lbf], or a Pint quantity / string).
+        Mass units (e.g. ``'lb'``, ``'kg'``) are converted to force under standard gravity.
     L
-        Scale length [in].
+        Scale length (float in [in], or a Pint quantity / string).
     pitch
         Pitch name in SPN, e.g. "A4".
     """
+    rho_lbm_in3, u_rho = _to_magnitude(density, "lbm / inch ** 3")
+    _check_positive(rho_lbm_in3, "density")
+    T_lbf, u_T = _to_magnitude(T, "lbf", allow_mass_as_force=True)
+    L_in, u_L = _to_magnitude(L, "inch")
 
-    UW = unit_weight(T, L, pitch)
+    UW = unit_weight(T_lbf, L_in, pitch)
+    assert isinstance(UW, float)
 
     # mu = rho pi r^2
     # => r = sqrt(mu / (rho pi))
     # => d = 2 sqrt(mu / (rho pi))
-    d = 2 * math.sqrt(UW / (density * math.pi))
+    d = 2 * math.sqrt(UW / (rho_lbm_in3 * math.pi))
 
+    if u_rho is not None or u_T is not None or u_L is not None:
+        return ureg.Quantity(d, "inch")
     return d
 
 
 def suggest_gauge(
-    T: float, L: float, pitch: str, *, types: set[str] | None = None, n: int = 3
+    T: float | QLike, L: float | QLike, pitch: str, *, types: set[str] | None = None, n: int = 3
 ) -> pd.DataFrame:
     """For target tension, given scale length, and pitch, return suggested gauge(s).
 
@@ -538,9 +577,11 @@ def suggest_gauge(
     Parameters
     ----------
     T
-        Tension [lbf].
+        Tension (float in [lbf], or a Pint quantity / string).
+        Mass units (e.g. ``'lb'``, ``'kg'``) are converted to force under standard gravity.
+        If units are supplied, the returned ``T`` and ``dT`` columns will use those units.
     L
-        Scale length [in].
+        Scale length (float in [in], or a Pint quantity / string).
     pitch
         Pitch name in ASCII `SPN <https://en.wikipedia.org/wiki/Scientific_pitch_notation>`__,
         e.g. "A4" (A440), which is a fourth above the guitar's high E string.
@@ -555,6 +596,11 @@ def suggest_gauge(
         Number of suggestions to include in the returned frame.
     """
     from pyabc2 import Pitch
+
+    T_lbf, u_T = _to_magnitude(T, "lbf", allow_mass_as_force=True)
+    L_in, _ = _to_magnitude(L, "inch")
+    _check_positive(T_lbf, "T")
+    _check_positive(L_in, "L")
 
     if types is None:
         types = {"DA:PB", "DA:PL"}
@@ -585,12 +631,12 @@ def suggest_gauge(
 
     UW = data.uw
     F = Pitch.from_name(pitch).etf
-    T_all = UW * (2 * L * F) ** 2 / 386.09
+    T_all = UW * (2 * L_in * F) ** 2 / 386.09
 
     # Find closest ones
-    data_sort = data.iloc[(T_all - T).abs().argsort().iloc[:n]].copy()
+    data_sort = data.iloc[(T_all - T_lbf).abs().argsort().iloc[:n]].copy()
     data_sort["T"] = T_all[data_sort.index]
-    data_sort["dT"] = data_sort["T"] - T
+    data_sort["dT"] = data_sort["T"] - T_lbf
 
     b = 1.7  # TODO: allow to set this?
     if (data_sort["dT"] > b).all() or (data_sort["dT"] < -b).all():
@@ -601,13 +647,23 @@ def suggest_gauge(
             stacklevel=2,
         )
 
+    if u_T is not None:
+        conv = float(ureg.Quantity(1.0, "lbf").to(u_T, "gravity").magnitude)
+        data_sort["T"] = data_sort["T"] * conv
+        data_sort["dT"] = data_sort["dT"] * conv
+        u_T_str: str | None = f"{u_T}"
+    else:
+        u_T_str = None
+
     df = data_sort[["id", "T", "dT"]].sort_values(by="dT").reset_index(drop=True)
+    unit_suffix = f" ({u_T_str})" if u_T_str is not None else ""
     df.attrs.update(
         {
+            "units": {"T": u_T_str, "dT": u_T_str} if u_T_str is not None else None,
             "col_desc": {
                 "id": "Product ID",
-                "T": "Tension",
-                "dT": "Tension difference from target tension",
+                "T": f"Tension{unit_suffix}",
+                "dT": f"Tension difference from target tension{unit_suffix}",
             },
             "fancy_col": {
                 "id": "ID",
