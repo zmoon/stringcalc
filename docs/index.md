@@ -48,7 +48,7 @@ examples/pythagoras-ratios.md
 :hidden:
 
 api.rst
-cli.rst
+cli.md
 prior-art.md
 GitHub <https://github.com/zmoon/stringcalc>
 dev.md
