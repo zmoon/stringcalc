@@ -613,6 +613,8 @@ def test_cli_svg_export_no_embed(tmp_path, monkeypatch):
     svg = p.read_text(encoding="utf-8")
     assert "cdnjs.cloudflare.com" in svg
     assert "data:font" not in svg
+    assert all(line == line.rstrip() for line in svg.splitlines())
+    assert svg.endswith("\n") and not svg.endswith("\n\n")
     cli.console.export_text(clear=True)
 
 
@@ -641,7 +643,7 @@ def test_cli_svg_export_embed_modes(tmp_path, monkeypatch):
         monkeypatch.setattr(cli, "_embed_svg_fonts", lambda _svg: "<svg>embedded</svg>")
         res = runner.invoke(cli.app, args)
         assert res.exit_code == 0, res.output
-        assert p.read_text(encoding="utf-8") == "<svg>embedded</svg>"
+        assert p.read_text(encoding="utf-8") == "<svg>embedded</svg>\n"
 
         # 2. Default (unset) + ImportError: dim tip and saves fallback SVG cleanly
         cli.console.export_text(clear=True)
@@ -688,6 +690,33 @@ def test_cli_svg_export_embed_modes(tmp_path, monkeypatch):
             orig_embed("<svg><text>hi</text></svg>")
     finally:
         cli.console.export_text(clear=True)
+
+
+def test_rich_table_alignment_and_highlight():
+    import io
+
+    import pandas as pd
+    from rich.console import Console
+
+    from stringcalc.cli import _rich_table
+
+    df = suggest_gauge(17, 23, "A3", types={"DA:LEW", "DA:LE"}, n=6)
+    c = Console(record=True, width=50, file=io.StringIO(), legacy_windows=False)
+    c.print(_rich_table(df, title="test", float_format="%.3f", ihighlight=3))
+    assert "│ DA:LE017  │" in c.export_text(clear=False)
+    assert ">DA:LE017</text>" in c.export_svg()
+
+    # Right-aligned numeric cells on a highlighted row also keep underline off padding
+    df_pos = pd.DataFrame(
+        {
+            "id": ["A", "B", "C", "D", "E"],
+            "T": [15.0, 16.0, 17.018, 18.0, 19.0],
+            "dT": [-2.0, -1.0, 0.018, 1.0, 2.0],
+        }
+    )
+    c2 = Console(record=True, width=50, file=io.StringIO(), legacy_windows=False)
+    c2.print(_rich_table(df_pos, title="test", float_format="%.3f", ihighlight=2))
+    assert ">0.018</text>" in c2.export_svg()
 
 
 def test_tension_non_positive():

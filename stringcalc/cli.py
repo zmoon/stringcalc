@@ -149,6 +149,7 @@ def _maybe_export_output(cmd):
                         error(f"Could not embed font in SVG export ({e!r}).")
                     else:
                         warning(f"Could not embed font in SVG export ({e!r}); saving without it.")
+            svg = "\n".join(line.rstrip() for line in svg.rstrip().splitlines()) + "\n"
             p.write_text(svg, encoding="utf-8")
 
         return ret
@@ -241,9 +242,11 @@ def _rich_table(
     column_info: bool = True,
     ihighlight: int | None = None,
 ) -> RenderableType:
+    import pandas as pd
     from rich.console import Group
     from rich.panel import Panel
     from rich.table import Table
+    from rich.text import Text
 
     attrs = df.attrs.copy()
     df_str = _with_float_nonext_dtypes(df).to_string(
@@ -277,9 +280,14 @@ def _rich_table(
         table.add_column(
             maybe_fancy_col_name(col),
             style="green" if col != "n" else None,
+            justify="right" if pd.api.types.is_numeric_dtype(df[col]) else "left",
         )
     for i, row in enumerate(df_str.splitlines()):
-        table.add_row(*re.split(r"(?<=\S) ", row), style=hl_style if i == ihighlight else None)
+        cells = row.split()
+        if i == ihighlight:
+            table.add_row(*[Text.assemble((c, hl_style)) for c in cells])
+        else:
+            table.add_row(*cells)
 
     # Column descriptions
     r: RenderableType
