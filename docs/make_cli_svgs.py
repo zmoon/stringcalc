@@ -1,7 +1,5 @@
 """
 Regenerate the CLI example SVGs used in the README and docs.
-
-    uv run python docs/make_cli_svgs.py
 """
 
 import os
