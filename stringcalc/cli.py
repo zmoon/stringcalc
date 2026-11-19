@@ -130,7 +130,7 @@ def _maybe_export_output(cmd):
             p = Path(_RICH_EXPORT).with_suffix(".svg")
 
         if p is not None:
-            svg = console.export_svg()
+            svg = console.export_svg(title="stringcalc")
             if _RICH_EXPORT_EMBED_FONT != "0":
                 try:
                     svg = _embed_svg_fonts(svg)

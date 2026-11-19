@@ -611,6 +611,7 @@ def test_cli_svg_export_no_embed(tmp_path, monkeypatch):
     res = CliRunner().invoke(cli.app, ["gauge", "--suggest", "-T", "17", "-L", "23", "-P", "D3"])
     assert res.exit_code == 0, res.output
     svg = p.read_text(encoding="utf-8")
+    assert ">stringcalc</text>" in svg
     assert "cdnjs.cloudflare.com" in svg
     assert "data:font" not in svg
     assert all(line == line.rstrip() for line in svg.splitlines())
