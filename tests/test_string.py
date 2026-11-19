@@ -560,6 +560,166 @@ def test_cli_pint():
     assert "mm" in res_exact_dens_v.output
 
 
+def test_embed_svg_fonts():
+    import base64
+    import html
+    import io
+    import re
+    import urllib.error
+
+    pytest.importorskip("fontTools")
+    from fontTools.ttLib import TTFont
+    from rich.console import Console
+    from rich.panel import Panel
+
+    from stringcalc.cli import _embed_svg_fonts
+
+    console = Console(record=True, width=40, file=io.StringIO(), legacy_windows=False)
+    console.print(Panel("[bold]Δ hi[/] ┃ 0.5 & <x>", title="test"))
+    svg = console.export_svg()
+    assert svg.count("@font-face") == 2
+
+    try:
+        svg_emb = _embed_svg_fonts(svg)
+    except urllib.error.URLError as e:
+        pytest.skip(f"network unavailable: {e}")
+
+    assert "cdnjs.cloudflare.com" in svg
+    assert "cdnjs.cloudflare.com" not in svg_emb
+    b64s = re.findall(r'data:font/woff;base64,([^"]+)"', svg_emb)
+    assert len(b64s) == 2
+    assert "font-weight: 400" in svg_emb and "font-weight: 700" in svg_emb
+
+    chars = set(html.unescape("".join(re.findall(r"<text[^>]*>([^<]*)</text>", svg)))) - {"\n"}
+    assert {"╭", "─", "Δ", "&", "<", "\xa0"} <= chars
+    for b64 in b64s:
+        cmap = TTFont(io.BytesIO(base64.b64decode(b64))).getBestCmap()
+        missing = {c for c in chars if ord(c) not in cmap}
+        assert not missing
+
+
+def test_cli_svg_export_no_embed(tmp_path, monkeypatch):
+    from typer.testing import CliRunner
+
+    import stringcalc.cli as cli
+
+    p = tmp_path / "out.svg"
+    monkeypatch.setattr(cli, "_RICH_EXPORT", str(p))
+    monkeypatch.setattr(cli, "_RICH_EXPORT_EMBED_FONT", "0")
+    monkeypatch.setattr(cli.console, "record", True)
+
+    res = CliRunner().invoke(cli.app, ["gauge", "--suggest", "-T", "17", "-L", "23", "-P", "D3"])
+    assert res.exit_code == 0, res.output
+    svg = p.read_text(encoding="utf-8")
+    assert ">stringcalc</text>" in svg
+    assert "cdnjs.cloudflare.com" in svg
+    assert "data:font" not in svg
+    assert all(line == line.rstrip() for line in svg.splitlines())
+    assert svg.endswith("\n") and not svg.endswith("\n\n")
+    cli.console.export_text(clear=True)
+
+
+def test_cli_svg_export_embed_modes(tmp_path, monkeypatch):
+    from typer.testing import CliRunner
+
+    import stringcalc.cli as cli
+
+    p = tmp_path / "out.svg"
+    runner = CliRunner()
+    args = ["length", "0-1=1.4", "--round", "2"]
+    orig_embed = cli._embed_svg_fonts
+    monkeypatch.setattr(cli, "_RICH_EXPORT", str(p))
+    monkeypatch.setattr(cli.console, "record", True)
+
+    def raise_err(exc):
+        def _fail(_svg):
+            raise exc
+
+        return _fail
+
+    try:
+        # 1. Default (unset): embeds via _embed_svg_fonts
+        cli.console.export_text(clear=True)
+        monkeypatch.setattr(cli, "_RICH_EXPORT_EMBED_FONT", None)
+        monkeypatch.setattr(cli, "_embed_svg_fonts", lambda _svg: "<svg>embedded</svg>")
+        res = runner.invoke(cli.app, args)
+        assert res.exit_code == 0, res.output
+        assert p.read_text(encoding="utf-8") == "<svg>embedded</svg>\n"
+
+        # 2. Default (unset) + ImportError: dim tip and saves fallback SVG cleanly
+        cli.console.export_text(clear=True)
+        monkeypatch.setattr(cli, "_embed_svg_fonts", raise_err(ImportError("no fonttools")))
+        res = runner.invoke(cli.app, args)
+        assert res.exit_code == 0, res.output
+        assert "Tip: install fonttools" in res.output
+        svg = p.read_text(encoding="utf-8")
+        assert "cdnjs.cloudflare.com" in svg
+        assert "Tip:" not in svg
+
+        # 3. Required (=1) + ImportError: exits 1 without overwriting file
+        cli.console.export_text(clear=True)
+        p.write_text("keep", encoding="utf-8")
+        monkeypatch.setattr(cli, "_RICH_EXPORT_EMBED_FONT", "1")
+        res = runner.invoke(cli.app, args)
+        assert res.exit_code == 1
+        assert "fonttools is required" in res.output
+        assert p.read_text(encoding="utf-8") == "keep"
+
+        # 4. Default (unset) + runtime error: warning and saves fallback SVG cleanly
+        cli.console.export_text(clear=True)
+        monkeypatch.setattr(cli, "_RICH_EXPORT_EMBED_FONT", None)
+        monkeypatch.setattr(cli, "_embed_svg_fonts", raise_err(RuntimeError("boom")))
+        res = runner.invoke(cli.app, args)
+        assert res.exit_code == 0, res.output
+        assert "Could not embed font" in res.output
+        svg = p.read_text(encoding="utf-8")
+        assert "cdnjs.cloudflare.com" in svg
+        assert "Could not embed" not in svg
+
+        # 5. Required (=1) + runtime error: exits 1 without overwriting file
+        cli.console.export_text(clear=True)
+        p.write_text("keep", encoding="utf-8")
+        monkeypatch.setattr(cli, "_RICH_EXPORT_EMBED_FONT", "1")
+        res = runner.invoke(cli.app, args)
+        assert res.exit_code == 1
+        assert "Could not embed font" in res.output
+        assert p.read_text(encoding="utf-8") == "keep"
+
+        # 6. Zero @font-face rules in SVG raises ValueError
+        pytest.importorskip("fontTools")
+        with pytest.raises(ValueError, match="no @font-face"):
+            orig_embed("<svg><text>hi</text></svg>")
+    finally:
+        cli.console.export_text(clear=True)
+
+
+def test_rich_table_alignment_and_highlight():
+    import io
+
+    import pandas as pd
+    from rich.console import Console
+
+    from stringcalc.cli import _rich_table
+
+    df = suggest_gauge(17, 23, "A3", types={"DA:LEW", "DA:LE"}, n=6)
+    c = Console(record=True, width=50, file=io.StringIO(), legacy_windows=False)
+    c.print(_rich_table(df, title="test", float_format="%.3f", ihighlight=3))
+    assert "│ DA:LE017  │" in c.export_text(clear=False)
+    assert ">DA:LE017</text>" in c.export_svg()
+
+    # Right-aligned numeric cells on a highlighted row also keep underline off padding
+    df_pos = pd.DataFrame(
+        {
+            "id": ["A", "B", "C", "D", "E"],
+            "T": [15.0, 16.0, 17.018, 18.0, 19.0],
+            "dT": [-2.0, -1.0, 0.018, 1.0, 2.0],
+        }
+    )
+    c2 = Console(record=True, width=50, file=io.StringIO(), legacy_windows=False)
+    c2.print(_rich_table(df_pos, title="test", float_format="%.3f", ihighlight=2))
+    assert ">0.018</text>" in c2.export_svg()
+
+
 def test_tension_non_positive():
     with pytest.raises(ValueError, match="must be positive"):
         load_aquila_data(nng_density=0)

@@ -26,11 +26,17 @@ except ImportError as e:
     raise SystemExit(1)
 
 _RICH_EXPORT: str = os.environ.get("STRINGCALC_RICH_EXPORT", "0")
+_RICH_EXPORT_EMBED_FONT: str | None = os.environ.get("STRINGCALC_RICH_EXPORT_EMBED_FONT")
 
 HERE = Path(__file__).parent
 _TRAN_SUPE_DIGIT = str.maketrans("0123456789", "⁰¹²³⁴⁵⁶⁷⁸⁹")
 
-console = Console(record=_RICH_EXPORT != "0")
+console = Console(
+    record=_RICH_EXPORT != "0",
+    # Legacy Windows mode (e.g. when output is piped on Windows) would use "safe" boxes
+    # and reduce the width by one, which we don't want for the SVG export
+    legacy_windows=False if _RICH_EXPORT != "0" else None,
+)
 
 app = typer.Typer(add_completion=False, name="stringcalc")
 
@@ -42,6 +48,56 @@ def _to_fancy_sci(s: str) -> str:
     return f"{a}×10{b}"
 
 
+def _embed_svg_fonts(svg: str) -> str:
+    """Replace the SVG's remote ``@font-face`` rules with inline WOFF data URIs,
+    subset to the characters used, so that the SVG renders the same everywhere,
+    including in ``<img>`` contexts (e.g. GitHub, PyPI) where remote fonts are blocked.
+
+    The font URLs are taken from the ``@font-face`` rules in the SVG (from Rich's template).
+    Raises ``ImportError`` if fontTools is not installed.
+    """
+    import base64
+    import html
+    import io
+    import urllib.request
+
+    from fontTools.subset import Options, Subsetter
+    from fontTools.ttLib import TTFont
+
+    text = html.unescape("".join(re.findall(r"<text[^>]*>([^<]*)</text>", svg)))
+
+    def repl(m: re.Match) -> str:
+        block = m.group(0)
+        family = re.search(r'font-family:\s*"([^"]+)"', block)
+        weight = re.search(r"font-weight:\s*(\d+)", block)
+        url = re.search(r'url\("(https://[^"]+\.woff)"\)', block)
+        if family is None or weight is None or url is None:
+            raise ValueError(f"unexpected @font-face rule: {block!r}")
+
+        with urllib.request.urlopen(url.group(1), timeout=10) as r:
+            font = TTFont(io.BytesIO(r.read()), recalcTimestamp=False)
+        subsetter = Subsetter(Options(flavor="woff"))
+        subsetter.populate(text=text)
+        subsetter.subset(font)
+        buf = io.BytesIO()
+        font.save(buf)
+        b64 = base64.b64encode(buf.getvalue()).decode("ascii")
+
+        return (
+            "@font-face {\n"
+            f'        font-family: "{family.group(1)}";\n'
+            f'        src: url("data:font/woff;base64,{b64}") format("woff");\n'
+            "        font-style: normal;\n"
+            f"        font-weight: {weight.group(1)};\n"
+            "    }"
+        )
+
+    svg, n = re.subn(r"@font-face\s*\{[^}]*\}", repl, svg)
+    if n == 0:
+        raise ValueError("no @font-face rules found in SVG")
+    return svg
+
+
 def _maybe_export_output(cmd):
     """Export CLI command's Rich output to SVG,
     dependent on the value of the ``STRINGCALC_RICH_EXPORT`` environment variable.
@@ -50,6 +106,15 @@ def _maybe_export_output(cmd):
     - ``1``: Export to ``stringcalc-rich-export.svg``.
     - Any other value: Export to ``<value>.svg``
       (or just ``value`` if it already ends in ``.svg``).
+
+    By default, if fontTools is installed, the font (subset to the characters used)
+    is embedded in the SVG, so that it renders correctly where remote fonts are blocked
+    (e.g. GitHub and PyPI READMEs).
+    This is controlled by the ``STRINGCALC_RICH_EXPORT_EMBED_FONT`` environment variable.
+
+    - Unset: Embed if fontTools is installed.
+    - ``1``: Embed, erroring if not possible.
+    - ``0``: Do not embed.
     """
 
     @functools.wraps(cmd)
@@ -65,7 +130,27 @@ def _maybe_export_output(cmd):
             p = Path(_RICH_EXPORT).with_suffix(".svg")
 
         if p is not None:
-            console.save_svg(p)
+            svg = console.export_svg(title="stringcalc")
+            if _RICH_EXPORT_EMBED_FONT != "0":
+                try:
+                    svg = _embed_svg_fonts(svg)
+                except ImportError:
+                    if _RICH_EXPORT_EMBED_FONT == "1":
+                        error("fonttools is required to embed the font in the SVG export.")
+                    else:
+                        console.print(
+                            "Tip: install fonttools to embed the font in the SVG export,"
+                            " so that box lines connect when shown on GitHub/PyPI.",
+                            style="dim",
+                            highlight=False,
+                        )
+                except Exception as e:
+                    if _RICH_EXPORT_EMBED_FONT == "1":
+                        error(f"Could not embed font in SVG export ({e!r}).")
+                    else:
+                        warning(f"Could not embed font in SVG export ({e!r}); saving without it.")
+            svg = "\n".join(line.rstrip() for line in svg.rstrip().splitlines()) + "\n"
+            p.write_text(svg, encoding="utf-8")
 
         return ret
 
@@ -157,9 +242,11 @@ def _rich_table(
     column_info: bool = True,
     ihighlight: int | None = None,
 ) -> RenderableType:
+    import pandas as pd
     from rich.console import Group
     from rich.panel import Panel
     from rich.table import Table
+    from rich.text import Text
 
     attrs = df.attrs.copy()
     df_str = _with_float_nonext_dtypes(df).to_string(
@@ -193,9 +280,14 @@ def _rich_table(
         table.add_column(
             maybe_fancy_col_name(col),
             style="green" if col != "n" else None,
+            justify="right" if pd.api.types.is_numeric_dtype(df[col]) else "left",
         )
     for i, row in enumerate(df_str.splitlines()):
-        table.add_row(*re.split(r"(?<=\S) ", row), style=hl_style if i == ihighlight else None)
+        cells = row.split()
+        if i == ihighlight:
+            table.add_row(*[Text.assemble((c, hl_style)) for c in cells])
+        else:
+            table.add_row(*cells)
 
     # Column descriptions
     r: RenderableType
