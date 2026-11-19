@@ -50,7 +50,6 @@ doc = [
     "myst-parser",
     "sphinx",
     "sphinx-book-theme",
-    "sphinx-click",
     "sphinx-copybutton",
 ]
 panel = [

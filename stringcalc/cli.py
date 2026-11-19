@@ -393,7 +393,7 @@ def frets(
 ):
     """Display fret distance table for `N` frets and scale length `L`.
 
-    Unitless `L` values default to inches when `--units` is specified.
+    Unitless `L` values default to inches when --units is specified.
     """
     from .frets import distances
 
@@ -452,7 +452,7 @@ def length(
     Where `a` and `b` are fret numbers
     (use '0' or 'n' for nut, 's' for saddle)
     and `d` is the corresponding distance (optionally with units, e.g. '0-1=3 cm').
-    Unitless `d` values default to inches when `--units` is specified.
+    Unitless `d` values default to inches when --units is specified.
     """
     from .frets import length_from_distance
 
@@ -805,9 +805,6 @@ def gauge_(
             )
         else:
             console.print(_fmt_val(g, fmt="") if isinstance(g, Quantity) else g)
-
-
-_typer_click_object = typer.main.get_command(app)  # for sphinx-click in docs
 
 
 if __name__ == "__main__":
