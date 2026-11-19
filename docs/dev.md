@@ -18,6 +18,12 @@ Build the Panel app (for inclusion in the docs):
 uv run panel convert panel/app.py --to pyodide --out docs/_static/panel/
 ```
 
+Regenerate the committed CLI example SVGs (only needed when updating them):
+
+```sh
+uv run python docs/make_cli_svgs.py
+```
+
 Build the docs:
 
 ```sh

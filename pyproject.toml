@@ -34,6 +34,7 @@ data = [
     "requests",
 ]
 test = [
+    "fonttools",
     "mypy",
     "pandas-stubs",
     "pytest ==9.*",
@@ -43,6 +44,7 @@ dev = [
     "ipython",
 ]
 doc = [
+    "fonttools",
     "matplotlib",
     "myst-nb",
     "myst-parser",
