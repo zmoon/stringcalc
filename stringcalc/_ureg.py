@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from typing import TYPE_CHECKING, Any, Final, Union
 
 from pint import (
@@ -10,7 +11,6 @@ from pint import (
     Quantity,
     Unit,
     UnitRegistry,
-    set_application_registry,
 )
 
 if TYPE_CHECKING:
@@ -48,24 +48,34 @@ _gravity_ctx.add_transformation("[force]", "[mass]", _force_to_mass)
 ureg.add_context(_gravity_ctx)
 ureg.formatter.default_format = "~P"
 
-set_application_registry(ureg)
-
 QLike = Union[Quantity, str]
-UnitLike = Union[_UnitType, str]
 
 
 _MASS_TO_FORCE_UNIT: dict[_UnitType, str] = {
     ureg.Unit("pound"): "lbf",
     ureg.Unit("kilogram"): "kgf",
     ureg.Unit("gram"): "gf",
+    ureg.Unit("ounce"): "ozf",
 }
 
 
-def _to_force_quantity(q: Quantity) -> Quantity:
+def _to_force_quantity(q: Quantity, *, strict: bool = False) -> Quantity:
     """Convert a mass quantity to its standard-gravity force equivalent."""
     if not q.check("[mass]"):
         return q
-    return q.to(_MASS_TO_FORCE_UNIT.get(q.units, "lbf"), "gravity")
+    target = _MASS_TO_FORCE_UNIT.get(q.units)
+    if target is None:
+        if strict:
+            raise ValueError(f"Unsupported mass unit for force output: {q.units}")
+        target = "lbf"
+    return q.to(target, "gravity")
+
+
+def _check_positive(val: float | Quantity, name: str) -> None:
+    """Raise ``ValueError`` unless ``val`` is strictly positive and finite."""
+    mag = float(val.magnitude) if isinstance(val, Quantity) else float(val)
+    if not (0 < mag < math.inf):
+        raise ValueError(f"`{name}` must be positive and finite")
 
 
 def _normalize_input(
@@ -78,8 +88,12 @@ def _normalize_input(
 
     Plain numbers are returned as ``float`` (default units assumed).
     """
-    if isinstance(val, (str, Quantity)):
+    if isinstance(val, str):
         q: Quantity = ureg.Quantity(val)
+    elif isinstance(val, ureg.Quantity):
+        q = val
+    elif isinstance(val, Quantity):
+        q = ureg.Quantity(val.magnitude, f"{val.units:D}")
     else:
         return float(val)
 

@@ -5,8 +5,10 @@ CLI
 from __future__ import annotations
 
 import functools
+import math
 import os
 import re
+import tokenize
 from pathlib import Path
 from typing import NoReturn
 
@@ -70,7 +72,7 @@ def _maybe_export_output(cmd):
     return inner
 
 
-def error(s: str, *, rc: int = 1, markup: bool = True) -> NoReturn:
+def error(s: str, *, rc: int = 1, markup: bool = False) -> NoReturn:
     """Print error message."""
     console.print(s, style=Style(color="red", bold=True), highlight=False, markup=markup)
     assert rc != 0
@@ -234,7 +236,7 @@ def _cli_val(s: str, *, dim: str, allow_mass_as_force: bool = False) -> float | 
         norm = _normalize_input(q, dim, allow_mass_as_force=allow_mass_as_force)
         assert isinstance(norm, Quantity)
         return norm
-    except (PintError, ValueError) as e:
+    except (PintError, ValueError, ArithmeticError, tokenize.TokenError) as e:
         error(f"Invalid value {s!r}. Message: {e}", rc=2)
 
 
@@ -242,12 +244,15 @@ def _cli_unit(u: str, *, dim: str, allow_mass_as_force: bool = False) -> _UnitTy
     """Parse a CLI unit string and validate its dimensionality."""
     try:
         unit: _UnitType = ureg.Unit(u)
-    except (PintError, ValueError) as e:
+    except (PintError, ValueError, ArithmeticError, tokenize.TokenError) as e:
         error(f"Invalid unit {u!r}. Message: {e}", rc=2)
 
     q = ureg.Quantity(1.0, unit)
     if allow_mass_as_force and q.check("[mass]"):
-        q = _to_force_quantity(q)
+        try:
+            q = _to_force_quantity(q, strict=True)
+        except ValueError as e:
+            error(str(e), rc=2)
         unit = q.units
 
     if not q.check(dim):
@@ -364,7 +369,6 @@ def length(
         error(
             f"Input failed to match a-b=d spec format regex {_RE_LENGTH_SPEC.pattern!r}",
             rc=2,
-            markup=False,
         )
 
     dct = m.groupdict()
@@ -404,6 +408,81 @@ def length(
         )
     else:
         console.print(res_str)
+
+
+def _from_inch(val_in: float, u: _UnitType) -> float:
+    """Convert an inch magnitude to ``u`` rounded to 4 decimal places."""
+    return round(float(ureg.Quantity(val_in, "inch").to(u).magnitude), 4)
+
+
+def _fanned_lengths(
+    L_vals: list[float | Quantity],
+    *,
+    n_str: int,
+    nut_width: str | None,
+    edge_space: list[str] | None,
+    verbose: bool,
+) -> list[float | Quantity]:
+    """Compute per-string scale lengths for fanned-fret calculations."""
+    if len(L_vals) != 2:
+        error(
+            "Must supply two scale lengths (bass and treble sides) for fanned calculation. "
+            f"Got {len(L_vals)}.",
+            rc=2,
+        )
+    if n_str < 2:
+        error("Need at least two strings for fanned calculation.", rc=2)
+    if not nut_width:
+        error("Must supply nut width for fanned calculation.", rc=2)
+
+    nw_val = _cli_val(nut_width, dim="[length]")
+    nw_in, u_nw = _to_magnitude(nw_val, "inch")
+    if not (0 < nw_in < math.inf):
+        error("Nut width must be positive and finite.", rc=2)
+
+    if edge_space is None:
+        e_b_in, e_t_in = 5 / 32, 1 / 8
+    else:
+        es_in = [_to_magnitude(_cli_val(e, dim="[length]"), "inch")[0] for e in edge_space]
+        if len(es_in) == 1:
+            es_in *= 2
+        elif len(es_in) > 2:
+            error(f"Specify one or two edge space values. Got {len(edge_space)}.", rc=2)
+        if not all(math.isfinite(e) for e in es_in):
+            error("Edge space values must be finite.", rc=2)
+        e_b_in, e_t_in = es_in
+
+    L_b_in, u_Lb = _to_magnitude(L_vals[0], "inch")
+    L_t_in, u_Lt = _to_magnitude(L_vals[1], "inch")
+    if not (0 < L_b_in < math.inf and 0 < L_t_in < math.inf):
+        error("Scale lengths must be positive and finite.", rc=2)
+
+    dLdx = (L_t_in - L_b_in) / nw_in
+    d_space = (nw_in - e_b_in - e_t_in) / (n_str - 1)  # string spacing
+    xs_in = [e_b_in + i * d_space for i in range(n_str)]
+    Ls_in = [L_b_in + dLdx * x for x in xs_in]
+    out_u = u_Lb or u_Lt
+    out_vals: list[float | Quantity]
+    if out_u is not None:
+        out_vals = [ureg.Quantity(_from_inch(l_in, out_u), out_u) for l_in in Ls_in]
+    else:
+        out_vals = [round(float(l_in), 4) for l_in in Ls_in]
+
+    if verbose:
+        disp_u = u_nw or ureg.Unit("inch")
+
+        def _fmt_fan(val_in: float) -> str:
+            return _fmt_val(ureg.Quantity(_from_inch(val_in, disp_u), disp_u))
+
+        xs_disp = [_from_inch(x, disp_u) for x in xs_in]
+        xs_u = f"{disp_u}" if disp_u != ureg.Unit("inch") else '"'
+        info(f"Nut width:               {_fmt_fan(nw_in)}")
+        info(f"Left/bass edge space:    {_fmt_fan(e_b_in)}")
+        info(f"Right/treble edge space: {_fmt_fan(e_t_in)}")
+        info(f"Computed string spacing: {_fmt_fan(d_space)}")
+        info(f"Computed string nut positions ({xs_u}): {xs_disp}")
+
+    return out_vals
 
 
 @app.command(name="gauge")
@@ -526,74 +605,13 @@ def gauge_(
         if is_fan is None:
             is_fan = len(L_vals) == 2
         if is_fan:
-            if len(L_vals) != 2:
-                error(
-                    "Must supply two scale lengths (bass and treble sides) for fanned calculation. "
-                    f"Got {len(L_vals)}.",
-                    rc=2,
-                )
-            n_str = max(len(T_vals), len(P))
-            if n_str < 2:
-                error("Need at least two strings for fanned calculation.", rc=2)
-            if not nut_width:
-                error("Must supply nut width for fanned calculation.", rc=2)
-
-            nw_val = _cli_val(nut_width, dim="[length]")
-            nw_in, u_nw = _to_magnitude(nw_val, "inch")
-            if nw_in <= 0:
-                error("Nut width must be positive.", rc=2)
-
-            if edge_space is None:
-                e_b_in, e_t_in = 5 / 32, 1 / 8
-            else:
-                es_in = [_to_magnitude(_cli_val(e, dim="[length]"), "inch")[0] for e in edge_space]
-                if len(es_in) == 1:
-                    es_in *= 2
-                elif len(es_in) > 2:
-                    error(f"Specify one or two edge space values. Got {len(edge_space)}.", rc=2)
-                e_b_in, e_t_in = es_in
-
-            L_b_in, u_Lb = _to_magnitude(L_vals[0], "inch")
-            L_t_in, u_Lt = _to_magnitude(L_vals[1], "inch")
-            if L_b_in <= 0 or L_t_in <= 0:
-                error("Scale lengths must be positive.", rc=2)
-            dLdx = (L_t_in - L_b_in) / nw_in
-            d_space = (nw_in - e_b_in - e_t_in) / (n_str - 1)  # string spacing
-            xs_in = [e_b_in + i * d_space for i in range(n_str)]
-            Ls_in = [L_b_in + dLdx * x for x in xs_in]
-            out_u = u_Lb or u_Lt
-            if out_u is not None:
-                L_vals = [
-                    ureg.Quantity(round(ureg.Quantity(l_in, "inch").to(out_u).magnitude, 4), out_u)
-                    for l_in in Ls_in
-                ]
-            else:
-                L_vals = [round(float(l_in), 4) for l_in in Ls_in]
-            if verbose:
-
-                def _fmt_fan(val_in: float) -> str:
-                    if u_nw is not None:
-                        q = ureg.Quantity(
-                            round(float(ureg.Quantity(val_in, "inch").to(u_nw).magnitude), 4),
-                            u_nw,
-                        )
-                        return _fmt_val(q)
-                    return f'{round(val_in, 4)}"'
-
-                xs_disp = [
-                    (
-                        round(float(ureg.Quantity(x, "inch").to(u_nw).magnitude), 4)
-                        if u_nw is not None
-                        else round(x, 4)
-                    )
-                    for x in xs_in
-                ]
-                xs_u = f"{u_nw}" if u_nw is not None and u_nw != ureg.Unit("inch") else '"'
-                info(f"Nut width:               {_fmt_fan(nw_in)}")
-                info(f"Left/bass edge space:    {_fmt_fan(e_b_in)}")
-                info(f"Right/treble edge space: {_fmt_fan(e_t_in)}")
-                info(f"Computed string spacing: {_fmt_fan(d_space)}")
-                info(f"Computed string nut positions ({xs_u}): {xs_disp}")
+            L_vals = _fanned_lengths(
+                L_vals,
+                n_str=max(len(T_vals), len(P)),
+                nut_width=nut_width,
+                edge_space=edge_space,
+                verbose=verbose,
+            )
 
         if verbose:
             info(f"Searching string types: {types_set}")

@@ -14,7 +14,7 @@ import numpy.typing as npt  # v1.21 needed
 import pandas as pd
 from pint import Quantity
 
-from ._ureg import QLike, _normalize_input, ureg
+from ._ureg import QLike, _check_positive, _normalize_input, ureg
 
 # Note also `pint._typing.UnitLike`
 
@@ -41,8 +41,7 @@ def distance_et(
         Scale length. Can be a float or a Pint quantity / string (e.g. ``'25.5"'``, ``'650 mm'``).
     """
     L_norm = _normalize_input(L, "[length]")
-    if not L_norm > 0:
-        raise ValueError("`L` must be positive")
+    _check_positive(L_norm, "L")
 
     n = np.floor(n, dtype=np.float64)
 
@@ -80,8 +79,7 @@ def distances(N: int, *, L: float | QLike, method: str = "et") -> pd.DataFrame:
     """
     assert N >= 1  # guarantees `d` is array with at least one value
     L_norm = _normalize_input(L, "[length]")
-    if not L_norm > 0:
-        raise ValueError("`L` must be positive")
+    _check_positive(L_norm, "L")
 
     if isinstance(L_norm, Quantity):
         L_mag = float(L_norm.magnitude)
@@ -152,9 +150,7 @@ def length_from_distance(ab: tuple[int | None, int | None], d: float | QLike) ->
     Quantity(21.04, "inch")
     """
     d = _normalize_input(d, "[length]")
-
-    if not d > 0:
-        raise ValueError("`d` must be positive")
+    _check_positive(d, "d")
 
     a, b = ab
 

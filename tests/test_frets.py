@@ -72,6 +72,13 @@ def test_l_from_d_pint():
         rtol=1e-4,
     )
 
+    other_ureg = pint.UnitRegistry()
+    pint.testing.assert_allclose(
+        frets.length_from_distance((0, 1), other_ureg("3 cm")).to("inch"),
+        21.04388 * frets.ureg("in"),
+        rtol=1e-4,
+    )
+
 
 @pytest.mark.parametrize("d", ["5 kg", "5"])
 def test_l_from_d_invalid_units(d):
@@ -96,6 +103,10 @@ def test_d_et_pint():
         frets.distance_et(12, L="25.5″"),
         12.75 * frets.ureg("in"),
     )
+    pint.testing.assert_allclose(
+        frets.distance_et(12, L=pint.Quantity(25.5, "in")),
+        12.75 * frets.ureg("in"),
+    )
 
 
 @pytest.mark.parametrize("L", ["5 kg", "25.5"])
@@ -104,9 +115,15 @@ def test_d_et_invalid_units(L):
         frets.distance_et(12, L=L)
 
 
-def test_d_et_invalid_L():
+@pytest.mark.parametrize("L", ["-5 in", "inf in", float("inf")])
+def test_d_et_invalid_L(L):
     with pytest.raises(ValueError, match="must be positive"):
-        frets.distance_et(12, L="-5 in")
+        frets.distance_et(12, L=L)
+
+
+def test_ds_invalid_L():
+    with pytest.raises(ValueError, match="must be positive"):
+        frets.distances(N=12, L="inf in")
 
 
 def test_ds_pint():
@@ -122,9 +139,10 @@ def test_l_from_d_invalid_ab():
         frets.length_from_distance((0, 0), 10)
 
 
-def test_l_from_d_invalid_d():
+@pytest.mark.parametrize("d", [-10, "inf in", float("inf")])
+def test_l_from_d_invalid_d(d):
     with pytest.raises(ValueError, match="must be positive"):
-        frets.length_from_distance((0, 1), -10)
+        frets.length_from_distance((0, 1), d)
 
 
 def test_main():
