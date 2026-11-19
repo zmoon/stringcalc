@@ -6,6 +6,8 @@ Using [uv](https://docs.astral.sh/uv/), prepare the venv:
 uv sync --all-groups --all-extras
 ```
 
+To update an existing venv, add `--upgrade`.
+
 Run the tests:
 
 ```sh
