@@ -11,6 +11,8 @@ _Calculations for [string instrument](https://en.wikipedia.org/wiki/String_instr
 stringcalc gauge --suggest -T 17 -L 23 -P G2 -P D3 -P A3 -P E4 -N 6 --type DA:LEW --type DA:LE --no-column-info
 ```
 
-<img src="https://raw.githubusercontent.com/zmoon/stringcalc/refs/heads/main/docs/cli_gauge-suggest_tb23nw.svg"
-     alt="CLI gauge suggestion output for 23&quot; TB for D'Addario loop-end nickel-wound strings"
-     width="550">
+<a href="https://stringcalc.readthedocs.io/en/latest/examples/gauge-suggest.html#cli">
+  <img src="https://raw.githubusercontent.com/zmoon/stringcalc/refs/heads/main/docs/cli_gauge-suggest_tb23nw.svg"
+       alt="CLI gauge suggestion output for 23&quot; TB for D'Addario loop-end nickel-wound strings"
+       width="550">
+</a>
