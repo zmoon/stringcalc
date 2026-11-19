@@ -31,20 +31,45 @@ data
 Plain steel ball-end strings.
 
 ```{code-cell} ipython3
-group_ids = ["DA:PL", "STP:PL", "GHS:PL", "SJ:PL"]
-(
-    data.query("group_id in @group_ids")
-    .pivot_table(
-        index="gauge",
-        columns="group_id",
-        values=["uw"],
-        observed=True,
+def make_table(title, group_ids):
+    table = (
+        data
+        .query("group_id in @group_ids")
+        .pivot_table(
+            index="gauge",
+            columns="group_id",
+            values=["uw"],
+            observed=True,
+        )
+        .mul(1000)
     )
-    .mul(1000)
-    .style
-    .set_caption("Plain steel")
-    .background_gradient(axis=1, cmap="RdBu_r")
-)
+
+    # single unique value -> neutral midpoint (instead of vmin),
+    # while keeping NaNs as NaN
+    vmin = table.min(axis=1)
+    gmap = (
+        table
+        .sub(vmin, axis=0)
+        .div(table.max(axis=1) - vmin, axis=0)
+        .fillna(0.5)
+        .mask(table.isna())
+    )
+
+    return (
+        table
+        .style
+        .set_caption(title)
+        .background_gradient(
+            cmap="RdBu_r",
+            gmap=gmap,
+            vmin=0,
+            vmax=1,
+            axis=None,
+        )
+    )
+
+
+make_table("Plain steel", ["DA:PL", "STP:PL", "GHS:PL", "SJ:PL"])
 ```
 
 ```{note}
@@ -64,20 +89,7 @@ The lack of a number in a cell indicates that we don't have data for that gauge.
 Phosphor bronze ball-end strings.
 
 ```{code-cell} ipython3
-group_ids = ["DA:PB", "STP:PB", "GHS:B", "SJ:PB"]
-(
-    data.query("group_id in @group_ids")
-    .pivot_table(
-        index="gauge",
-        columns="group_id",
-        values=["uw"],
-        observed=True,
-    )
-    .mul(1000)
-    .style
-    .set_caption("Phosphor bronze")
-    .background_gradient(axis=1, cmap="RdBu_r")
-)
+make_table("Phosphor bronze", ["DA:PB", "STP:PB", "GHS:B", "SJ:PB"])
 ```
 
 ## Nickel-wound
@@ -91,18 +103,5 @@ Nickel-wound ball-end strings.
 - `SJ:PN`: Stringjoy pure nickel ("Broadways")
 
 ```{code-cell} ipython3
-group_ids = ["DA:NW", "STP:NW", "GHS:N", "GHS:DY", "SJ:N", "SJ:PN"]
-(
-    data.query("group_id in @group_ids")
-    .pivot_table(
-        index="gauge",
-        columns="group_id",
-        values=["uw"],
-        observed=True,
-    )
-    .mul(1000)
-    .style
-    .set_caption("Nickel-wound")
-    .background_gradient(axis=1, cmap="RdBu_r")
-)
+make_table("Nickel-wound", ["DA:NW", "STP:NW", "GHS:N", "GHS:DY", "SJ:N", "SJ:PN"])
 ```
