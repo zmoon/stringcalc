@@ -184,6 +184,7 @@ export const sharedStyles = css`
 
   .sc-segmented {
     display: inline-flex;
+    width: fit-content;
     border: 1px solid var(--sc-border-strong);
     border-radius: var(--sc-radius-sm);
     overflow: hidden;
