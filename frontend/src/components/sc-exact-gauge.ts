@@ -47,7 +47,7 @@ export class ScExactGauge extends LitElement {
   @property({ type: String }) tensionUnit: TensionUnit = "lbf";
   @property({ type: Number }) L = 22.5;
   @property({ type: String }) lengthUnit: ScaleLengthUnit = "in";
-  @property({ type: String }) pitch = "D3";
+  @property({ type: String }) pitch = "E4";
   @property({ type: String }) material = "plain steel";
   @property({ type: Number }) customDensity = 1.3;
   @property({ type: String }) densityUnit: DensityUnit = "g/cm^3";

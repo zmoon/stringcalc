@@ -298,7 +298,7 @@ class ExactGaugeWidget(_BaseWidget):
     tension_unit = traitlets.Unicode("lbf").tag(sync=True)
     L = traitlets.Float(22.5).tag(sync=True)
     length_unit = traitlets.Unicode("in").tag(sync=True)
-    pitch = traitlets.Unicode("D3").tag(sync=True)
+    pitch = traitlets.Unicode("E4").tag(sync=True)
     material = traitlets.Unicode("plain steel").tag(sync=True)
     custom_density = traitlets.Float(1.3).tag(sync=True)
     density_unit = traitlets.Unicode("g/cm^3").tag(sync=True)

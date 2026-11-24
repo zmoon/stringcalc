@@ -63,7 +63,7 @@ def test_gauge_suggest_widget(monkeypatch):
 
 
 def test_misc_widgets():
-    eg = ExactGaugeWidget(T=16, L=22.5, pitch="D3", **_bundle_kwargs())
+    eg = ExactGaugeWidget(T=16, L=22.5, pitch="E4", **_bundle_kwargs())
     assert eg.result["error"] is None
     assert eg.result["gauge_in"] > 0
 
