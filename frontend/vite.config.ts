@@ -1,10 +1,11 @@
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   base: "./",
+  publicDir: command === "serve" ? "public" : false,
   build: {
-    outDir: "dist/app",
+    outDir: "../stringcalc/_web",
     emptyOutDir: true,
     rollupOptions: {
       input: {
@@ -19,4 +20,4 @@ export default defineConfig({
   test: {
     environment: "happy-dom",
   },
-});
+}));

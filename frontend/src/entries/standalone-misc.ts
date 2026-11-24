@@ -3,13 +3,14 @@ import "../components/sc-exact-gauge";
 import "../components/sc-frets";
 import "../components/sc-scale-length";
 
-import { PyodideBackend } from "../backend/pyodide-backend";
+import { createBackend } from "../backend";
 import type { ScExactGauge } from "../components/sc-exact-gauge";
 import type { ScFrets } from "../components/sc-frets";
 import type { ScScaleLength } from "../components/sc-scale-length";
 import type { ExactGaugeState, FretsState, ScaleLengthState } from "../types";
 import {
   createStatusUpdater,
+  setFooterRuntime,
   setFooterVersion,
   wireCalc,
 } from "./standalone-util";
@@ -18,7 +19,7 @@ const exactEl = document.getElementById("exact-gauge-widget") as ScExactGauge;
 const fretsEl = document.getElementById("frets-widget") as ScFrets;
 const scaleEl = document.getElementById("scale-length-widget") as ScScaleLength;
 const setStatus = createStatusUpdater();
-const backend = new PyodideBackend(setStatus);
+const backend = createBackend(setStatus, setFooterRuntime);
 
 const exactState = (): ExactGaugeState => ({
   T: exactEl.T,

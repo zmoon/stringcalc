@@ -780,5 +780,33 @@ def gauge_(
             console.print(_fmt_val(g, fmt="") if isinstance(g, Quantity) else g)
 
 
+@app.command(name="app")
+def run_app(
+    host: str = typer.Option("127.0.0.1", help="Host interface to bind."),
+    port: int = typer.Option(0, "-p", "--port", help="Port to listen on (0 picks a free port)."),
+    open_browser: bool = typer.Option(
+        True,
+        "--open/--no-open",
+        help="Open the app in the default web browser.",
+    ),
+):
+    """Launch the interactive web app backed by local Python."""
+    from ._server import serve
+
+    try:
+        serve(
+            host=host,
+            port=port,
+            open_browser=open_browser,
+            on_ready=lambda url: console.print(
+                f"Serving stringcalc app at [link={url}]{url}[/link] (Ctrl+C to stop)"
+            ),
+        )
+    except FileNotFoundError as e:
+        error(str(e), rc=1)
+    except OSError as e:
+        error(f"Could not start server on {host}:{port}: {e}", rc=1)
+
+
 if __name__ == "__main__":
     app()

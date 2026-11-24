@@ -1,23 +1,20 @@
 /// <reference lib="webworker" />
 
+import type { MethodName } from "./index";
+
 const PYODIDE_INDEX_URL = "https://cdn.jsdelivr.net/pyodide/v0.27.5/full/";
 
 interface InitMessage {
   type: "init";
   id: number;
   appBaseUrl: string;
-  pkgOverride: string | null;
+  pkgSource: string | null;
 }
 
 interface CallMessage {
   type: "call";
   id: number;
-  method:
-    | "get_catalog"
-    | "run_suggest_gauge"
-    | "run_exact_gauge"
-    | "run_frets"
-    | "run_scale_length";
+  method: MethodName;
   payload?: unknown;
 }
 
@@ -46,23 +43,8 @@ function postStatus(phase: string, message: string) {
 
 async function resolvePackageSpec(
   appBaseUrl: string,
-  pkgOverride: string | null,
+  source: string | null,
 ): Promise<string> {
-  let source = pkgOverride;
-  if (!source) {
-    try {
-      const res = await fetch(new URL("app-config.json", appBaseUrl), {
-        cache: "no-store",
-      });
-      if (res.ok) {
-        const cfg = (await res.json()) as { stringcalcSource?: string };
-        if (cfg.stringcalcSource) source = cfg.stringcalcSource;
-      }
-    } catch {
-      // Fall through to pypi
-    }
-  }
-
   if (source === "local") {
     const manifestUrl = new URL("wheels/manifest.json", appBaseUrl);
     const res = await fetch(manifestUrl, { cache: "no-store" });
@@ -86,7 +68,7 @@ async function resolvePackageSpec(
   return source;
 }
 
-async function initPyodide(appBaseUrl: string, pkgOverride: string | null) {
+async function initPyodide(appBaseUrl: string, pkgSource: string | null) {
   if (initialized) return;
 
   postStatus("loading", "Loading Python (Pyodide)…");
@@ -100,7 +82,7 @@ async function initPyodide(appBaseUrl: string, pkgOverride: string | null) {
   postStatus("loading", "Loading NumPy & pandas…");
   await pyodide.loadPackage(["numpy", "pandas", "micropip"]);
 
-  const spec = await resolvePackageSpec(appBaseUrl, pkgOverride);
+  const spec = await resolvePackageSpec(appBaseUrl, pkgSource);
   postStatus(
     "loading",
     spec.endsWith(".whl")
@@ -116,15 +98,10 @@ async function initPyodide(appBaseUrl: string, pkgOverride: string | null) {
   postStatus("loading", "Initializing stringcalc…");
   await pyodide.runPythonAsync(`
 import json
-from stringcalc import _app
+from stringcalc._app import dispatch
 
 def _sc_dispatch(method: str, payload_json: str) -> str:
-    fn = getattr(_app, method)
-    if method == "get_catalog":
-        res = fn()
-    else:
-        res = fn(json.loads(payload_json))
-    return json.dumps(res)
+    return json.dumps(dispatch(method, json.loads(payload_json)))
 `);
 
   dispatchFn = pyodide.globals.get("_sc_dispatch") as DispatchFn;
@@ -137,7 +114,7 @@ self.onmessage = (event: MessageEvent<WorkerRequest>) => {
   callQueue = callQueue.then(async () => {
     try {
       if (msg.type === "init") {
-        await initPyodide(msg.appBaseUrl, msg.pkgOverride);
+        await initPyodide(msg.appBaseUrl, msg.pkgSource);
         self.postMessage({ type: "response", id: msg.id, result: true });
         return;
       }

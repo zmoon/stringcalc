@@ -18,6 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 FRONTEND = ROOT / "frontend"
+WEB_DIR = ROOT / "stringcalc" / "_web"
 DIST_APP = FRONTEND / "dist" / "app"
 
 
@@ -99,6 +100,10 @@ def main(argv: list[str] | None = None) -> int:
         _run([npm, "--prefix", str(FRONTEND), "run", "build:widgets"])
 
     _run([npm, "--prefix", str(FRONTEND), "run", "build:app"])
+
+    if DIST_APP.exists():
+        shutil.rmtree(DIST_APP)
+    shutil.copytree(WEB_DIR, DIST_APP)
 
     _write_app_config(DIST_APP, args.source)
     if args.source == "local":

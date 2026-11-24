@@ -1,23 +1,4 @@
-import type {
-  Catalog,
-  ExactGaugeResponse,
-  ExactGaugeState,
-  FretsResponse,
-  FretsState,
-  GaugeSuggestState,
-  ScaleLengthResponse,
-  ScaleLengthState,
-  SuggestGaugeResponse,
-} from "../types";
-
-export type BackendStatusHandler = (phase: string, message: string) => void;
-
-type MethodName =
-  | "get_catalog"
-  | "run_suggest_gauge"
-  | "run_exact_gauge"
-  | "run_frets"
-  | "run_scale_length";
+import type { BackendStatusHandler, MethodName } from "./index";
 
 interface PendingCall {
   resolve: (value: unknown) => void;
@@ -31,7 +12,7 @@ export class PyodideBackend {
   private readyPromise: Promise<void>;
   private onStatus?: BackendStatusHandler;
 
-  constructor(onStatus?: BackendStatusHandler) {
+  constructor(onStatus?: BackendStatusHandler, configSource?: string | null) {
     this.onStatus = onStatus;
     this.worker = new Worker(new URL("./pyodide-worker.ts", import.meta.url), {
       type: "module",
@@ -72,11 +53,14 @@ export class PyodideBackend {
     };
 
     const appBaseUrl = new URL("./", window.location.href).href;
-    const pkgOverride = new URLSearchParams(window.location.search).get("pkg");
+    const pkgSource =
+      new URLSearchParams(window.location.search).get("pkg") ??
+      configSource ??
+      null;
     this.readyPromise = this.sendRaw({
       type: "init",
       appBaseUrl,
-      pkgOverride,
+      pkgSource,
     }) as Promise<void>;
   }
 
@@ -88,28 +72,8 @@ export class PyodideBackend {
     });
   }
 
-  private async call<T>(method: MethodName, payload?: unknown): Promise<T> {
+  async call<T>(method: MethodName, payload?: unknown): Promise<T> {
     await this.readyPromise;
     return (await this.sendRaw({ type: "call", method, payload })) as T;
-  }
-
-  getCatalog(): Promise<Catalog> {
-    return this.call<Catalog>("get_catalog");
-  }
-
-  suggestGauge(state: GaugeSuggestState): Promise<SuggestGaugeResponse> {
-    return this.call<SuggestGaugeResponse>("run_suggest_gauge", state);
-  }
-
-  exactGauge(state: ExactGaugeState): Promise<ExactGaugeResponse> {
-    return this.call<ExactGaugeResponse>("run_exact_gauge", state);
-  }
-
-  frets(state: FretsState): Promise<FretsResponse> {
-    return this.call<FretsResponse>("run_frets", state);
-  }
-
-  scaleLength(state: ScaleLengthState): Promise<ScaleLengthResponse> {
-    return this.call<ScaleLengthResponse>("run_scale_length", state);
   }
 }

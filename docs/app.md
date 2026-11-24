@@ -5,6 +5,8 @@ stringcalc ships interactive tools built as shared Web Components:
 - **Standalone web apps** powered by Python in the browser (via Pyodide):
   - <a href="_static/app/index.html" target="_blank" rel="noopener">Open Gauge Suggest app (full screen)</a>
   - <a href="_static/app/misc.html" target="_blank" rel="noopener">Open Misc Tools app (Exact gauge, Frets, Scale length)</a>
+- **Local web app** backed directly by your local Python installation (instant startup, works offline):
+  `stringcalc app` (requires `pip install stringcalc[cli]`; pass `--no-open` to skip opening the browser).
 - **Notebook widgets** via `anywidget` (`pip install stringcalc[widget]`), using the same UI backed by your live Python kernel.
 
 ## Embedded Gauge Suggest app

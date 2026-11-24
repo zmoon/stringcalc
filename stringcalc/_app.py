@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import math
 import warnings
+from collections.abc import Callable
 from functools import lru_cache
 from typing import Any, TypedDict
 
@@ -415,3 +416,20 @@ def run_scale_length(req: dict[str, Any]) -> ScaleLengthResponse:
         }
     except (ValueError, PintError) as e:
         return {"L": None, "L_in": None, "L_mm": None, "lengthUnit": length_unit, "error": str(e)}
+
+
+METHODS: dict[str, Callable[[dict[str, Any]], Any]] = {
+    "get_catalog": lambda _req: get_catalog(),
+    "run_suggest_gauge": run_suggest_gauge,
+    "run_exact_gauge": run_exact_gauge,
+    "run_frets": run_frets,
+    "run_scale_length": run_scale_length,
+}
+
+
+def dispatch(method: str, payload: dict[str, Any] | None = None) -> Any:
+    """Dispatch a JSON-compatible app method call by name."""
+    fn = METHODS.get(method)
+    if fn is None:
+        raise KeyError(f"Unknown method: {method}")
+    return fn(payload if payload is not None else {})

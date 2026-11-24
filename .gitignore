@@ -7,6 +7,7 @@ frontend/dist/
 frontend/public/wheels/
 frontend/public/app-config.json
 stringcalc/widget/_bundle.js
+stringcalc/_web/
 _version.py
 
 uv.lock

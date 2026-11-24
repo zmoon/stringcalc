@@ -13,6 +13,14 @@ export function setFooterVersion(version?: string) {
   if (el) el.textContent = `v${version}`;
 }
 
+export function setFooterRuntime(mode: "http" | "pyodide") {
+  const el = document.getElementById("sc-runtime");
+  if (el) {
+    el.textContent =
+      mode === "http" ? "locally with Python" : "in your browser via Pyodide";
+  }
+}
+
 export function wireCalc<S, R>(
   el: HTMLElement & { loading: boolean },
   resultProp: "result" | "results",

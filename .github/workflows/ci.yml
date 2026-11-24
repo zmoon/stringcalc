@@ -100,16 +100,20 @@ jobs:
       - name: Build widget bundle and standalone web app
         run: uv run python scripts/build_web.py --source local
 
-      - name: Verify widget bundle is built and packaged in wheel
+      - name: Verify widget and web assets are built and packaged in wheel
         run: |
           uv run python -c "
           import glob, pathlib, zipfile
           assert pathlib.Path('stringcalc/widget/_bundle.js').is_file()
+          assert pathlib.Path('stringcalc/_web/index.html').is_file()
           wheels = sorted(glob.glob('frontend/dist/app/wheels/stringcalc-*.whl'))
           assert wheels, 'no wheel built'
           with zipfile.ZipFile(wheels[-1]) as z:
-              assert 'stringcalc/widget/_bundle.js' in z.namelist()
-              assert 'stringcalc/data/presets.json' in z.namelist()
+              names = set(z.namelist())
+              assert 'stringcalc/widget/_bundle.js' in names
+              assert 'stringcalc/_web/index.html' in names
+              assert 'stringcalc/_web/misc.html' in names
+              assert 'stringcalc/data/presets.json' in names
           "
 
       - name: Test Python widgets and app service

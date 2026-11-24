@@ -165,3 +165,67 @@ def test_run_exact_gauge_frets_and_scale_length():
 
     sl_err = run_scale_length({"a": "5", "b": "5", "d": 1.0, "lengthUnit": "in"})
     assert sl_err["error"] is not None
+
+
+def test_local_http_server(tmp_path):
+    import json
+    import threading
+    import urllib.error
+    import urllib.request
+
+    from stringcalc._server import create_server
+
+    with pytest.raises(FileNotFoundError):
+        create_server(web_dir=tmp_path)
+
+    (tmp_path / "index.html").write_text("<html>stringcalc</html>", encoding="utf-8")
+    server = create_server(port=0, web_dir=tmp_path)
+    port = server.server_address[1]
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+
+    base = f"http://127.0.0.1:{port}"
+    try:
+        with urllib.request.urlopen(f"{base}/") as r:
+            assert r.status == 200
+            assert "stringcalc" in r.read().decode("utf-8")
+
+        with urllib.request.urlopen(f"{base}/app-config.json") as r:
+            assert json.loads(r.read()) == {"backend": "http"}
+
+        req = urllib.request.Request(
+            f"{base}/api/get_catalog",
+            data=b"{}",
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(req) as r:
+            cat = json.loads(r.read())
+            assert "version" in cat and len(cat["presets"]) > 0
+
+        req_eg = urllib.request.Request(
+            f"{base}/api/run_exact_gauge",
+            data=json.dumps({"T": 16, "L": 22.5, "pitch": "E4", "material": "plain steel"}).encode(
+                "utf-8"
+            ),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(req_eg) as r:
+            eg = json.loads(r.read())
+            assert eg["error"] is None
+            assert eg["gauge_in"] == pytest.approx(0.0112, rel=0.05)
+
+        req_404 = urllib.request.Request(f"{base}/api/nope", data=b"{}", method="POST")
+        with pytest.raises(urllib.error.HTTPError) as exc:
+            urllib.request.urlopen(req_404)
+        assert exc.value.code == 404
+
+        req_400 = urllib.request.Request(f"{base}/api/get_catalog", data=b"{bad", method="POST")
+        with pytest.raises(urllib.error.HTTPError) as exc2:
+            urllib.request.urlopen(req_400)
+        assert exc2.value.code == 400
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=5)

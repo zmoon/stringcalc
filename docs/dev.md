@@ -35,10 +35,16 @@ npm --prefix frontend test
 
 ## Web app & widgets
 
-Build the `anywidget` bundle (`stringcalc/widget/_bundle.js`) and standalone web apps (with local wheel for Pyodide):
+Build the `anywidget` bundle (`stringcalc/widget/_bundle.js`), packaged local web assets (`stringcalc/_web/`), and standalone Pyodide web apps:
 
 ```sh
 uv run python scripts/build_web.py --source local --out docs/_static/app
+```
+
+To run the local Python-backed web app (no Pyodide or wheel rebuild needed after Python edits):
+
+```sh
+uv run stringcalc app
 ```
 
 To target the PyPI release of `stringcalc` instead of the local wheel, pass `--source pypi`.

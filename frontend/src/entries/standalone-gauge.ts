@@ -2,12 +2,13 @@ import "../standalone.css";
 import "../components/sc-gauge-suggest";
 
 import defaultPresets from "../../../stringcalc/data/presets.json";
-import { PyodideBackend } from "../backend/pyodide-backend";
+import { createBackend } from "../backend";
 import type { ScGaugeSuggest } from "../components/sc-gauge-suggest";
 import type { GaugeSuggestState, Preset } from "../types";
 import { createUrlSyncer, paramsToState } from "../url-state";
 import {
   createStatusUpdater,
+  setFooterRuntime,
   setFooterVersion,
   wireCalc,
 } from "./standalone-util";
@@ -26,7 +27,7 @@ Object.assign(widget, currentState);
 widget.loading = true;
 
 const urlSync = createUrlSyncer(presets);
-const backend = new PyodideBackend(setStatus);
+const backend = createBackend(setStatus, setFooterRuntime);
 
 const runner = wireCalc(
   widget,
