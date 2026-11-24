@@ -111,6 +111,11 @@ export const sharedStyles = css`
     cursor: not-allowed;
   }
 
+  input:disabled,
+  select:disabled {
+    background: var(--sc-surface-hover);
+  }
+
   button {
     font: inherit;
     font-size: 0.88rem;

@@ -619,27 +619,22 @@ export class ScGaugeSuggest extends LitElement {
           </div>
 
           <div class="scale-bar">
-            ${
-              !this.fanned.enabled
-                ? html`
-                    <div class="sc-field">
-                      <label for="uniform-L">Scale length (${unitL})</label>
-                      <input
-                        id="uniform-L"
-                        type="number"
-                        inputmode="decimal"
-                        step="any"
-                        style="width: 7.5rem"
-                        .value=${String(this.L)}
-                        @change=${(e: Event) =>
-                          this.onUniformLengthChange(
-                            Number((e.target as HTMLInputElement).value),
-                          )}
-                      />
-                    </div>
-                  `
-                : nothing
-            }
+            <div class="sc-field">
+              <label for="uniform-L">Scale length (${unitL})</label>
+              <input
+                id="uniform-L"
+                type="number"
+                inputmode="decimal"
+                step="any"
+                style="width: 7.5rem"
+                ?disabled=${this.fanned.enabled}
+                .value=${String(this.L)}
+                @change=${(e: Event) =>
+                  this.onUniformLengthChange(
+                    Number((e.target as HTMLInputElement).value),
+                  )}
+              />
+            </div>
 
             <label class="fan-toggle">
               <input
