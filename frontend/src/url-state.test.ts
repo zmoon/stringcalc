@@ -4,6 +4,9 @@ import type { Preset } from "./types";
 import {
   convertLength,
   convertTension,
+  fmtPitchSub,
+  normalizePitch,
+  splitPitch,
   stateFromPreset,
   transposePitch,
 } from "./units";
@@ -109,6 +112,17 @@ describe("units & pitch helpers", () => {
     expect(transposePitch("C4", -1)).toBe("B3");
     expect(transposePitch("Bb2", 2)).toBe("C3");
     expect(transposePitch("not-a-pitch", 1)).toBe("not-a-pitch");
+  });
+
+  it("formats and normalizes subscript pitch octaves", () => {
+    expect(fmtPitchSub("A4")).toBe("A₄");
+    expect(fmtPitchSub("F#3")).toBe("F#₃");
+    expect(fmtPitchSub("C-1")).toBe("C₋₁");
+    expect(fmtPitchSub("bad")).toBe("bad");
+    expect(normalizePitch("A₄")).toBe("A4");
+    expect(normalizePitch("C₋₁")).toBe("C-1");
+    expect(splitPitch("Bb2")).toEqual(["Bb", "2"]);
+    expect(transposePitch("A₄", 1)).toBe("A#4");
   });
 
   it("converts length and tension units cleanly", () => {

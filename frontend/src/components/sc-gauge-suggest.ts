@@ -18,6 +18,9 @@ import {
   convertTension,
   fmtGaugeIn,
   fmtNum,
+  fmtPitchSub,
+  normalizePitch,
+  splitPitch,
   stateFromPreset,
   transposePitch,
 } from "../units";
@@ -445,6 +448,12 @@ export class ScGaugeSuggest extends LitElement {
     });
   }
 
+  private renderPitch(pitch: string) {
+    if (!pitch) return "?";
+    const parts = splitPitch(pitch);
+    return parts ? html`${parts[0]}<sub>${parts[1]}</sub>` : pitch;
+  }
+
   private fmtGauge(
     gaugeIn: number | null,
     gaugeMm: number | null,
@@ -484,7 +493,7 @@ export class ScGaugeSuggest extends LitElement {
           ${items.map(
             (it) => html`
               <span>
-                <strong>${it.pitch}</strong>:
+                <strong>${this.renderPitch(it.pitch)}</strong>:
                 ${
                   it.pick
                     ? `${it.pick.id} (${this.fmtGauge(it.pick.gauge_in, it.pick.gauge_mm, unitL)})`
@@ -745,13 +754,13 @@ export class ScGaugeSuggest extends LitElement {
                         <input
                           id="pitch-${idx}"
                           type="text"
-                          .value=${s.pitch}
-                          @change=${(e: Event) =>
-                            this.onStringField(idx, {
-                              pitch: (
-                                e.target as HTMLInputElement
-                              ).value.trim(),
-                            })}
+                          .value=${fmtPitchSub(s.pitch)}
+                          @change=${(e: Event) => {
+                            const input = e.target as HTMLInputElement;
+                            const pitch = normalizePitch(input.value);
+                            input.value = fmtPitchSub(pitch);
+                            this.onStringField(idx, { pitch });
+                          }}
                         />
                         <button
                           type="button"
@@ -846,7 +855,7 @@ export class ScGaugeSuggest extends LitElement {
                       <div class="res-card">
                         <div class="res-head">
                           <span class="res-pitch"
-                            >#${idx + 1} · ${res.pitch || "?"}</span
+                            >#${idx + 1} · ${this.renderPitch(res.pitch)}</span
                           >
                           <span class="res-meta">
                             ${res.L != null ? `${fmtNum(res.L, resUnitL === "mm" ? 1 : 2)} ${resUnitL}` : ""}

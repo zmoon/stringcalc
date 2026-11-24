@@ -44,8 +44,42 @@ const NOTE_TO_SEMITONE: Record<string, number> = {
 
 const RE_PITCH = /^([A-Ga-g])([#b]?)(-?\d)$/;
 
+const SUB_DIGITS: Record<string, string> = {
+  "0": "₀",
+  "1": "₁",
+  "2": "₂",
+  "3": "₃",
+  "4": "₄",
+  "5": "₅",
+  "6": "₆",
+  "7": "₇",
+  "8": "₈",
+  "9": "₉",
+  "-": "₋",
+};
+
+const ASCII_DIGITS: Record<string, string> = Object.fromEntries(
+  Object.entries(SUB_DIGITS).map(([k, v]) => [v, k]),
+);
+
+export function normalizePitch(pitch: string): string {
+  return pitch.trim().replace(/[₀₁₂₃₄₅₆₇₈₉₋]/g, (c) => ASCII_DIGITS[c] ?? c);
+}
+
+export function splitPitch(pitch: string): [string, string] | null {
+  const m = RE_PITCH.exec(normalizePitch(pitch));
+  return m ? [`${m[1]}${m[2]}`, m[3]] : null;
+}
+
+export function fmtPitchSub(pitch: string): string {
+  const parts = splitPitch(pitch);
+  if (!parts) return pitch;
+  const sub = parts[1].replace(/[0-9-]/g, (c) => SUB_DIGITS[c] ?? c);
+  return `${parts[0]}${sub}`;
+}
+
 export function parsePitchMidi(pitch: string): number | null {
-  const m = RE_PITCH.exec(pitch.trim());
+  const m = RE_PITCH.exec(normalizePitch(pitch));
   if (!m) return null;
   const key = m[1].toUpperCase() + m[2];
   const semitone = NOTE_TO_SEMITONE[key];

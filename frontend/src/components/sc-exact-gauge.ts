@@ -13,6 +13,8 @@ import {
   convertLength,
   convertTension,
   fmtNum,
+  fmtPitchSub,
+  normalizePitch,
   transposePitch,
 } from "../units";
 
@@ -175,11 +177,13 @@ export class ScExactGauge extends LitElement {
               <input
                 id="eg-pitch"
                 type="text"
-                .value=${this.pitch}
-                @change=${(e: Event) =>
-                  this.emitState({
-                    pitch: (e.target as HTMLInputElement).value.trim(),
-                  })}
+                .value=${fmtPitchSub(this.pitch)}
+                @change=${(e: Event) => {
+                  const input = e.target as HTMLInputElement;
+                  const pitch = normalizePitch(input.value);
+                  input.value = fmtPitchSub(pitch);
+                  this.emitState({ pitch });
+                }}
               />
               <button
                 type="button"

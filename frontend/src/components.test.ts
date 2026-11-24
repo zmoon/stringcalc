@@ -88,6 +88,15 @@ describe("Lit custom elements", () => {
     expect(el.shadowRoot!.querySelector(".summary-set")?.textContent).toContain(
       "DA:PB042",
     );
+    expect(el.shadowRoot!.querySelector(".res-pitch sub")?.textContent).toBe(
+      "2",
+    );
+    expect(el.shadowRoot!.querySelector(".summary-set sub")?.textContent).toBe(
+      "2",
+    );
+    expect(
+      (el.shadowRoot!.querySelector("#pitch-0") as HTMLInputElement).value,
+    ).toBe("F₂");
     el.remove();
   });
 

@@ -32,6 +32,12 @@ export const sharedStyles = css`
     box-sizing: border-box;
   }
 
+  sub {
+    font-size: 0.72em;
+    line-height: 0;
+    vertical-align: sub;
+  }
+
   .sc-card {
     border: 1px solid var(--sc-border);
     border-radius: var(--sc-radius);
