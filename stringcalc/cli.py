@@ -5,7 +5,6 @@ CLI
 from __future__ import annotations
 
 import functools
-import math
 import os
 import re
 import tokenize
@@ -14,7 +13,7 @@ from typing import NoReturn
 
 from pint import PintError, Quantity
 
-from ._ureg import _normalize_input, _to_force_quantity, _to_magnitude, _UnitType, ureg
+from ._ureg import _normalize_input, _to_force_quantity, _UnitType, ureg
 
 try:
     import typer
@@ -502,11 +501,6 @@ def length(
         console.print(res_str)
 
 
-def _from_inch(val_in: float, u: _UnitType) -> float:
-    """Convert an inch magnitude to ``u`` rounded to 4 decimal places."""
-    return round(float(ureg.Quantity(val_in, "inch").to(u).magnitude), 4)
-
-
 def _fanned_lengths(
     L_vals: list[float | Quantity],
     *,
@@ -516,65 +510,46 @@ def _fanned_lengths(
     verbose: bool,
 ) -> list[float | Quantity]:
     """Compute per-string scale lengths for fanned-fret calculations."""
+    from .tension import _fanned_geometry, _from_inch
+
     if len(L_vals) != 2:
         error(
             "Must supply two scale lengths (bass and treble sides) for fanned calculation. "
             f"Got {len(L_vals)}.",
             rc=2,
         )
-    if n_str < 2:
-        error("Need at least two strings for fanned calculation.", rc=2)
     if not nut_width:
         error("Must supply nut width for fanned calculation.", rc=2)
 
     nw_val = _cli_val(nut_width, dim="[length]")
-    nw_in, u_nw = _to_magnitude(nw_val, "inch")
-    if not (0 < nw_in < math.inf):
-        error("Nut width must be positive and finite.", rc=2)
+    es_vals = [_cli_val(e, dim="[length]") for e in edge_space] if edge_space is not None else None
 
-    if edge_space is None:
-        e_b_in, e_t_in = 5 / 32, 1 / 8
-    else:
-        es_in = [_to_magnitude(_cli_val(e, dim="[length]"), "inch")[0] for e in edge_space]
-        if len(es_in) == 1:
-            es_in *= 2
-        elif len(es_in) > 2:
-            error(f"Specify one or two edge space values. Got {len(edge_space)}.", rc=2)
-        if not all(math.isfinite(e) for e in es_in):
-            error("Edge space values must be finite.", rc=2)
-        e_b_in, e_t_in = es_in
-
-    L_b_in, u_Lb = _to_magnitude(L_vals[0], "inch")
-    L_t_in, u_Lt = _to_magnitude(L_vals[1], "inch")
-    if not (0 < L_b_in < math.inf and 0 < L_t_in < math.inf):
-        error("Scale lengths must be positive and finite.", rc=2)
-
-    dLdx = (L_t_in - L_b_in) / nw_in
-    d_space = (nw_in - e_b_in - e_t_in) / (n_str - 1)  # string spacing
-    xs_in = [e_b_in + i * d_space for i in range(n_str)]
-    Ls_in = [L_b_in + dLdx * x for x in xs_in]
-    out_u = u_Lb or u_Lt
-    out_vals: list[float | Quantity]
-    if out_u is not None:
-        out_vals = [ureg.Quantity(_from_inch(l_in, out_u), out_u) for l_in in Ls_in]
-    else:
-        out_vals = [round(float(l_in), 4) for l_in in Ls_in]
+    try:
+        geom = _fanned_geometry(
+            L_vals[0],
+            L_vals[1],
+            n_str,
+            nut_width=nw_val,
+            edge_space=es_vals,
+        )
+    except ValueError as e:
+        error(str(e), rc=2)
 
     if verbose:
-        disp_u = u_nw or ureg.Unit("inch")
+        disp_u = geom.nut_width_unit or ureg.Unit("inch")
 
         def _fmt_fan(val_in: float) -> str:
             return _fmt_val(ureg.Quantity(_from_inch(val_in, disp_u), disp_u))
 
-        xs_disp = [_from_inch(x, disp_u) for x in xs_in]
+        xs_disp = [_from_inch(x, disp_u) for x in geom.positions_in]
         xs_u = f"{disp_u}" if disp_u != ureg.Unit("inch") else '"'
-        info(f"Nut width:               {_fmt_fan(nw_in)}")
-        info(f"Left/bass edge space:    {_fmt_fan(e_b_in)}")
-        info(f"Right/treble edge space: {_fmt_fan(e_t_in)}")
-        info(f"Computed string spacing: {_fmt_fan(d_space)}")
+        info(f"Nut width:               {_fmt_fan(geom.nut_width_in)}")
+        info(f"Left/bass edge space:    {_fmt_fan(geom.edge_bass_in)}")
+        info(f"Right/treble edge space: {_fmt_fan(geom.edge_treble_in)}")
+        info(f"Computed string spacing: {_fmt_fan(geom.spacing_in)}")
         info(f"Computed string nut positions ({xs_u}): {xs_disp}")
 
-    return out_vals
+    return geom.lengths
 
 
 @app.command(name="gauge")
@@ -670,9 +645,7 @@ def gauge_(
     default to lbf, inches, and lbm/in^3; Pint unit strings (e.g. '650 mm',
     '75 N', '7.5 kg', '1.3 g/cm^3') are also supported.
     """
-    from itertools import cycle
-
-    from .tension import _STRING_TYPE_ALIAS_TO_VERBOSE, DENSITY_LB_IN, gauge, suggest_gauge
+    from .tension import _STRING_TYPE_ALIAS_TO_VERBOSE, DENSITY_LB_IN, gauge, suggest_gauges
 
     T_vals: list[float | Quantity] = [
         _cli_val(t, dim="[force]", allow_mass_as_force=True) for t in T
@@ -708,24 +681,24 @@ def gauge_(
         if verbose:
             info(f"Searching string types: {types_set}")
 
-        n_cases = max(len(T_vals), len(L_vals), len(P))
-        if not all(len(x) == n_cases or len(x) == 1 for x in (T_vals, L_vals, P)):
-            error(
-                "Must supply single or same number of values for each of T, L, P. "
-                f"Got {len(T_vals)}, {len(L_vals)}, {len(P)}.",
-                rc=2,
+        try:
+            g_dfs = suggest_gauges(
+                T=T_vals,
+                L=L_vals,
+                pitch=P,
+                types=types_set,
+                n=nsuggest,
+                fanned=False,
             )
+        except ValueError as e:
+            error(f"Failed to compute gauge suggestions. Message: {e}", rc=2)
 
+        n_cases = len(g_dfs)
         tables = []
-        for n, (T_, L_, P_) in enumerate(zip(cycle(T_vals), cycle(L_vals), cycle(P))):
-            if n >= n_cases:
-                break
-
-            try:
-                g_df = suggest_gauge(T=T_, L=L_, pitch=P_, types=types_set, n=nsuggest)
-            except ValueError as e:
-                error(f"Failed to compute gauge suggestions. Message: {e}", rc=2)
-
+        for g_df in g_dfs:
+            T_ = g_df.attrs["T"]
+            L_ = g_df.attrs["L"]
+            P_ = g_df.attrs["pitch"]
             g_df.attrs["col_desc"][
                 "dT"
             ] = f"Tension difference from target tension ({_fmt_val(T_, ' lbf')})"

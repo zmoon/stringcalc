@@ -12,14 +12,16 @@ from __future__ import annotations
 import math
 import re
 import warnings
+from collections.abc import Sequence
 from functools import lru_cache
+from itertools import cycle
 from typing import NamedTuple, Protocol, cast
 
 import numpy as np
 import pandas as pd
 from pint import Quantity
 
-from ._ureg import QLike, _check_positive, _to_magnitude, ureg
+from ._ureg import QLike, _check_positive, _to_magnitude, _UnitType, ureg
 
 
 def _get_data():
@@ -674,3 +676,195 @@ def suggest_gauge(
     )
 
     return df
+
+
+class _FannedGeometry(NamedTuple):
+    lengths: list[float | Quantity]
+    nut_width_in: float
+    nut_width_unit: _UnitType | None
+    edge_bass_in: float
+    edge_treble_in: float
+    spacing_in: float
+    positions_in: list[float]
+
+
+def _from_inch(val_in: float, u: _UnitType) -> float:
+    """Convert an inch magnitude to ``u`` rounded to 4 decimal places."""
+    return round(float(ureg.Quantity(val_in, "inch").to(u).magnitude), 4)
+
+
+def _fanned_geometry(
+    L_bass: float | QLike,
+    L_treble: float | QLike,
+    n_strings: int,
+    *,
+    nut_width: float | QLike,
+    edge_space: float | QLike | Sequence[float | QLike] | None = None,
+) -> _FannedGeometry:
+    """Compute per-string scale lengths and nut geometry for a fanned-fret instrument."""
+    if n_strings < 2:
+        raise ValueError("Need at least two strings for fanned calculation.")
+
+    nw_in, u_nw = _to_magnitude(nut_width, "inch")
+    if not (0 < nw_in < math.inf):
+        raise ValueError("Nut width must be positive and finite.")
+
+    if edge_space is None:
+        e_b_in, e_t_in = 5 / 32, 1 / 8
+    else:
+        if isinstance(edge_space, (str, Quantity)) or not isinstance(edge_space, Sequence):
+            es_seq: Sequence[float | QLike] = [edge_space]
+        else:
+            es_seq = edge_space
+        es_in = [_to_magnitude(e, "inch")[0] for e in es_seq]
+        if len(es_in) == 1:
+            es_in = es_in * 2
+        elif len(es_in) != 2:
+            raise ValueError(f"Specify one or two edge space values. Got {len(es_in)}.")
+        if not all(math.isfinite(e) for e in es_in):
+            raise ValueError("Edge space values must be finite.")
+        e_b_in, e_t_in = es_in
+
+    L_b_in, u_Lb = _to_magnitude(L_bass, "inch")
+    L_t_in, u_Lt = _to_magnitude(L_treble, "inch")
+    if not (0 < L_b_in < math.inf and 0 < L_t_in < math.inf):
+        raise ValueError("Scale lengths must be positive and finite.")
+
+    dLdx = (L_t_in - L_b_in) / nw_in
+    d_space = (nw_in - e_b_in - e_t_in) / (n_strings - 1)
+    xs_in = [e_b_in + i * d_space for i in range(n_strings)]
+    Ls_in = [L_b_in + dLdx * x for x in xs_in]
+    out_u = u_Lb or u_Lt
+    out_vals: list[float | Quantity]
+    if out_u is not None:
+        out_vals = [ureg.Quantity(_from_inch(l_in, out_u), out_u) for l_in in Ls_in]
+    else:
+        out_vals = [round(float(l_in), 4) for l_in in Ls_in]
+
+    return _FannedGeometry(
+        lengths=out_vals,
+        nut_width_in=nw_in,
+        nut_width_unit=u_nw,
+        edge_bass_in=e_b_in,
+        edge_treble_in=e_t_in,
+        spacing_in=d_space,
+        positions_in=xs_in,
+    )
+
+
+def fanned_scale_lengths(
+    L_bass: float | QLike,
+    L_treble: float | QLike,
+    n_strings: int,
+    *,
+    nut_width: float | QLike,
+    edge_space: float | QLike | Sequence[float | QLike] | None = None,
+) -> list[float | Quantity]:
+    """Compute per-string scale lengths for a fanned-fret (multiscale) instrument.
+
+    Parameters
+    ----------
+    L_bass, L_treble
+        Bass-side and treble-side scale lengths (float in inches, or Pint quantity / string).
+    n_strings
+        Number of strings (at least 2).
+    nut_width
+        Neck width at the nut (float in inches, or Pint quantity / string).
+    edge_space
+        Distance from neck edge to outer string center: either a single value for both sides
+        or a 2-element sequence ``(bass, treble)``. Defaults to ``(5/32", 1/8")``.
+    """
+    return _fanned_geometry(
+        L_bass, L_treble, n_strings, nut_width=nut_width, edge_space=edge_space
+    ).lengths
+
+
+def _as_list(val: object) -> list:
+    if isinstance(val, (str, Quantity)) or not isinstance(val, Sequence):
+        return [val]
+    return list(val)
+
+
+def suggest_gauges(
+    T: float | QLike | Sequence[float | QLike],
+    L: float | QLike | Sequence[float | QLike],
+    pitch: str | Sequence[str],
+    *,
+    types: set[str] | None = None,
+    n: int = 3,
+    fanned: bool | None = None,
+    nut_width: float | QLike | None = None,
+    edge_space: float | QLike | Sequence[float | QLike] | None = None,
+) -> list[pd.DataFrame]:
+    """Suggest gauges for multiple strings, broadcasting single-value inputs
+    and optionally interpolating fanned-fret scale lengths.
+
+    Parameters
+    ----------
+    T
+        Target tension(s) (single value or sequence; floats in [lbf] or Pint quantities / strings).
+    L
+        Scale length(s) (single value or sequence; floats in [in] or Pint quantities / strings).
+        When ``fanned`` is enabled (or ``None`` with two scale lengths), ``L`` gives
+        ``(L_bass, L_treble)``.
+    pitch
+        Pitch(es) in ASCII SPN (single string or sequence, e.g. ``["G2", "D3", "A3", "E4"]``).
+    types
+        String type group IDs to consider (defaults to ``{"DA:PB", "DA:PL"}``).
+    n
+        Number of suggestions per string.
+    fanned
+        Whether to compute fanned-fret scale lengths from two scale lengths.
+        If ``None``, assumed ``True`` when two scale lengths are given.
+    nut_width
+        Nut width (required when ``fanned`` is enabled).
+    edge_space
+        Optional edge space(s) for fanned-fret calculation (single value or ``(bass, treble)``).
+
+    Returns
+    -------
+    list[pandas.DataFrame]
+        One :func:`suggest_gauge` DataFrame per string, with ``attrs["T"]``, ``attrs["L"]``,
+        and ``attrs["pitch"]`` populated for each case.
+    """
+    T_vals: Sequence[float | QLike] = _as_list(T)
+    L_vals: Sequence[float | QLike] = _as_list(L)
+    P_vals: Sequence[str] = _as_list(pitch)
+
+    if fanned is None:
+        fanned = len(L_vals) == 2
+
+    if fanned:
+        if len(L_vals) != 2:
+            raise ValueError(
+                "Must supply two scale lengths (bass and treble sides) for fanned calculation. "
+                f"Got {len(L_vals)}."
+            )
+        if nut_width is None or nut_width == "":
+            raise ValueError("Must supply nut width for fanned calculation.")
+        L_vals = fanned_scale_lengths(
+            L_vals[0],
+            L_vals[1],
+            max(len(T_vals), len(P_vals)),
+            nut_width=nut_width,
+            edge_space=edge_space,
+        )
+
+    n_cases = max(len(T_vals), len(L_vals), len(P_vals))
+    if n_cases == 0 or not all(len(x) in (1, n_cases) for x in (T_vals, L_vals, P_vals)):
+        raise ValueError(
+            "Must supply single or same number of values for each of T, L, P. "
+            f"Got {len(T_vals)}, {len(L_vals)}, {len(P_vals)}."
+        )
+
+    dfs: list[pd.DataFrame] = []
+    for i, (T_, L_, P_) in enumerate(zip(cycle(T_vals), cycle(L_vals), cycle(P_vals))):
+        if i >= n_cases:
+            break
+        df = suggest_gauge(T=T_, L=L_, pitch=P_, types=types, n=n)
+        df.attrs["T"] = T_
+        df.attrs["L"] = L_
+        df.attrs["pitch"] = P_
+        dfs.append(df)
+
+    return dfs

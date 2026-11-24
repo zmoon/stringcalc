@@ -66,15 +66,8 @@ jobs:
           done
           exit $rc
 
-  panel:
+  web:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -l {0}
-    strategy:
-      matrix:
-        stringcalc: ["local", "pypi"]
-
     steps:
       - uses: actions/checkout@v7
 
@@ -83,40 +76,36 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
       - name: Install uv
         uses: astral-sh/setup-uv@v7
 
-      - name: Install dependencies
+      - name: Install Python dependencies
+        run: uv sync --all-extras --group test
+
+      - name: Install frontend dependencies
+        run: npm --prefix frontend ci
+
+      - name: Typecheck & test frontend
         run: |
-          uv sync --group panel
+          npm --prefix frontend run typecheck
+          npm --prefix frontend test
 
-      - name: Install stringcalc (${{ matrix.stringcalc }})
-        run: |
-          if [ "${{ matrix.stringcalc }}" == "local" ]; then
-            :
-          elif [ "${{ matrix.stringcalc }}" == "pypi" ]; then
-            uv pip install stringcalc
-          else
-            exit 1
-          fi
+      - name: Build widget bundle and standalone web app
+        run: uv run python scripts/build_web.py --source local
 
-      - name: Run the app script
-        run: uv run python panel/app.py
+      - name: Test Python widgets and app service
+        run: uv run pytest tests/test_app.py tests/test_widget.py -v
 
-      - name: Check type annotations in app script
-        run: |
-          uv pip install mypy
-          uv run mypy --non-interactive panel/app.py
-
-      - name: Build app (pyodide)
-        run: |
-          uv run panel convert panel/app.py --to pyodide
-          mv ./app.html ./stringcalc-panel.html
-
-      - name: Upload built app
-        if: matrix.stringcalc == 'pypi'
+      - name: Upload built standalone app
         uses: actions/upload-artifact@v7
         with:
-          name: panel
-          path: stringcalc-panel.html
+          name: web-app
+          path: frontend/dist/app
           retention-days: 1

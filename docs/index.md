@@ -4,7 +4,7 @@ Calculations for instrument strings.
 
 - {doc}`Python library <api>`
 - {doc}`Command-line interface <cli>`
-- {doc}`panel`
+- {doc}`Web app & widgets <app>`
 - ...
 
 ## Installation
@@ -30,7 +30,7 @@ pip install stringcalc[cli]
 ```{toctree}
 :hidden:
 
-panel.rst
+app.md
 ```
 
 ```{toctree}

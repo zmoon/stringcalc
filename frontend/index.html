@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>stringcalc — Gauge Suggest</title>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="page-header">
+        <div class="brand-group">
+          <a class="brand-title" href="./index.html">stringcalc</a>
+          <nav class="page-nav" aria-label="Tools">
+            <a href="./index.html" aria-current="page">Gauge suggest</a>
+            <a href="./misc.html">Misc tools</a>
+          </nav>
+        </div>
+        <div class="header-actions">
+          <span id="status-pill" class="status-pill" data-state="loading">
+            <span class="status-dot"></span>
+            <span id="status-text">Starting…</span>
+          </span>
+          <button id="copy-link-btn" class="copy-link-btn" type="button">
+            Copy link
+          </button>
+        </div>
+      </header>
+
+      <main id="app-root">
+        <sc-gauge-suggest id="gauge-widget"></sc-gauge-suggest>
+      </main>
+
+      <footer class="page-footer">
+        <span>
+          Powered by
+          <a href="https://github.com/zmoon/stringcalc">stringcalc</a>
+          <strong id="sc-version"></strong> running in your browser via Pyodide.
+        </span>
+        <span> Data from D'Addario, Stringjoy, GHS, Aquila, and Worth. </span>
+      </footer>
+    </div>
+
+    <script type="module" src="/src/entries/standalone-gauge.ts"></script>
+  </body>
+</html>

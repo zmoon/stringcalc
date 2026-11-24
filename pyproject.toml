@@ -28,6 +28,10 @@ cli = [
     "rich",
     "typer",
 ]
+widget = [
+    "anywidget >=0.9",
+    "traitlets >=5",
+]
 
 [dependency-groups]
 data = [
@@ -52,11 +56,6 @@ doc = [
     "sphinx-book-theme",
     "sphinx-copybutton",
 ]
-panel = [
-    "hvplot",
-    "panel ==1.*",
-    "watchfiles",
-]
 
 [project.scripts]
 stringcalc = "stringcalc.cli:app"
@@ -77,7 +76,8 @@ exclude = [
     ".readthedocs.yaml",
     ".github/",
     "/data/",
-    "panel/",
+    "frontend/",
+    "scripts/",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -97,7 +97,7 @@ addopts = ["--ignore=docs/_build"]
 exclude = [
     "^venv/",
     "^data/",
-    "^panel/",
+    "^frontend/",
 ]
 install_types = true
 ignore_missing_imports = true

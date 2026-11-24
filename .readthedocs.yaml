@@ -4,6 +4,7 @@ build:
   os: ubuntu-lts-latest
   tools:
     python: "3.13"
+    nodejs: "22"
   jobs:
     pre_create_environment:
       - asdf plugin add uv
@@ -15,11 +16,12 @@ build:
       - UV_PROJECT_ENVIRONMENT="${READTHEDOCS_VIRTUALENV_PATH}"
         uv sync
         --group doc
-        --group panel
         --extra cli
+        --extra widget
     pre_build:
+      - npm --prefix frontend ci
       - UV_PROJECT_ENVIRONMENT="${READTHEDOCS_VIRTUALENV_PATH}"
-        uv run panel convert panel/app.py --to pyodide --out docs/_static/panel/
+        uv run python scripts/build_web.py --source local --out docs/_static/app
 
 sphinx:
   configuration: docs/conf.py
