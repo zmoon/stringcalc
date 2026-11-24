@@ -56,8 +56,15 @@ def test_fanned_scale_lengths_and_suggest_gauges():
     assert len(dfs_fan) == 7
     assert dfs_fan[0].attrs["L"] > dfs_fan[-1].attrs["L"]
 
+    # 2-string instrument with distinct scale lengths does not require fanned/nut_width
+    dfs_two = suggest_gauges(T=15, L=[24, 25], pitch=["D3", "A3"])
+    assert [df.attrs["L"] for df in dfs_two] == [24, 25]
+
     with pytest.raises(ValueError, match="nut width"):
-        suggest_gauges(T=17, L=[27, 25.5], pitch=["E2", "A2"])
+        suggest_gauges(T=17, L=[27, 25.5], pitch=["E2", "A2", "D3"])
+
+    with pytest.raises(ValueError, match="nut width"):
+        suggest_gauges(T=17, L=[27, 25.5], pitch=["E2", "A2"], fanned=True)
 
     with pytest.raises(ValueError, match="single or same number"):
         suggest_gauges(T=[15, 16], L=25.5, pitch=["E2", "A2", "D3"])

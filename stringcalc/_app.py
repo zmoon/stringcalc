@@ -194,83 +194,51 @@ def run_suggest_gauge(req: dict[str, Any]) -> SuggestGaugeResponse:
     """Run multi-string gauge suggestions from a JSON-compatible request dict."""
     length_unit = str(req.get("lengthUnit", "in"))
     tension_unit = str(req.get("tensionUnit", "lbf"))
-    if length_unit not in _LENGTH_UNITS:
-        return _suggest_error(
-            f"Unsupported length unit {length_unit!r}",
-            length_unit=length_unit,
-            tension_unit=tension_unit,
-        )
-    if tension_unit not in _TENSION_UNITS:
-        return _suggest_error(
-            f"Unsupported tension unit {tension_unit!r}",
-            length_unit=length_unit,
-            tension_unit=tension_unit,
-        )
+    fanned_lengths: list[float] | None = None
 
     try:
-        n = int(req.get("n", 5))
-    except (TypeError, ValueError):
-        return _suggest_error(
-            "Number of suggestions must be an integer",
-            length_unit=length_unit,
-            tension_unit=tension_unit,
-        )
-    if not (1 <= n <= 20):
-        return _suggest_error(
-            "Number of suggestions must be between 1 and 20",
-            length_unit=length_unit,
-            tension_unit=tension_unit,
-        )
+        if length_unit not in _LENGTH_UNITS:
+            raise ValueError(f"Unsupported length unit {length_unit!r}")
+        if tension_unit not in _TENSION_UNITS:
+            raise ValueError(f"Unsupported tension unit {tension_unit!r}")
 
-    types_raw = req.get("types") or []
-    types = {str(t) for t in types_raw if str(t).strip()}
-    if not types:
-        return _suggest_error(
-            "Select at least one string type.",
-            length_unit=length_unit,
-            tension_unit=tension_unit,
-        )
-
-    strings_in = req.get("strings") or []
-    if not isinstance(strings_in, list) or len(strings_in) == 0:
-        return _suggest_error(
-            "Add at least one string.",
-            length_unit=length_unit,
-            tension_unit=tension_unit,
-        )
-
-    fanned = req.get("fanned")
-    fanned_lengths: list[float] | None = None
-    if isinstance(fanned, dict) and fanned.get("enabled"):
         try:
+            n = int(req.get("n", 5))
+        except (TypeError, ValueError) as e:
+            raise ValueError("Number of suggestions must be an integer") from e
+        if not (1 <= n <= 20):
+            raise ValueError("Number of suggestions must be between 1 and 20")
+
+        types = {str(t) for t in (req.get("types") or []) if str(t).strip()}
+        if not types:
+            raise ValueError("Select at least one string type.")
+
+        strings_in = req.get("strings") or []
+        if not isinstance(strings_in, list) or not strings_in:
+            raise ValueError("Add at least one string.")
+
+        fanned = req.get("fanned")
+        if isinstance(fanned, dict) and fanned.get("enabled"):
             L_bass = _finite_pos_float(fanned.get("L_bass"), "Bass scale length")
             L_treble = _finite_pos_float(fanned.get("L_treble"), "Treble scale length")
             nut_width = _finite_pos_float(fanned.get("nutWidth"), "Nut width")
-            eb = fanned.get("edgeBass")
-            et = fanned.get("edgeTreble")
-            edge_arg: Any = None
-            if eb is not None and eb != "" and et is not None and et != "":
-                edge_arg = [
-                    ureg.Quantity(float(eb), length_unit),
-                    ureg.Quantity(float(et), length_unit),
-                ]
-            elif eb is not None and eb != "":
-                edge_arg = ureg.Quantity(float(eb), length_unit)
-            elif et is not None and et != "":
-                edge_arg = ureg.Quantity(float(et), length_unit)
-
+            edges = [
+                ureg.Quantity(float(v), length_unit)
+                for v in (fanned.get("edgeBass"), fanned.get("edgeTreble"))
+                if v is not None and v != ""
+            ]
             Ls_q = fanned_scale_lengths(
                 ureg.Quantity(L_bass, length_unit),
                 ureg.Quantity(L_treble, length_unit),
                 len(strings_in),
                 nut_width=ureg.Quantity(nut_width, length_unit),
-                edge_space=edge_arg,
+                edge_space=edges or None,
             )
             fanned_lengths = [
                 round(float(x.magnitude) if isinstance(x, Quantity) else float(x), 4) for x in Ls_q
             ]
-        except (ValueError, PintError) as e:
-            return _suggest_error(str(e), length_unit=length_unit, tension_unit=tension_unit)
+    except (ValueError, PintError) as e:
+        return _suggest_error(str(e), length_unit=length_unit, tension_unit=tension_unit)
 
     meta = _string_metadata()
     default_L = req.get("L")

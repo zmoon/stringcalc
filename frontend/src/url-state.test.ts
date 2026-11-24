@@ -59,6 +59,40 @@ describe("url-state", () => {
     expect(restored.strings[0].T).toBe(18);
   });
 
+  it("round-trips custom preset and per-string scale lengths", () => {
+    const s = stateFromPreset(presets[0]);
+    s.preset = "";
+    s.strings = [
+      { pitch: "E2", T: 16.5, L: 26 },
+      { pitch: "A2", T: 16.5, L: 25.5 },
+    ];
+
+    const params = stateToParams(s, presets);
+    expect(params.get("inst")).toBe("custom");
+    expect(params.get("s")).toBe("E2:16.5:26,A2:16.5");
+
+    const restored = paramsToState(params, presets);
+    expect(restored.preset).toBe("");
+    expect(restored.strings).toEqual(s.strings);
+  });
+
+  it("seeds metric fanned defaults for mm presets", () => {
+    const classical = presets.find((p) => p.id === "guitar-6-classical")!;
+    const s = stateFromPreset(classical);
+    expect(s.lengthUnit).toBe("mm");
+    expect(s.fanned.L_bass).toBeGreaterThan(600);
+    expect(s.fanned.L_treble).toBeGreaterThan(600);
+    expect(s.fanned.nutWidth).toBeGreaterThan(40);
+
+    // URL override lu=mm on an inch preset also seeds metric fanned defaults
+    const fromUrl = paramsToState(
+      new URLSearchParams("inst=guitar-6&lu=mm&L=647.7"),
+      presets,
+    );
+    expect(fromUrl.lengthUnit).toBe("mm");
+    expect(fromUrl.fanned.L_bass).toBeGreaterThan(600);
+  });
+
   it("handles malformed query parameters gracefully", () => {
     const params = new URLSearchParams(
       "inst=nonexistent&lu=furlong&tu=dyn&n=999&L=-5&s=bad",

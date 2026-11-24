@@ -832,7 +832,7 @@ def suggest_gauges(
     P_vals: Sequence[str] = _as_list(pitch)
 
     if fanned is None:
-        fanned = len(L_vals) == 2
+        fanned = len(L_vals) == 2 and (nut_width is not None or max(len(T_vals), len(P_vals)) != 2)
 
     if fanned:
         if len(L_vals) != 2:

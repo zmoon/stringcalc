@@ -3,6 +3,7 @@ import type {
   GaugeSuggestState,
   LengthUnit,
   Preset,
+  ScaleLengthUnit,
   TensionUnit,
 } from "./types";
 import { DEFAULT_FANNED } from "./types";
@@ -111,9 +112,27 @@ export function fmtGaugeIn(gIn: number | null): string {
   return `${s.startsWith("0.") ? s.slice(1) : s}"`;
 }
 
+export function defaultFanned(unit: ScaleLengthUnit): FannedConfig {
+  if (unit === "in") return { ...DEFAULT_FANNED };
+  return {
+    enabled: false,
+    L_bass: convertLength(DEFAULT_FANNED.L_bass, "in", unit),
+    L_treble: convertLength(DEFAULT_FANNED.L_treble, "in", unit),
+    nutWidth: convertLength(DEFAULT_FANNED.nutWidth, "in", unit),
+    edgeBass:
+      DEFAULT_FANNED.edgeBass != null
+        ? convertLength(DEFAULT_FANNED.edgeBass, "in", unit)
+        : null,
+    edgeTreble:
+      DEFAULT_FANNED.edgeTreble != null
+        ? convertLength(DEFAULT_FANNED.edgeTreble, "in", unit)
+        : null,
+  };
+}
+
 export function stateFromPreset(preset: Preset, n = 5): GaugeSuggestState {
   const fanned: FannedConfig = {
-    ...DEFAULT_FANNED,
+    ...defaultFanned(preset.lengthUnit),
     ...(preset.fanned ?? {}),
   };
   return {

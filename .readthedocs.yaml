@@ -4,7 +4,7 @@ build:
   os: ubuntu-lts-latest
   tools:
     python: "3.13"
-    nodejs: "22"
+    nodejs: "24"
   jobs:
     pre_create_environment:
       - asdf plugin add uv

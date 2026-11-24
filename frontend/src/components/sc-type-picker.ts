@@ -156,15 +156,17 @@ export class ScTypePicker extends LitElement {
   }
 
   render() {
-    const labelMap = new Map(
-      this.catalogTypes.map((t) => [t.id, `${t.brand}: ${t.label}`]),
-    );
+    const groups = this.open ? this.filteredGroups : [];
 
     return html`
       <div class="chips">
-        ${this.selected.map(
-          (id) => html`
-            <span class="chip" title=${labelMap.get(id) ?? id}>
+        ${this.selected.map((id) => {
+          const info = this.catalogTypes.find((t) => t.id === id);
+          return html`
+            <span
+              class="chip"
+              title=${info ? `${info.brand}: ${info.label}` : id}
+            >
               <span>${id}</span>
               <button
                 type="button"
@@ -174,8 +176,8 @@ export class ScTypePicker extends LitElement {
                 ×
               </button>
             </span>
-          `,
-        )}
+          `;
+        })}
         <button
           type="button"
           class="sc-btn-sm"
@@ -226,14 +228,14 @@ export class ScTypePicker extends LitElement {
                     : html`
                         <div class="groups">
                           ${
-                            this.filteredGroups.length === 0
+                            groups.length === 0
                               ? html`<div
                                   class="sc-muted"
                                   style="font-size: 0.84rem"
                                 >
                                   No string types match "${this.query}".
                                 </div>`
-                              : this.filteredGroups.map(
+                              : groups.map(
                                   ([brand, items]) => html`
                                     <div>
                                       <div class="brand-title">

@@ -1,18 +1,14 @@
 # Development
 
-Using [uv](https://docs.astral.sh/uv/), prepare the venv:
+## Setup
+
+Using [uv](https://docs.astral.sh/uv/), prepare the Python venv:
 
 ```sh
 uv sync --all-groups --all-extras
 ```
 
 To update an existing venv, add `--upgrade`.
-
-Run the tests:
-
-```sh
-uv run pytest
-```
 
 Install frontend dependencies (requires Node.js 20+):
 
@@ -22,7 +18,26 @@ Install frontend dependencies (requires Node.js 20+):
 npm --prefix frontend ci
 ```
 
-Build the `anywidget` bundle and standalone web apps (with local wheel for Pyodide):
+## Testing
+
+Run the Python tests:
+
+```sh
+uv run pytest
+```
+
+Run frontend typecheck and unit tests:
+
+<!--pytest.mark.skip-->
+
+```sh
+npm --prefix frontend run typecheck
+npm --prefix frontend test
+```
+
+## Web app & widgets
+
+Build the `anywidget` bundle (`stringcalc/widget/_bundle.js`) and standalone web apps (with local wheel for Pyodide):
 
 <!--pytest.mark.skip-->
 
@@ -40,14 +55,7 @@ uv run python scripts/build_web.py --wheel-only
 npm --prefix frontend run dev
 ```
 
-Run frontend checks:
-
-<!--pytest.mark.skip-->
-
-```sh
-npm --prefix frontend run typecheck
-npm --prefix frontend test
-```
+## Docs & versioning
 
 Regenerate the committed CLI example SVGs (only needed when updating them):
 

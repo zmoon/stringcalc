@@ -8,7 +8,7 @@ Install the optional extra to use this module::
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 
 import pandas as pd
 
@@ -39,7 +39,7 @@ __all__ = (
 
 _BUNDLE_PATH = Path(__file__).parent / "_bundle.js"
 
-_DEFAULT_FANNED: dict[str, Any] = {
+_DEFAULT_FANNED_IN: dict[str, Any] = {
     "enabled": False,
     "L_bass": 27.0,
     "L_treble": 25.5,
@@ -47,6 +47,14 @@ _DEFAULT_FANNED: dict[str, Any] = {
     "edgeBass": 0.15625,
     "edgeTreble": 0.125,
 }
+
+
+def _default_fanned(length_unit: str = "in") -> dict[str, Any]:
+    factor = 25.4 if length_unit == "mm" else 1.0
+    return {
+        k: (round(v * factor, 3) if isinstance(v, float) and factor != 1.0 else v)
+        for k, v in _DEFAULT_FANNED_IN.items()
+    }
 
 
 def _load_esm() -> str:
@@ -58,28 +66,77 @@ def _load_esm() -> str:
     return _BUNDLE_PATH.read_text(encoding="utf-8")
 
 
+def _preset_fields(preset_id: str) -> dict[str, Any]:
+    for p in load_presets():
+        if p["id"] == preset_id:
+            p_L = float(p["L"])
+            lu = str(p["lengthUnit"])
+            return {
+                "preset": preset_id,
+                "length_unit": lu,
+                "tension_unit": str(p["tensionUnit"]),
+                "L": p_L,
+                "types": list(p["types"]),
+                "strings": [
+                    {
+                        "pitch": str(s["pitch"]),
+                        "T": float(s["T"]),
+                        "L": float(s.get("L", p_L)),
+                    }
+                    for s in p["strings"]
+                ],
+                "fanned": {**_default_fanned(lu), **(p.get("fanned") or {})},
+            }
+    valid = [p["id"] for p in load_presets()]
+    raise ValueError(f"Unknown preset {preset_id!r}. Valid presets: {valid}")
+
+
 class _BaseWidget(anywidget.AnyWidget):
     _esm = _BUNDLE_PATH if _BUNDLE_PATH.exists() else ""
     _widget_name = traitlets.Unicode("").tag(sync=True)
+    _input_traits: ClassVar[frozenset[str]] = frozenset()
 
     def __init__(self, **kwargs: Any) -> None:
         if not self._esm:
             kwargs.setdefault("_esm", _load_esm())
-        super().__init__(**kwargs)
+        self._recomputing = True
+        try:
+            super().__init__(**kwargs)
+        finally:
+            self._recomputing = False
+        self._recompute()
 
+    def set_state(self, sync_data: dict[str, Any]) -> None:
+        # Batch multi-trait updates coming from the JS frontend into a single recompute.
+        self._recomputing = True
+        try:
+            super().set_state(sync_data)
+        finally:
+            self._recomputing = False
+        if self._input_traits.intersection(sync_data):
+            self._recompute()
 
-def _preset_by_id(preset_id: str) -> dict[str, Any]:
-    for p in load_presets():
-        if p["id"] == preset_id:
-            return p
-    valid = [p["id"] for p in load_presets()]
-    raise ValueError(f"Unknown preset {preset_id!r}. Valid presets: {valid}")
+    @traitlets.observe(traitlets.All)
+    def _on_any_change(self, change: Any) -> None:
+        if self._recomputing or change["name"] not in self._input_traits:
+            return
+        self._before_recompute(change["name"])
+        self._recompute()
+
+    def _before_recompute(self, _changed_name: str) -> None:
+        pass
+
+    def _recompute(self) -> None:
+        raise NotImplementedError
 
 
 class GaugeSuggestWidget(_BaseWidget):
     """Interactive multi-string gauge suggestion widget."""
 
     _widget_name = traitlets.Unicode("gauge-suggest").tag(sync=True)
+    _input_traits = frozenset(
+        {"preset", "length_unit", "tension_unit", "n", "L", "types", "strings", "fanned"}
+    )
 
     preset = traitlets.Unicode("guitar-6").tag(sync=True)
     length_unit = traitlets.Unicode("in").tag(sync=True)
@@ -106,38 +163,27 @@ class GaugeSuggestWidget(_BaseWidget):
         fanned: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> None:
-        init_state: dict[str, Any] = {
-            "preset": preset or "",
-            "length_unit": "in",
-            "tension_unit": "lbf",
-            "n": n,
-            "L": 25.5,
-            "types": ["DA:PB", "DA:PL"],
-            "strings": [{"pitch": "E2", "T": 16.5, "L": 25.5}],
-            "fanned": dict(_DEFAULT_FANNED),
-            "catalog": get_catalog(),
-        }
-
         if preset:
-            p = _preset_by_id(preset)
-            p_L = float(p["L"])
-            init_state["length_unit"] = p["lengthUnit"]
-            init_state["tension_unit"] = p["tensionUnit"]
-            init_state["L"] = p_L
-            init_state["types"] = list(p["types"])
-            init_state["strings"] = [
-                {
-                    "pitch": str(s["pitch"]),
-                    "T": float(s["T"]),
-                    "L": float(s.get("L", p_L)),
-                }
-                for s in p["strings"]
-            ]
-            if p.get("fanned"):
-                init_state["fanned"] = {**_DEFAULT_FANNED, **p["fanned"]}
+            init_state = _preset_fields(preset)
+        else:
+            lu = length_unit or "in"
+            init_state = {
+                "preset": "",
+                "length_unit": lu,
+                "tension_unit": "lbf",
+                "L": 25.5,
+                "types": ["DA:PB", "DA:PL"],
+                "strings": [{"pitch": "E2", "T": 16.5, "L": 25.5}],
+                "fanned": _default_fanned(lu),
+            }
 
-        if length_unit is not None:
+        init_state["n"] = n
+        init_state["catalog"] = get_catalog()
+
+        if length_unit is not None and length_unit != init_state["length_unit"]:
             init_state["length_unit"] = length_unit
+            if fanned is None:
+                init_state["fanned"] = _default_fanned(length_unit)
         if tension_unit is not None:
             init_state["tension_unit"] = tension_unit
         if L is not None:
@@ -160,45 +206,36 @@ class GaugeSuggestWidget(_BaseWidget):
         if types is not None:
             init_state["types"] = list(types)
         if fanned is not None:
-            init_state["fanned"] = {**_DEFAULT_FANNED, **fanned}
+            init_state["fanned"] = {**_default_fanned(init_state["length_unit"]), **fanned}
 
         init_state.update(kwargs)
-        self._recomputing = True
-        try:
-            super().__init__(**init_state)
-        finally:
-            self._recomputing = False
-        self._recompute()
+        super().__init__(**init_state)
 
-    def apply_preset(self, preset_id: str) -> None:
-        """Apply a named instrument preset from ``presets.json``."""
-        p = _preset_by_id(preset_id)
-        p_L = float(p["L"])
+    def _apply_preset_fields(self, preset_id: str) -> None:
+        fields = _preset_fields(preset_id)
         self._recomputing = True
         try:
             with self.hold_sync():
-                self.preset = preset_id
-                self.length_unit = p["lengthUnit"]
-                self.tension_unit = p["tensionUnit"]
-                self.L = p_L
-                self.types = list(p["types"])
-                self.strings = [
-                    {
-                        "pitch": str(s["pitch"]),
-                        "T": float(s["T"]),
-                        "L": float(s.get("L", p_L)),
-                    }
-                    for s in p["strings"]
-                ]
-                self.fanned = {**_DEFAULT_FANNED, **(p.get("fanned") or {})}
+                for k, v in fields.items():
+                    setattr(self, k, v)
         finally:
             self._recomputing = False
+
+    def apply_preset(self, preset_id: str) -> None:
+        """Apply a named instrument preset from ``presets.json``."""
+        self._apply_preset_fields(preset_id)
         self._recompute()
 
-    @traitlets.observe("length_unit", "tension_unit", "n", "L", "types", "strings", "fanned")
-    def _on_input_change(self, _change: Any) -> None:
-        if not self._recomputing:
-            self._recompute()
+    def _before_recompute(self, changed_name: str) -> None:
+        if changed_name == "preset" and self.preset:
+            self._apply_preset_fields(self.preset)
+        elif changed_name == "L":
+            # Setting w.L = ... in Python propagates the uniform scale length to all strings.
+            self._recomputing = True
+            try:
+                self.strings = [{**s, "L": self.L} for s in self.strings]
+            finally:
+                self._recomputing = False
 
     def _recompute(self) -> None:
         self.results = dict(
@@ -244,6 +281,18 @@ class ExactGaugeWidget(_BaseWidget):
     """Interactive exact-gauge calculator widget."""
 
     _widget_name = traitlets.Unicode("exact-gauge").tag(sync=True)
+    _input_traits = frozenset(
+        {
+            "T",
+            "tension_unit",
+            "L",
+            "length_unit",
+            "pitch",
+            "material",
+            "custom_density",
+            "density_unit",
+        }
+    )
 
     T = traitlets.Float(16.0).tag(sync=True)
     tension_unit = traitlets.Unicode("lbf").tag(sync=True)
@@ -258,26 +307,7 @@ class ExactGaugeWidget(_BaseWidget):
 
     def __init__(self, **kwargs: Any) -> None:
         kwargs.setdefault("catalog", get_catalog())
-        self._recomputing = True
-        try:
-            super().__init__(**kwargs)
-        finally:
-            self._recomputing = False
-        self._recompute()
-
-    @traitlets.observe(
-        "T",
-        "tension_unit",
-        "L",
-        "length_unit",
-        "pitch",
-        "material",
-        "custom_density",
-        "density_unit",
-    )
-    def _on_input_change(self, _change: Any) -> None:
-        if not self._recomputing:
-            self._recompute()
+        super().__init__(**kwargs)
 
     def _recompute(self) -> None:
         self.result = dict(
@@ -300,35 +330,15 @@ class FretsWidget(_BaseWidget):
     """Interactive equal-temperament fret positions widget."""
 
     _widget_name = traitlets.Unicode("frets").tag(sync=True)
+    _input_traits = frozenset({"N", "L", "length_unit"})
 
     N = traitlets.Int(24).tag(sync=True)
     L = traitlets.Float(25.5).tag(sync=True)
     length_unit = traitlets.Unicode("in").tag(sync=True)
     result = traitlets.Dict().tag(sync=True)
 
-    def __init__(self, **kwargs: Any) -> None:
-        self._recomputing = True
-        try:
-            super().__init__(**kwargs)
-        finally:
-            self._recomputing = False
-        self._recompute()
-
-    @traitlets.observe("N", "L", "length_unit")
-    def _on_input_change(self, _change: Any) -> None:
-        if not self._recomputing:
-            self._recompute()
-
     def _recompute(self) -> None:
-        self.result = dict(
-            run_frets(
-                {
-                    "N": self.N,
-                    "L": self.L,
-                    "lengthUnit": self.length_unit,
-                }
-            )
-        )
+        self.result = dict(run_frets({"N": self.N, "L": self.L, "lengthUnit": self.length_unit}))
 
     def to_dataframe(self) -> pd.DataFrame:
         """Return the current fret table as a pandas DataFrame."""
@@ -342,6 +352,7 @@ class ScaleLengthWidget(_BaseWidget):
     """Interactive scale-length-from-fret-distance calculator widget."""
 
     _widget_name = traitlets.Unicode("scale-length").tag(sync=True)
+    _input_traits = frozenset({"a", "b", "d", "length_unit"})
 
     a = traitlets.Unicode("nut").tag(sync=True)
     b = traitlets.Unicode("1").tag(sync=True)
@@ -349,27 +360,9 @@ class ScaleLengthWidget(_BaseWidget):
     length_unit = traitlets.Unicode("in").tag(sync=True)
     result = traitlets.Dict().tag(sync=True)
 
-    def __init__(self, **kwargs: Any) -> None:
-        self._recomputing = True
-        try:
-            super().__init__(**kwargs)
-        finally:
-            self._recomputing = False
-        self._recompute()
-
-    @traitlets.observe("a", "b", "d", "length_unit")
-    def _on_input_change(self, _change: Any) -> None:
-        if not self._recomputing:
-            self._recompute()
-
     def _recompute(self) -> None:
         self.result = dict(
             run_scale_length(
-                {
-                    "a": self.a,
-                    "b": self.b,
-                    "d": self.d,
-                    "lengthUnit": self.length_unit,
-                }
+                {"a": self.a, "b": self.b, "d": self.d, "lengthUnit": self.length_unit}
             )
         )

@@ -88,10 +88,6 @@ export class PyodideBackend {
     });
   }
 
-  async ready(): Promise<void> {
-    await this.readyPromise;
-  }
-
   private async call<T>(method: MethodName, payload?: unknown): Promise<T> {
     await this.readyPromise;
     return (await this.sendRaw({ type: "call", method, payload })) as T;
@@ -115,9 +111,5 @@ export class PyodideBackend {
 
   scaleLength(state: ScaleLengthState): Promise<ScaleLengthResponse> {
     return this.call<ScaleLengthResponse>("run_scale_length", state);
-  }
-
-  terminate(): void {
-    this.worker.terminate();
   }
 }

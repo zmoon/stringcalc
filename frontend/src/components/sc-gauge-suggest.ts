@@ -192,18 +192,64 @@ export class ScGaugeSuggest extends LitElement {
         min-width: 0;
       }
 
-      .res-table-wrap {
-        overflow-x: auto;
+      .sug-list {
+        display: flex;
+        flex-direction: column;
       }
 
-      .res-table {
+      .sug-head,
+      .sug-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 4.4rem 4rem 3.6rem;
+        gap: 0.35rem;
+        align-items: center;
+        width: 100%;
+        padding: 0.32rem 0.4rem;
         font-size: 0.82rem;
+        font-variant-numeric: tabular-nums;
+        text-align: left;
+        border: 0;
+        border-bottom: 1px solid var(--sc-border);
+        border-radius: 0;
+        background: transparent;
       }
 
-      .res-table th,
-      .res-table td {
-        padding: 0.32rem 0.38rem;
+      .sug-id {
+        overflow: hidden;
+        text-overflow: ellipsis;
         white-space: nowrap;
+      }
+
+      .sug-head {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--sc-muted);
+      }
+
+      .sug-head .num,
+      .sug-row .num {
+        text-align: right;
+        font-family: var(--sc-mono);
+        white-space: nowrap;
+      }
+
+      .sug-row {
+        min-height: 34px;
+        justify-content: stretch;
+      }
+
+      .sug-row.best {
+        background: var(--sc-highlight-bg);
+      }
+
+      .sug-row[aria-pressed="true"] {
+        background: var(--sc-selected-bg);
+        font-weight: 600;
+      }
+
+      .sug-row[aria-pressed="true"] .sug-id::before {
+        content: "✓ ";
+        color: var(--sc-accent);
       }
 
       .res-head {
@@ -224,29 +270,6 @@ export class ScGaugeSuggest extends LitElement {
         font-size: 0.8rem;
         color: var(--sc-muted);
         font-family: var(--sc-mono);
-      }
-
-      .res-table tbody tr {
-        cursor: pointer;
-        transition: background 100ms ease;
-      }
-
-      .res-table tbody tr:hover {
-        background: var(--sc-surface-hover);
-      }
-
-      .res-table tbody tr.best {
-        background: var(--sc-highlight-bg);
-      }
-
-      .res-table tbody tr.selected {
-        background: var(--sc-selected-bg);
-        font-weight: 600;
-      }
-
-      .res-table tbody tr.selected td:first-child::before {
-        content: "✓ ";
-        color: var(--sc-accent);
       }
 
       .summary-bar {
@@ -317,14 +340,8 @@ export class ScGaugeSuggest extends LitElement {
       fanned: patch.fanned ?? this.fanned,
     };
 
-    this.preset = next.preset;
-    this.lengthUnit = next.lengthUnit;
-    this.tensionUnit = next.tensionUnit;
-    this.n = next.n;
-    this.L = next.L;
-    this.types = next.types;
-    this.strings = next.strings;
-    this.fanned = next.fanned;
+    Object.assign(this, next);
+    this.chosenRows = {};
 
     this.dispatchEvent(
       new CustomEvent<GaugeSuggestState>("sc-change", {
@@ -342,7 +359,6 @@ export class ScGaugeSuggest extends LitElement {
     }
     const found = this.presetsList.find((p) => p.id === presetId);
     if (!found) return;
-    this.chosenRows = {};
     this.emitState(stateFromPreset(found, this.n));
   }
 
@@ -409,7 +425,6 @@ export class ScGaugeSuggest extends LitElement {
 
   private removeString(idx: number) {
     if (this.strings.length <= 1) return;
-    this.chosenRows = {};
     this.emitState({ strings: this.strings.filter((_, i) => i !== idx) });
   }
 
@@ -430,9 +445,19 @@ export class ScGaugeSuggest extends LitElement {
     });
   }
 
+  private fmtGauge(
+    gaugeIn: number | null,
+    gaugeMm: number | null,
+    unitL: ScaleLengthUnit,
+  ): string {
+    if (unitL === "mm" && gaugeMm != null) return `${fmtNum(gaugeMm, 2)} mm`;
+    return fmtGaugeIn(gaugeIn);
+  }
+
   private renderSummary() {
     const res = this.results;
     if (!res || res.error || !res.strings.length) return nothing;
+    const unitL = res.lengthUnit ?? this.lengthUnit;
     const unit = res.tensionUnit ?? this.tensionUnit;
 
     let totalT = 0;
@@ -460,7 +485,11 @@ export class ScGaugeSuggest extends LitElement {
             (it) => html`
               <span>
                 <strong>${it.pitch}</strong>:
-                ${it.pick ? `${it.pick.id} (${fmtGaugeIn(it.pick.gauge_in)})` : "—"}
+                ${
+                  it.pick
+                    ? `${it.pick.id} (${this.fmtGauge(it.pick.gauge_in, it.pick.gauge_mm, unitL)})`
+                    : "—"
+                }
               </span>
             `,
           )}
@@ -606,111 +635,44 @@ export class ScGaugeSuggest extends LitElement {
               this.fanned.enabled
                 ? html`
                     <div class="fan-fields">
-                      <div class="sc-field">
-                        <label for="fan-lb">Bass scale (${unitL})</label>
-                        <input
-                          id="fan-lb"
-                          type="number"
-                          inputmode="decimal"
-                          step="any"
-                          .value=${String(this.fanned.L_bass)}
-                          @change=${(e: Event) =>
-                            this.emitState({
-                              fanned: {
-                                ...this.fanned,
-                                L_bass: Number(
-                                  (e.target as HTMLInputElement).value,
-                                ),
-                              },
-                            })}
-                        />
-                      </div>
-                      <div class="sc-field">
-                        <label for="fan-lt">Treble scale (${unitL})</label>
-                        <input
-                          id="fan-lt"
-                          type="number"
-                          inputmode="decimal"
-                          step="any"
-                          .value=${String(this.fanned.L_treble)}
-                          @change=${(e: Event) =>
-                            this.emitState({
-                              fanned: {
-                                ...this.fanned,
-                                L_treble: Number(
-                                  (e.target as HTMLInputElement).value,
-                                ),
-                              },
-                            })}
-                        />
-                      </div>
-                      <div class="sc-field">
-                        <label for="fan-nw">Nut width (${unitL})</label>
-                        <input
-                          id="fan-nw"
-                          type="number"
-                          inputmode="decimal"
-                          step="any"
-                          .value=${String(this.fanned.nutWidth)}
-                          @change=${(e: Event) =>
-                            this.emitState({
-                              fanned: {
-                                ...this.fanned,
-                                nutWidth: Number(
-                                  (e.target as HTMLInputElement).value,
-                                ),
-                              },
-                            })}
-                        />
-                      </div>
-                      <div class="sc-field">
-                        <label for="fan-eb">Bass edge (${unitL})</label>
-                        <input
-                          id="fan-eb"
-                          type="number"
-                          inputmode="decimal"
-                          step="any"
-                          placeholder="default"
-                          .value=${this.fanned.edgeBass != null ? String(this.fanned.edgeBass) : ""}
-                          @change=${(e: Event) => {
-                            const raw = (
-                              e.target as HTMLInputElement
-                            ).value.trim();
-                            this.emitState({
-                              fanned: {
-                                ...this.fanned,
-                                edgeBass: raw === "" ? null : Number(raw),
-                              },
-                            });
-                          }}
-                        />
-                      </div>
-                      <div class="sc-field">
-                        <label for="fan-et">Treble edge (${unitL})</label>
-                        <input
-                          id="fan-et"
-                          type="number"
-                          inputmode="decimal"
-                          step="any"
-                          placeholder="default"
-                          .value=${
-                            this.fanned.edgeTreble != null
-                              ? String(this.fanned.edgeTreble)
-                              : ""
-                          }
-                          @change=${(e: Event) => {
-                            const raw = (
-                              e.target as HTMLInputElement
-                            ).value.trim();
-                            this.emitState({
-                              fanned: {
-                                ...this.fanned,
-                                edgeTreble: raw === "" ? null : Number(raw),
-                              },
-                            });
-                          }}
-                        />
-                      </div>
+                      ${(
+                        [
+                          ["fan-lb", "Bass scale", "L_bass", false],
+                          ["fan-lt", "Treble scale", "L_treble", false],
+                          ["fan-nw", "Nut width", "nutWidth", false],
+                          ["fan-eb", "Bass edge", "edgeBass", true],
+                          ["fan-et", "Treble edge", "edgeTreble", true],
+                        ] as const
+                      ).map(([id, label, key, optional]) => {
+                        const val = this.fanned[key];
+                        return html`
+                          <div class="sc-field">
+                            <label for=${id}>${label} (${unitL})</label>
+                            <input
+                              id=${id}
+                              type="number"
+                              inputmode="decimal"
+                              step="any"
+                              placeholder=${optional ? "default" : ""}
+                              .value=${val != null ? String(val) : ""}
+                              @change=${(e: Event) => {
+                                const raw = (
+                                  e.target as HTMLInputElement
+                                ).value.trim();
+                                this.emitState({
+                                  fanned: {
+                                    ...this.fanned,
+                                    [key]:
+                                      optional && raw === ""
+                                        ? null
+                                        : Number(raw),
+                                  },
+                                });
+                              }}
+                            />
+                          </div>
+                        `;
+                      })}
                     </div>
                   `
                 : nothing
@@ -908,57 +870,49 @@ export class ScGaugeSuggest extends LitElement {
                         ${
                           res.suggestions.length
                             ? html`
-                                <div class="res-table-wrap">
-                                  <table class="sc-table res-table">
-                                    <thead>
-                                      <tr>
-                                        <th>ID</th>
-                                        <th class="num">Gauge</th>
-                                        <th class="num">T (${resUnitT})</th>
-                                        <th class="num">ΔT</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      ${res.suggestions.map((sug, sIdx) => {
-                                        const isBest = sIdx === res.bestIndex;
-                                        const isSel = sIdx === selectedIdx;
-                                        const sign = sug.dT > 0 ? "+" : "";
-                                        return html`
-                                          <tr
-                                            class=${[
-                                              isBest ? "best" : "",
-                                              isSel ? "selected" : "",
-                                            ]
-                                              .filter(Boolean)
-                                              .join(" ")}
-                                            title="Click to select ${sug.id} for Set Summary"
-                                            @click=${() => {
-                                              this.chosenRows = {
-                                                ...this.chosenRows,
-                                                [idx]: sIdx,
-                                              };
-                                            }}
-                                          >
-                                            <td class="sc-mono">${sug.id}</td>
-                                            <td class="num">
-                                              ${
-                                                resUnitL === "mm" &&
-                                                sug.gauge_mm != null
-                                                  ? `${fmtNum(sug.gauge_mm, 2)} mm`
-                                                  : fmtGaugeIn(sug.gauge_in)
-                                              }
-                                            </td>
-                                            <td class="num">
-                                              ${fmtNum(sug.T, 2)}
-                                            </td>
-                                            <td class="num">
-                                              ${sign}${fmtNum(sug.dT, 2)}
-                                            </td>
-                                          </tr>
-                                        `;
-                                      })}
-                                    </tbody>
-                                  </table>
+                                <div
+                                  class="sug-list"
+                                  role="group"
+                                  aria-label="Suggestions for ${res.pitch}"
+                                >
+                                  <div class="sug-head" aria-hidden="true">
+                                    <span>ID</span>
+                                    <span class="num">Gauge</span>
+                                    <span class="num">T (${resUnitT})</span>
+                                    <span class="num">ΔT</span>
+                                  </div>
+                                  ${res.suggestions.map((sug, sIdx) => {
+                                    const isBest = sIdx === res.bestIndex;
+                                    const isSel = sIdx === selectedIdx;
+                                    const sign = sug.dT > 0 ? "+" : "";
+                                    return html`
+                                      <button
+                                        type="button"
+                                        class=${isBest ? "sug-row best" : "sug-row"}
+                                        aria-pressed=${String(isSel)}
+                                        title=${`Select ${sug.id} for Set Summary`}
+                                        @click=${() => {
+                                          this.chosenRows = {
+                                            ...this.chosenRows,
+                                            [idx]: sIdx,
+                                          };
+                                        }}
+                                      >
+                                        <span class="sc-mono sug-id"
+                                          >${sug.id}</span
+                                        >
+                                        <span class="num">
+                                          ${this.fmtGauge(sug.gauge_in, sug.gauge_mm, resUnitL)}
+                                        </span>
+                                        <span class="num"
+                                          >${fmtNum(sug.T, 2)}</span
+                                        >
+                                        <span class="num"
+                                          >${sign}${fmtNum(sug.dT, 2)}</span
+                                        >
+                                      </button>
+                                    `;
+                                  })}
                                 </div>
                               `
                             : nothing
