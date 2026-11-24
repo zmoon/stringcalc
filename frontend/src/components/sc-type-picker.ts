@@ -38,6 +38,23 @@ export class ScTypePicker extends LitElement {
         border-radius: 50%;
       }
 
+      .selected-legend {
+        margin: 0.35rem 0 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+        font-size: 0.78rem;
+        line-height: 1.35;
+        color: var(--sc-muted);
+      }
+
+      .selected-legend strong {
+        font-family: var(--sc-mono);
+        font-weight: 600;
+      }
+
       .panel {
         margin-top: 0.5rem;
         border: 1px solid var(--sc-border-strong);
@@ -157,11 +174,15 @@ export class ScTypePicker extends LitElement {
 
   render() {
     const groups = this.open ? this.filteredGroups : [];
+    const infoById = new Map(this.catalogTypes.map((t) => [t.id, t]));
+    const selectedInfos = this.selected
+      .map((id) => infoById.get(id))
+      .filter((t): t is StringTypeInfo => t !== undefined);
 
     return html`
       <div class="chips">
         ${this.selected.map((id) => {
-          const info = this.catalogTypes.find((t) => t.id === id);
+          const info = infoById.get(id);
           return html`
             <span
               class="chip"
@@ -191,6 +212,21 @@ export class ScTypePicker extends LitElement {
         </button>
       </div>
 
+      ${
+        selectedInfos.length
+          ? html`
+              <ul class="selected-legend">
+                ${selectedInfos.map(
+                  (info) => html`
+                    <li>
+                      <strong>${info.id}</strong> — ${info.brand}: ${info.label}
+                    </li>
+                  `,
+                )}
+              </ul>
+            `
+          : nothing
+      }
       ${
         this.open
           ? html`

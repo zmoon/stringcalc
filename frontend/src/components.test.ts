@@ -7,6 +7,7 @@ import type { ScExactGauge } from "./components/sc-exact-gauge";
 import type { ScFrets } from "./components/sc-frets";
 import type { ScGaugeSuggest } from "./components/sc-gauge-suggest";
 import type { ScScaleLength } from "./components/sc-scale-length";
+import type { ScTypePicker } from "./components/sc-type-picker";
 
 describe("Lit custom elements", () => {
   it("renders sc-gauge-suggest and emits sc-change on add string", async () => {
@@ -131,5 +132,23 @@ describe("Lit custom elements", () => {
     await sl.updateComplete;
     expect(sl.shadowRoot!.textContent).toContain('25.50"');
     sl.remove();
+  });
+
+  it("shows selected string type descriptions inline in sc-type-picker", async () => {
+    const picker = document.createElement("sc-type-picker") as ScTypePicker;
+    picker.selected = ["DA:PB"];
+    picker.catalogTypes = [
+      {
+        id: "DA:PB",
+        brand: "D'Addario (Chart)",
+        label: "Acoustic Guitar - Phosphor Bronze",
+      },
+    ];
+    document.body.appendChild(picker);
+    await picker.updateComplete;
+    expect(
+      picker.shadowRoot!.querySelector(".selected-legend")?.textContent,
+    ).toContain("D'Addario (Chart): Acoustic Guitar - Phosphor Bronze");
+    picker.remove();
   });
 });
