@@ -63,12 +63,18 @@ const ASCII_DIGITS: Record<string, string> = Object.fromEntries(
 );
 
 export function normalizePitch(pitch: string): string {
-  return pitch.trim().replace(/[₀₁₂₃₄₅₆₇₈₉₋]/g, (c) => ASCII_DIGITS[c] ?? c);
+  return pitch
+    .trim()
+    .replace(/♯/g, "#")
+    .replace(/♭/g, "b")
+    .replace(/[₀₁₂₃₄₅₆₇₈₉₋]/g, (c) => ASCII_DIGITS[c] ?? c);
 }
 
 export function splitPitch(pitch: string): [string, string] | null {
   const m = RE_PITCH.exec(normalizePitch(pitch));
-  return m ? [`${m[1]}${m[2]}`, m[3]] : null;
+  if (!m) return null;
+  const acc = m[2] === "#" ? "♯" : m[2] === "b" ? "♭" : "";
+  return [`${m[1]}${acc}`, m[3]];
 }
 
 export function fmtPitchSub(pitch: string): string {

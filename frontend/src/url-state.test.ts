@@ -114,15 +114,19 @@ describe("units & pitch helpers", () => {
     expect(transposePitch("not-a-pitch", 1)).toBe("not-a-pitch");
   });
 
-  it("formats and normalizes subscript pitch octaves", () => {
+  it("formats and normalizes subscript pitch octaves and accidentals", () => {
     expect(fmtPitchSub("A4")).toBe("A₄");
-    expect(fmtPitchSub("F#3")).toBe("F#₃");
+    expect(fmtPitchSub("F#3")).toBe("F♯₃");
+    expect(fmtPitchSub("Bb2")).toBe("B♭₂");
+    expect(fmtPitchSub("B2")).toBe("B₂");
     expect(fmtPitchSub("C-1")).toBe("C₋₁");
     expect(fmtPitchSub("bad")).toBe("bad");
     expect(normalizePitch("A₄")).toBe("A4");
+    expect(normalizePitch("F♯₃")).toBe("F#3");
+    expect(normalizePitch("B♭₂")).toBe("Bb2");
     expect(normalizePitch("C₋₁")).toBe("C-1");
-    expect(splitPitch("Bb2")).toEqual(["Bb", "2"]);
-    expect(transposePitch("A₄", 1)).toBe("A#4");
+    expect(splitPitch("Bb2")).toEqual(["B♭", "2"]);
+    expect(transposePitch("F♯₃", 1)).toBe("G3");
   });
 
   it("converts length and tension units cleanly", () => {
