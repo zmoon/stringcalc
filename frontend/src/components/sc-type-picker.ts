@@ -171,6 +171,7 @@ export class ScTypePicker extends LitElement {
               <button
                 type="button"
                 aria-label="Remove ${id}"
+                title="Remove ${id}"
                 @click=${() => this.toggleType(id)}
               >
                 ×

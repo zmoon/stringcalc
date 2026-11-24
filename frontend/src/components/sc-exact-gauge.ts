@@ -170,6 +170,7 @@ export class ScExactGauge extends LitElement {
               <button
                 type="button"
                 aria-label="Lower pitch"
+                title="Lower pitch by 1 semitone"
                 @click=${() => this.emitState({ pitch: transposePitch(this.pitch, -1) })}
               >
                 −
@@ -188,6 +189,7 @@ export class ScExactGauge extends LitElement {
               <button
                 type="button"
                 aria-label="Raise pitch"
+                title="Raise pitch by 1 semitone"
                 @click=${() => this.emitState({ pitch: transposePitch(this.pitch, 1) })}
               >
                 +

@@ -542,11 +542,17 @@ export class ScGaugeSuggest extends LitElement {
                 role="group"
                 aria-label="Scale length unit"
               >
-                ${(["in", "mm"] as ScaleLengthUnit[]).map(
-                  (u) => html`
+                ${(
+                  [
+                    ["in", "Inches"],
+                    ["mm", "Millimeters"],
+                  ] as const
+                ).map(
+                  ([u, label]) => html`
                     <button
                       type="button"
                       aria-pressed=${String(this.lengthUnit === u)}
+                      title=${label}
                       @click=${() => this.onLengthUnitChange(u)}
                     >
                       ${u}
@@ -559,11 +565,18 @@ export class ScGaugeSuggest extends LitElement {
             <div class="sc-field">
               <span class="sc-label">Tension unit</span>
               <div class="sc-segmented" role="group" aria-label="Tension unit">
-                ${(["lbf", "kgf", "N"] as TensionUnit[]).map(
-                  (u) => html`
+                ${(
+                  [
+                    ["lbf", "Pounds-force"],
+                    ["kgf", "Kilograms-force"],
+                    ["N", "Newtons"],
+                  ] as const
+                ).map(
+                  ([u, label]) => html`
                     <button
                       type="button"
                       aria-pressed=${String(this.tensionUnit === u)}
+                      title=${label}
                       @click=${() => this.onTensionUnitChange(u)}
                     >
                       ${u}
@@ -720,6 +733,7 @@ export class ScGaugeSuggest extends LitElement {
               <button
                 type="button"
                 class="sc-btn-sm sc-btn-primary"
+                title="Add a string (a fourth above the last)"
                 @click=${() => this.addString()}
               >
                 + Add string
@@ -744,6 +758,7 @@ export class ScGaugeSuggest extends LitElement {
                           type="button"
                           class="nudge-btn"
                           aria-label="Lower string ${idx + 1} pitch"
+                          title="Lower pitch by 1 semitone"
                           @click=${() =>
                             this.onStringField(idx, {
                               pitch: transposePitch(s.pitch, -1),
@@ -766,6 +781,7 @@ export class ScGaugeSuggest extends LitElement {
                           type="button"
                           class="nudge-btn"
                           aria-label="Raise string ${idx + 1} pitch"
+                          title="Raise pitch by 1 semitone"
                           @click=${() =>
                             this.onStringField(idx, {
                               pitch: transposePitch(s.pitch, 1),
@@ -812,6 +828,7 @@ export class ScGaugeSuggest extends LitElement {
                     type="button"
                     class="sc-btn-ghost"
                     aria-label="Remove string ${idx + 1}"
+                    title="Remove string ${idx + 1}"
                     ?disabled=${this.strings.length <= 1}
                     @click=${() => this.removeString(idx)}
                   >
