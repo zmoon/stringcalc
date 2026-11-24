@@ -97,8 +97,8 @@ class _BaseWidget(anywidget.AnyWidget):
     _input_traits: ClassVar[frozenset[str]] = frozenset()
 
     def __init__(self, **kwargs: Any) -> None:
-        if not self._esm:
-            kwargs.setdefault("_esm", _load_esm())
+        if not self._esm and "_esm" not in kwargs:
+            kwargs["_esm"] = _load_esm()
         self._recomputing = True
         try:
             super().__init__(**kwargs)
