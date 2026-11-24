@@ -59,6 +59,13 @@
       </footer>
     </div>
 
+    <script>
+      if (location.protocol === "file:") {
+        document.getElementById("status-pill").dataset.state = "error";
+        document.getElementById("status-text").textContent =
+          "Serve over HTTP (file:// not supported)";
+      }
+    </script>
     <script type="module" src="/src/entries/standalone-misc.ts"></script>
   </body>
 </html>

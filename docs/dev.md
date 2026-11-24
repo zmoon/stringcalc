@@ -69,6 +69,14 @@ Build the docs:
 uv run sphinx-build docs docs/_build/html
 ```
 
+To preview the built docs locally (serving over HTTP so the embedded web app loads):
+
+<!--pytest.mark.skip-->
+
+```sh
+uv run python -m http.server --directory docs/_build/html
+```
+
 Check the version:
 
 ```sh
