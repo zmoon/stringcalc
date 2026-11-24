@@ -1,3 +1,5 @@
+<!--pytest-codeblocks:skipfile-->
+
 # Development
 
 ## Setup
@@ -11,8 +13,6 @@ uv sync --all-groups --all-extras
 To update an existing venv, add `--upgrade`.
 
 Install frontend dependencies (requires Node.js 20+):
-
-<!--pytest.mark.skip-->
 
 ```sh
 npm --prefix frontend ci
@@ -28,8 +28,6 @@ uv run pytest
 
 Run frontend typecheck and unit tests:
 
-<!--pytest.mark.skip-->
-
 ```sh
 npm --prefix frontend run typecheck
 npm --prefix frontend test
@@ -39,16 +37,12 @@ npm --prefix frontend test
 
 Build the `anywidget` bundle (`stringcalc/widget/_bundle.js`) and standalone web apps (with local wheel for Pyodide):
 
-<!--pytest.mark.skip-->
-
 ```sh
 uv run python scripts/build_web.py --source local --out docs/_static/app
 ```
 
 To target the PyPI release of `stringcalc` instead of the local wheel, pass `--source pypi`.
 For live frontend development with Vite HMR:
-
-<!--pytest.mark.skip-->
 
 ```sh
 uv run python scripts/build_web.py --wheel-only
@@ -70,8 +64,6 @@ uv run sphinx-build docs docs/_build/html
 ```
 
 To preview the built docs locally (serving over HTTP so the embedded web app loads):
-
-<!--pytest.mark.skip-->
 
 ```sh
 uv run python -m http.server --directory docs/_build/html
