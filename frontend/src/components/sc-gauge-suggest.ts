@@ -196,15 +196,18 @@ export class ScGaugeSuggest extends LitElement {
       }
 
       .sug-list {
-        display: flex;
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto auto auto;
+        column-gap: 0.45rem;
       }
 
       .sug-head,
       .sug-row {
+        grid-column: 1 / -1;
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 4.4rem 4rem 3.6rem;
-        gap: 0.35rem;
+        grid-template-columns: subgrid;
+        row-gap: 0;
+        column-gap: inherit;
         align-items: center;
         width: 100%;
         padding: 0.32rem 0.4rem;
