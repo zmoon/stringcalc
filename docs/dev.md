@@ -18,27 +18,21 @@ Install frontend dependencies (requires Node.js 20+):
 npm --prefix frontend ci
 ```
 
-## Testing
-
-Run the Python tests:
-
-```sh
-uv run pytest
-```
-
-Run frontend typecheck and unit tests:
+Build the `anywidget` bundle (`stringcalc/widget/_bundle.js`),
+packaged local web assets (`stringcalc/_web/`),
+and standalone Pyodide web apps for the docs:
 
 ```sh
-npm --prefix frontend run typecheck
-npm --prefix frontend test
+uv run python scripts/build_web.py --out docs/_static/app
 ```
 
 ## Web app & widgets
 
-Build the `anywidget` bundle (`stringcalc/widget/_bundle.js`), packaged local web assets (`stringcalc/_web/`), and standalone Pyodide web apps:
+For live frontend development with Vite HMR:
 
 ```sh
-uv run python scripts/build_web.py --out docs/_static/app
+uv run python scripts/build_web.py --wheel-only
+npm --prefix frontend run dev
 ```
 
 To run the local Python-backed web app (no Pyodide or wheel rebuild needed after Python edits):
@@ -47,15 +41,22 @@ To run the local Python-backed web app (no Pyodide or wheel rebuild needed after
 uv run stringcalc app
 ```
 
-To target the PyPI release of `stringcalc` instead of the local wheel, pass `--source pypi`.
-For live frontend development with Vite HMR:
+## Testing
+
+Run the Python tests:
 
 ```sh
-uv run python scripts/build_web.py --wheel-only
-npm --prefix frontend run dev
+uv run pytest
 ```
 
-## Docs & versioning
+Run frontend type-check and unit tests:
+
+```sh
+npm --prefix frontend run typecheck
+npm --prefix frontend test
+```
+
+## Docs
 
 Regenerate the committed CLI example SVGs (only needed when updating them):
 
@@ -75,17 +76,32 @@ To preview the built docs locally (serving over HTTP so the standalone web apps 
 uv run python -m http.server --directory docs/_build/html
 ```
 
-Check the version:
+## Releases & deployment
+
+### PyPI
+
+Pushing an annotated `v*` tag triggers Trusted Publishing to PyPI in GitHub Actions,
+assuming the build and test jobs pass.
+
+For example (on the `main` branch):
 
 ```sh
-uv run stringcalc --version
+git tag -a v0.2.0 -m "v0.2.0"
+git push --follow-tags
 ```
 
-After adding a new annotated version tag,
-you may need to touch one of the files
-in order for uv/hatch to detect that a rebuild is needed,
-or use:
+Note that for the tag to be picked up in your local `stringcalc` by uv/hatch,
+you may need to use `--reinstall-package` or similar.
+For example:
 
 ```sh
 uv run --reinstall-package stringcalc stringcalc --version
 ```
+
+### GitHub Pages
+
+Pushes to `main` (and manual `workflow_dispatch` runs on `main`) deploy the standalone Pyodide web apps.
+
+### Read the Docs
+
+Read the Docs builds documentation and versioned copies of the standalone web apps.
