@@ -139,7 +139,8 @@ uv run --reinstall-package stringcalc stringcalc --version
 
 ### GitHub Pages
 
-Pushes to `main` (and manual `workflow_dispatch` runs on `main`) deploy the standalone Pyodide web apps.
+Pushes to `main`, `v*` tags, and manual `workflow_dispatch` runs on `main`,
+deploy the standalone Pyodide web apps.
 
 ### Read the Docs
 
