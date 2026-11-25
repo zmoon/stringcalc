@@ -19,8 +19,8 @@ export class ScScaleLength extends LitElement {
   static styles = [sharedStyles];
 
   @property({ type: String }) a = "nut";
-  @property({ type: String }) b = "1";
-  @property({ type: Number }) d = 1.4;
+  @property({ type: String }) b = "5";
+  @property({ type: Number }) d = 6;
   @property({ type: String }) lengthUnit: LengthUnit = "in";
   @property({ type: Object }) result: ScaleLengthResponse | null = null;
   @property({ type: Boolean }) loading = false;

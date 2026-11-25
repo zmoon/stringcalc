@@ -357,8 +357,8 @@ class ScaleLengthWidget(_BaseWidget):
     _input_traits = frozenset({"a", "b", "d", "length_unit"})
 
     a = traitlets.Unicode("nut").tag(sync=True)
-    b = traitlets.Unicode("1").tag(sync=True)
-    d = traitlets.Float(1.4).tag(sync=True)
+    b = traitlets.Unicode("5").tag(sync=True)
+    d = traitlets.Float(6.0).tag(sync=True)
     length_unit = traitlets.Unicode("in").tag(sync=True)
     result = traitlets.Dict().tag(sync=True)
 
