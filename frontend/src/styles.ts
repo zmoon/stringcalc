@@ -155,7 +155,8 @@ export const sharedStyles = css`
   }
 
   button.sc-btn-primary:hover:not(:disabled) {
-    filter: brightness(1.08);
+    background: var(--sc-accent);
+    filter: brightness(0.92);
   }
 
   button.sc-btn-ghost {
