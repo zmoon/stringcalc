@@ -4,33 +4,32 @@ Calculations for instrument strings.
 
 - {doc}`Python library <api>`
 - {doc}`Command-line interface <cli>`
-- {doc}`Web app & widgets <app>`
-- ...
+- {doc}`Web app and notebook widgets <web>`
 
 ## Installation
 
 stringcalc is available [on PyPI](https://pypi.org/project/stringcalc/):
 
-```
-pip install stringcalc
+```{code} console
+$ pip install stringcalc
 ```
 
 For the CLI, include the `cli` extra:
 
+```{code} console
+$ pip install stringcalc[cli]
 ```
-pip install stringcalc[cli]
+
+For the notebook widgets, include the `widget` extra:
+
+```{code} console
+$ pip install stringcalc[widget]
 ```
 
 ## Examples
 
 ```{nb-exec-table}
 
-```
-
-```{toctree}
-:hidden:
-
-app.md
 ```
 
 ```{toctree}
@@ -49,6 +48,7 @@ examples/pythagoras-ratios.md
 
 api.rst
 cli.md
+web.md
 prior-art.md
 GitHub <https://github.com/zmoon/stringcalc>
 dev.md

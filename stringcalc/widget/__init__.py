@@ -1,8 +1,10 @@
 """Interactive notebook widgets (via ``anywidget``) sharing the web app UI.
 
-Install the optional extra to use this module::
+Install the optional ``widget`` extra to use this module:
 
-    pip install stringcalc[widget]
+.. code-block:: console
+
+   $ pip install stringcalc[widget]
 """
 
 from __future__ import annotations

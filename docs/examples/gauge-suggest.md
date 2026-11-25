@@ -6,7 +6,7 @@ kernelspec:
 
 # Gauge suggest
 
-We can use the {doc}`/api` or the {doc}`/cli` to do this.
+We can use the {doc}`/api`, {doc}`/cli`, or {doc}`widget </web>` to do this.
 For example, consider this Irish tenor banjo situation
 (also shown in [the GitHub README](https://github.com/zmoon/stringcalc/blob/main/README.md)):
 
@@ -72,4 +72,20 @@ stringcalc gauge --suggest -T 17 -L 23 -P D3 --type DA:LEW
 :alt: CLI gauge suggestion output for 23" TB D string using D'Addario loop-end nickel-wound strings
 :width: 450
 
+```
+
+## Widget
+
+With the notebook widget ({class}`stringcalc.widget.GaugeSuggestWidget`),
+we have an Irish tenor banjo preset:
+
+```{code-cell} ipython3
+from stringcalc.widget import GaugeSuggestWidget
+
+w = GaugeSuggestWidget(preset="tenor-banjo-4-irish", n=6)
+w
+```
+
+```{code-cell} ipython3
+w.to_dataframes()
 ```
