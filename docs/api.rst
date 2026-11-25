@@ -12,8 +12,10 @@ Tension
 .. autosummary::
    :toctree: api/
 
+   stringcalc.tension.fanned_scale_lengths
    stringcalc.tension.gauge
    stringcalc.tension.suggest_gauge
+   stringcalc.tension.suggest_gauges
    stringcalc.tension.tension
    stringcalc.tension.unit_weight
 
@@ -59,3 +61,16 @@ Distance
    stringcalc.frets.distance_et
    stringcalc.frets.distances
    stringcalc.frets.length_from_distance
+
+Widgets
+=======
+
+.. automodule:: stringcalc.widget
+
+.. autosummary::
+   :toctree: api/
+
+   stringcalc.widget.GaugeSuggestWidget
+   stringcalc.widget.ExactGaugeWidget
+   stringcalc.widget.FretsWidget
+   stringcalc.widget.ScaleLengthWidget

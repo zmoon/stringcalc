@@ -8,6 +8,7 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-docstring-first
+      - id: check-json
       - id: check-yaml
 
   - repo: https://github.com/asottile/pyupgrade
@@ -35,3 +36,4 @@ repos:
     rev: "v3.10.1"
     hooks:
       - id: prettier
+        exclude: ^frontend/package-lock\.json$

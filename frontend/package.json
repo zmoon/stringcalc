@@ -1,0 +1,24 @@
+{
+  "name": "stringcalc-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build:widgets": "vite build --config vite.widgets.config.ts",
+    "build:app": "vite build",
+    "build": "npm run build:widgets && npm run build:app",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "lit": "^3.3.0"
+  },
+  "devDependencies": {
+    "happy-dom": "^17.4.4",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.5",
+    "vitest": "^3.1.1"
+  }
+}

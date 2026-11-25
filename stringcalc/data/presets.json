@@ -1,0 +1,145 @@
+[
+  {
+    "id": "guitar-6",
+    "name": "Acoustic Guitar (6-string, Standard)",
+    "lengthUnit": "in",
+    "tensionUnit": "lbf",
+    "L": 25.5,
+    "types": ["DA:PB", "DA:PL"],
+    "strings": [
+      { "pitch": "E2", "T": 26 },
+      { "pitch": "A2", "T": 26 },
+      { "pitch": "D3", "T": 26 },
+      { "pitch": "G3", "T": 26 },
+      { "pitch": "B3", "T": 26 },
+      { "pitch": "E4", "T": 26 }
+    ]
+  },
+  {
+    "id": "guitar-6-electric",
+    "name": "Electric Guitar (6-string, Standard)",
+    "lengthUnit": "in",
+    "tensionUnit": "lbf",
+    "L": 25.5,
+    "types": ["DA:NW", "DA:PL"],
+    "strings": [
+      { "pitch": "E2", "T": 17 },
+      { "pitch": "A2", "T": 17 },
+      { "pitch": "D3", "T": 17 },
+      { "pitch": "G3", "T": 17 },
+      { "pitch": "B3", "T": 17 },
+      { "pitch": "E4", "T": 17 }
+    ]
+  },
+  {
+    "id": "guitar-6-classical",
+    "name": "Classical Guitar (6-string, Standard)",
+    "lengthUnit": "mm",
+    "tensionUnit": "lbf",
+    "L": 650,
+    "types": ["DA:NYLW", "DA:NYL"],
+    "strings": [
+      { "pitch": "E2", "T": 14.5 },
+      { "pitch": "A2", "T": 14.5 },
+      { "pitch": "D3", "T": 14.5 },
+      { "pitch": "G3", "T": 14.5 },
+      { "pitch": "B3", "T": 14.5 },
+      { "pitch": "E4", "T": 14.5 }
+    ]
+  },
+  {
+    "id": "tenor-banjo-4-irish",
+    "name": "Irish Tenor Banjo (4-string, GDAE)",
+    "lengthUnit": "in",
+    "tensionUnit": "lbf",
+    "L": 23,
+    "types": ["DA:LEW", "DA:LE"],
+    "strings": [
+      { "pitch": "G2", "T": 17 },
+      { "pitch": "D3", "T": 17 },
+      { "pitch": "A3", "T": 17 },
+      { "pitch": "E4", "T": 17 }
+    ]
+  },
+  {
+    "id": "tenor-banjo-4-cgda",
+    "name": "Standard Tenor Banjo (4-string, CGDA)",
+    "lengthUnit": "in",
+    "tensionUnit": "lbf",
+    "L": 23,
+    "types": ["DA:LEW", "DA:LE"],
+    "strings": [
+      { "pitch": "C3", "T": 20 },
+      { "pitch": "G3", "T": 20 },
+      { "pitch": "D4", "T": 20 },
+      { "pitch": "A4", "T": 20 }
+    ]
+  },
+  {
+    "id": "mandolin-4",
+    "name": "Mandolin (4 courses, GDAE)",
+    "lengthUnit": "in",
+    "tensionUnit": "lbf",
+    "L": 13.875,
+    "types": ["DA:LEPB", "DA:LE"],
+    "strings": [
+      { "pitch": "G3", "T": 22 },
+      { "pitch": "D4", "T": 22 },
+      { "pitch": "A4", "T": 22 },
+      { "pitch": "E5", "T": 22 }
+    ]
+  },
+  {
+    "id": "ukulele-4-tenor",
+    "name": "Tenor Ukulele (4-string, GCEA)",
+    "lengthUnit": "in",
+    "tensionUnit": "lbf",
+    "L": 17,
+    "types": ["WFC", "A:NNG"],
+    "strings": [
+      { "pitch": "G4", "T": 11 },
+      { "pitch": "C4", "T": 11 },
+      { "pitch": "E4", "T": 11 },
+      { "pitch": "A4", "T": 11 }
+    ]
+  },
+  {
+    "id": "bass-4",
+    "name": "Electric Bass (4-string, Standard)",
+    "lengthUnit": "in",
+    "tensionUnit": "lbf",
+    "L": 34,
+    "types": ["DA:XLB"],
+    "strings": [
+      { "pitch": "E1", "T": 42 },
+      { "pitch": "A1", "T": 42 },
+      { "pitch": "D2", "T": 42 },
+      { "pitch": "G2", "T": 42 }
+    ]
+  },
+  {
+    "id": "guitar-7-fan",
+    "name": "7-String Multiscale Guitar (BEADGBE)",
+    "lengthUnit": "in",
+    "tensionUnit": "lbf",
+    "L": 25.5,
+    "fanned": {
+      "enabled": true,
+      "L_bass": 27.0,
+      "L_treble": 25.5,
+      "nutWidth": 1.89,
+      "edgeBass": 0.15625,
+      "edgeTreble": 0.125
+    },
+    "types": ["DA:NW", "DA:PL"],
+    "strings": [
+      { "pitch": "B1", "T": 17.5 },
+      { "pitch": "E2", "T": 17.5 },
+      { "pitch": "A2", "T": 17.5 },
+      { "pitch": "D3", "T": 17.5 },
+      { "pitch": "G3", "T": 17.5 },
+      { "pitch": "B3", "T": 17.5 },
+      { "pitch": "E4", "T": 17.5 }
+    ]
+  }
+]

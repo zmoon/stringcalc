@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>stringcalc — Misc Tools</title>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="page-header">
+        <div class="brand-group">
+          <a class="brand-title" href="./index.html">stringcalc</a>
+          <nav class="page-nav" aria-label="Tools">
+            <a href="./index.html">Gauge suggest</a>
+            <a href="./misc.html" aria-current="page">Misc tools</a>
+          </nav>
+        </div>
+        <div class="header-actions">
+          <span id="status-pill" class="status-pill" data-state="loading">
+            <span class="status-dot"></span>
+            <span id="status-text">Starting…</span>
+          </span>
+        </div>
+      </header>
+
+      <main class="misc-grid">
+        <section class="misc-card" id="exact-gauge">
+          <h2>Exact gauge</h2>
+          <p class="misc-desc">
+            Compute exact plain-string diameter from material density.
+          </p>
+          <sc-exact-gauge id="exact-gauge-widget"></sc-exact-gauge>
+        </section>
+
+        <section class="misc-card" id="scale-length">
+          <h2>Scale length</h2>
+          <p class="misc-desc">
+            Compute the scale length implied by fretboard distance a → b.
+          </p>
+          <sc-scale-length id="scale-length-widget"></sc-scale-length>
+        </section>
+
+        <section class="misc-card" id="frets">
+          <h2>Fret positions</h2>
+          <p class="misc-desc">
+            Compute equal-temperament fret locations using the 12th-root-of-2
+            method.
+          </p>
+          <sc-frets id="frets-widget"></sc-frets>
+        </section>
+      </main>
+
+      <footer class="page-footer">
+        <span>
+          Powered by
+          <a href="https://github.com/zmoon/stringcalc">stringcalc</a>
+          <strong id="sc-version"></strong> running
+          <span id="sc-runtime">in your browser via Pyodide</span>.
+        </span>
+      </footer>
+    </div>
+
+    <script>
+      if (location.protocol === "file:") {
+        document.getElementById("status-pill").dataset.state = "error";
+        document.getElementById("status-text").textContent =
+          "Serve over HTTP (file:// not supported)";
+      }
+    </script>
+    <script type="module" src="/src/entries/standalone-misc.ts"></script>
+  </body>
+</html>

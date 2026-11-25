@@ -6,14 +6,14 @@ can be specified more than once to get results for multiple strings.
 
 With [uv](https://docs.astral.sh/uv/), you can install `stringcalc` globally with:
 
-```
-uv tool install stringcalc[cli]
+```{code} console
+$ uv tool install stringcalc[cli]
 ```
 
 or run it in an ephemeral environment with:
 
-```
-uvx stringcalc[cli]
+```{code} console
+$ uvx stringcalc[cli]
 ```
 
 ## Commands

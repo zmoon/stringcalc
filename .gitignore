@@ -1,7 +1,13 @@
 data/tension_chart_13934.pdf
 data/*.png
 docs/api/
-panel/app.html
+docs/_static/app/
+frontend/node_modules/
+frontend/dist/
+frontend/public/wheels/
+frontend/public/app-config.json
+stringcalc/widget/_bundle.js
+stringcalc/_web/
 _version.py
 
 uv.lock
