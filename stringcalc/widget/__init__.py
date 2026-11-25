@@ -175,7 +175,7 @@ class GaugeSuggestWidget(_BaseWidget):
                 "tension_unit": "lbf",
                 "L": 25.5,
                 "types": ["DA:PB", "DA:PL"],
-                "strings": [{"pitch": "E2", "T": 16.5, "L": 25.5}],
+                "strings": [{"pitch": "E2", "T": 26.0, "L": 25.5}],
                 "fanned": _default_fanned(lu),
             }
 
@@ -183,7 +183,13 @@ class GaugeSuggestWidget(_BaseWidget):
         init_state["catalog"] = get_catalog()
 
         if length_unit is not None and length_unit != init_state["length_unit"]:
+            prev_lu = init_state["length_unit"]
             init_state["length_unit"] = length_unit
+            if L is None and prev_lu in {"in", "mm"} and length_unit in {"in", "mm"}:
+                factor = 25.4 if length_unit == "mm" else 1 / 25.4
+                init_state["L"] = round(float(init_state["L"]) * factor, 3)
+                for s in init_state["strings"]:
+                    s["L"] = round(float(s["L"]) * factor, 3)
             if fanned is None:
                 init_state["fanned"] = _default_fanned(length_unit)
         if tension_unit is not None:

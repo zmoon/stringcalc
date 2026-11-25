@@ -94,6 +94,7 @@ describe("url-state", () => {
     );
     expect(fromUrl.lengthUnit).toBe("mm");
     expect(fromUrl.fanned.L_bass).toBeGreaterThan(600);
+    expect(stateToParams(fromUrl, presets).get("fan")).toBeNull();
   });
 
   it("handles malformed query parameters gracefully", () => {

@@ -61,6 +61,12 @@ def test_gauge_suggest_widget(monkeypatch):
     assert w.L == 25.5
     assert [df.attrs["pitch"] for df in w.to_dataframes()] == ["E2", "A2", "D3", "G3", "B3", "E4"]
 
+    # Overriding length_unit on a preset without L converts scale length
+    w_mm = GaugeSuggestWidget(preset="guitar-6", length_unit="mm", **_bundle_kwargs())
+    assert w_mm.L == pytest.approx(647.7, rel=1e-3)
+    assert all(s["L"] == pytest.approx(647.7, rel=1e-3) for s in w_mm.strings)
+    assert w_mm.results["error"] is None
+
 
 def test_misc_widgets():
     eg = ExactGaugeWidget(T=16, L=22.5, pitch="E4", **_bundle_kwargs())

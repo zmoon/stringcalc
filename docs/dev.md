@@ -28,18 +28,57 @@ uv run python scripts/build_web.py --out docs/_static/app
 
 ## Web app & widgets
 
-For live frontend development with Vite HMR:
+The [Lit Web Components](https://lit.dev/) in `frontend/src/components/` are shared across three surfaces,
+all talking to `stringcalc/_app.py` (`METHODS` / `dispatch`) via `frontend/src/backend/index.ts`:
+
+- **Standalone Pyodide apps**
+  (`frontend/dist/app/`, copied to `docs/_static/app/` and deployed to GitHub Pages).
+  Pass `?pkg=pypi` or `?pkg=local` in the URL to override `app-config.json` at runtime.
+- **Local Python app**
+  (`stringcalc/_web/`, served by `stringcalc app` via `stringcalc/_server.py`).
+- **Notebook widgets**
+  (`stringcalc/widget/_bundle.js`, loaded by `anywidget` wrappers in `stringcalc/widget/__init__.py`).
+
+To run the local Python-backed web app
+(fastest loop for Python edits, no JS or wheel rebuild needed):
+
+```sh
+uv run stringcalc app
+```
+
+After editing `frontend/src/`,
+rebuild both packaged JS targets for `stringcalc app` and notebooks:
+
+```sh
+npm --prefix frontend run build
+```
+
+For live frontend development with Vite HMR (Pyodide mode):
 
 ```sh
 uv run python scripts/build_web.py --wheel-only
 npm --prefix frontend run dev
 ```
 
-To run the local Python-backed web app (no Pyodide or wheel rebuild needed after Python edits):
+Things to keep in mind when modifying the frontend or widgets:
 
-```sh
-uv run stringcalc app
-```
+- **Adding an RPC method or tool**:
+  update `METHODS` in `stringcalc/_app.py`,
+  `MethodName` + `createBackend` in `frontend/src/backend/index.ts`,
+  and `WIDGET_SPECS` in `frontend/src/entries/widgets-esm.ts` (for `anywidget`).
+- **Synced defaults**:
+  standalone apps read Lit `@property` defaults (`frontend/src/components/sc-*.ts`)
+  and `DEFAULT_FANNED` (`frontend/src/types.ts`),
+  while notebooks read traitlet defaults
+  and `_DEFAULT_FANNED_IN` in `stringcalc/widget/__init__.py`.
+  Keep them aligned.
+- **Packaging**:
+  `stringcalc/widget/_bundle.js` and `stringcalc/_web/` are gitignored
+  and included via `[tool.hatch.build] artifacts`, which Hatch silently skips if missing.
+  Run `npm --prefix frontend run build` before a manual `uv build`
+  (CI verifies both wheel and sdist contents).
+  `vite.config.ts` sets `publicDir: false` on build
+  so `frontend/public/wheels/` never leaks into `stringcalc/_web/`.
 
 ## Testing
 

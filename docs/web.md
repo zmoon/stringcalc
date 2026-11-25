@@ -5,6 +5,7 @@ _Web app and notebook widgets_
 stringcalc ships interactive tools built as shared Web Components:
 
 - **Standalone web apps** powered by Python in the browser (via Pyodide):
+  <!-- Keep raw HTML <a> tags: Sphinx rewrites Markdown links to _static/ into _downloads/<hash>/, breaking relative JS/CSS paths. -->
   - <a href="_static/app/index.html" target="_blank" rel="noopener">Open Gauge Suggest app</a>
   - <a href="_static/app/misc.html" target="_blank" rel="noopener">Open Misc Tools app</a> (Exact gauge, Frets, Scale length)
 - **Local web app** backed directly by your local Python installation (instant startup, works offline):

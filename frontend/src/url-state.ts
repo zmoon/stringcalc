@@ -79,8 +79,9 @@ function encodeFanned(f: FannedConfig): string {
 }
 
 function fannedEqual(a: FannedConfig, b: FannedConfig): boolean {
+  if (a.enabled !== b.enabled) return false;
+  if (!a.enabled) return true;
   return (
-    a.enabled === b.enabled &&
     numEq(a.L_bass, b.L_bass) &&
     numEq(a.L_treble, b.L_treble) &&
     numEq(a.nutWidth, b.nutWidth) &&
@@ -160,7 +161,7 @@ export function paramsToState(
         n: DEFAULT_N,
         L: 25.5,
         types: ["DA:PB", "DA:PL"],
-        strings: [{ pitch: "E2", T: 16.5, L: 25.5 }],
+        strings: [{ pitch: "E2", T: 26, L: 25.5 }],
         fanned: { ...DEFAULT_FANNED },
       };
 
