@@ -69,7 +69,7 @@ Build the docs:
 uv run sphinx-build docs docs/_build/html
 ```
 
-To preview the built docs locally (serving over HTTP so the embedded web app loads):
+To preview the built docs locally (serving over HTTP so the standalone web apps load):
 
 ```sh
 uv run python -m http.server --directory docs/_build/html
