@@ -10,17 +10,48 @@ export class ScFrets extends LitElement {
     sharedStyles,
     css`
       .table-wrap {
-        max-height: 360px;
-        overflow-y: auto;
+        max-width: 30rem;
+        overflow-x: auto;
         border: 1px solid var(--sc-border);
         border-radius: var(--sc-radius-sm);
       }
 
-      .table-wrap thead th {
-        position: sticky;
-        top: 0;
-        background: var(--sc-bg, Canvas);
-        z-index: 1;
+      table {
+        width: 100%;
+        min-width: 18rem;
+        table-layout: fixed;
+        border-collapse: collapse;
+        font-size: 0.86rem;
+        font-family: var(--sc-mono);
+        font-variant-numeric: tabular-nums;
+      }
+
+      th,
+      td {
+        padding: 0.36rem 0.5rem;
+        border-bottom: 1px solid var(--sc-border);
+        text-align: right;
+      }
+
+      thead th {
+        font-size: 0.76rem;
+        font-weight: 600;
+        white-space: nowrap;
+        background: var(--sc-surface);
+        color: var(--sc-muted);
+        border-bottom: 1px solid var(--sc-border-strong);
+      }
+
+      thead th:first-child {
+        width: 3rem;
+      }
+
+      tbody tr:hover {
+        background: var(--sc-surface-hover);
+      }
+
+      tbody tr:last-child td {
+        border-bottom: 0;
       }
     `,
   ];
@@ -117,23 +148,23 @@ export class ScFrets extends LitElement {
             : this.result?.rows?.length
               ? html`
                   <div class="table-wrap">
-                    <table class="sc-table">
+                    <table>
                       <thead>
                         <tr>
-                          <th class="num">n</th>
-                          <th class="num">d (${u})</th>
-                          <th class="num">Δd (${u})</th>
-                          <th class="num">L−d (${u})</th>
+                          <th>n</th>
+                          <th>d (${u})</th>
+                          <th>Δd (${u})</th>
+                          <th>L−d (${u})</th>
                         </tr>
                       </thead>
                       <tbody>
                         ${this.result.rows.map(
                           (r) => html`
                             <tr>
-                              <td class="num">${r.n}</td>
-                              <td class="num">${fmtNum(r.d, digits)}</td>
-                              <td class="num">${fmtNum(r.dd, digits)}</td>
-                              <td class="num">${fmtNum(r.d_inv, digits)}</td>
+                              <td>${r.n}</td>
+                              <td>${fmtNum(r.d, digits)}</td>
+                              <td>${fmtNum(r.dd, digits)}</td>
+                              <td>${fmtNum(r.d_inv, digits)}</td>
                             </tr>
                           `,
                         )}

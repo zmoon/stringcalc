@@ -235,33 +235,6 @@ export const sharedStyles = css`
     color: var(--sc-muted);
   }
 
-  table.sc-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.86rem;
-    font-variant-numeric: tabular-nums;
-  }
-
-  table.sc-table th,
-  table.sc-table td {
-    padding: 0.36rem 0.5rem;
-    border-bottom: 1px solid var(--sc-border);
-    text-align: left;
-  }
-
-  table.sc-table th {
-    font-size: 0.76rem;
-    font-weight: 600;
-    color: var(--sc-muted);
-    white-space: nowrap;
-  }
-
-  table.sc-table th.num,
-  table.sc-table td.num {
-    text-align: right;
-    font-family: var(--sc-mono);
-  }
-
   .sc-result-box {
     padding: 0.85rem 1rem;
     border-radius: var(--sc-radius);
