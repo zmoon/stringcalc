@@ -38,7 +38,7 @@ npm --prefix frontend test
 Build the `anywidget` bundle (`stringcalc/widget/_bundle.js`), packaged local web assets (`stringcalc/_web/`), and standalone Pyodide web apps:
 
 ```sh
-uv run python scripts/build_web.py --source local --out docs/_static/app
+uv run python scripts/build_web.py --out docs/_static/app
 ```
 
 To run the local Python-backed web app (no Pyodide or wheel rebuild needed after Python edits):
