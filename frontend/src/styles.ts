@@ -236,6 +236,11 @@ export const sharedStyles = css`
     color: var(--sc-muted);
   }
 
+  .sc-loading-note {
+    font-size: 0.85rem;
+    color: var(--sc-muted);
+  }
+
   .sc-result-box {
     padding: 0.85rem 1rem;
     border-radius: var(--sc-radius);

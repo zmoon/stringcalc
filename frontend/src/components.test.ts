@@ -151,4 +151,25 @@ describe("Lit custom elements", () => {
     ).toContain("D'Addario (Chart): Acoustic Guitar - Phosphor Bronze");
     picker.remove();
   });
+
+  it("shows a consistent loading placeholder across all tool widgets", async () => {
+    for (const tag of [
+      "sc-gauge-suggest",
+      "sc-exact-gauge",
+      "sc-frets",
+      "sc-scale-length",
+    ]) {
+      const el = document.createElement(tag) as HTMLElement & {
+        loading: boolean;
+        updateComplete: Promise<boolean>;
+      };
+      el.loading = true;
+      document.body.appendChild(el);
+      await el.updateComplete;
+      expect(
+        el.shadowRoot!.querySelector(".sc-loading-note")?.textContent?.trim(),
+      ).toBe("Waiting for Python…");
+      el.remove();
+    }
+  });
 });

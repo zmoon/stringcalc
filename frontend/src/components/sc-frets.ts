@@ -173,9 +173,7 @@ export class ScFrets extends LitElement {
                   </div>
                 `
               : this.loading
-                ? html`<div class="sc-muted" style="font-size: 0.85rem">
-                    Computing…
-                  </div>`
+                ? html`<div class="sc-loading-note">Waiting for Python…</div>`
                 : nothing
         }
       </div>

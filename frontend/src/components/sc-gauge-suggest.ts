@@ -304,12 +304,6 @@ export class ScGaugeSuggest extends LitElement {
         font-family: var(--sc-mono);
         white-space: nowrap;
       }
-
-      .loading-note {
-        font-size: 0.86rem;
-        color: var(--sc-muted);
-        padding: 0.5rem 0;
-      }
     `,
   ];
 
@@ -847,9 +841,7 @@ export class ScGaugeSuggest extends LitElement {
         }
         ${
           this.loading && !this.results
-            ? html`<div class="loading-note">
-                Waiting for Python engine to compute suggestions…
-              </div>`
+            ? html`<div class="sc-loading-note">Waiting for Python…</div>`
             : nothing
         }
         ${this.renderSummary()}
