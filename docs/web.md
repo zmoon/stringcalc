@@ -9,7 +9,7 @@ stringcalc ships interactive tools built as shared Web Components:
   - Included with docs build (and thus version-matched):
     - <a href="_static/app/index.html" target="_blank" rel="noopener">Open Gauge Suggest app</a>
     - <a href="_static/app/misc.html" target="_blank" rel="noopener">Open Misc Tools app</a> (Exact gauge, Frets, Scale length)
-  - Also available at https://zmoon.github.io/stringcalc/
+  - Also available at <https://zmoon.github.io/stringcalc/>
 - **Local web app** backed directly by your local Python installation (instant startup, works offline):
   ```{code} console
   $ stringcalc app
